@@ -2,7 +2,7 @@
 
 This is the active phase/checkpoint roadmap. It organizes the approved product direction; creating the roadmap does not authorize implementation or publication.
 
-**Current status:** Phases 1 and 2 are implemented in v0.3.0. All 53 foundation and 93 Phase 2 game-VM assertions pass; the native dedicated probe verifies purchases, trait effects and receipt recovery across saves/restarts. The owner authorized both Phase 2 checkpoints and deferred live dedicated acceptance until they were implemented. The [complete combined test checklist](TEST_PHASE_2.md) now covers the shop and remaining foundation checks. Checkpoints 5-14 have not started. Checkpoint numbering is sequential across phases, as requested by the owner.
+**Current status:** Phases 1 and 2 are implemented in v0.3.0. All 53 foundation and 93 Phase 2 game-VM assertions pass; the native dedicated probe verifies purchases, trait effects and receipt recovery across saves/restarts. The owner authorized both Phase 2 checkpoints and deferred live dedicated acceptance until they were implemented. The current [eight-step solo test](TEST_PHASE_2.md) covers the shop and foundation lifecycle together; multiplayer acceptance remains pending. Checkpoints 5-14 have not started. Checkpoint numbering is sequential across phases, as requested by the owner.
 
 Initial release follows Phase 5 and includes standalone progression, positive-trait purchasing, prestige, optional Horde Night rewards, and official-score integration. Negative-trait removal is Phase 6, after release. This ordering is proposed for execution; changes to scope or checkpoint boundaries should be recorded here.
 
@@ -12,6 +12,7 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 - Before major implementation, recommend the lowest suitable model/effort and estimate duration. If work could exceed 25 minutes, recommend Fast as requested by the owner. Assess each checkpoint separately rather than promise a duration for the entire project.
 - Implement the checkpoint, run its smallest meaningful checks, and report changed behavior, evidence, limitations, and the exact build to test. Use [VALIDATION.md](VALIDATION.md) for the broader acceptance list.
 - Give the owner the complete test sequence, prerequisites, expected results and final reporting point together before testing begins. Include required reloads, deaths, replacement characters and restarts up front; do not drip-feed known steps across extra conversation turns.
+- Keep each owner-facing test to 4-8 short numbered steps. No long setup sections, nested lists, repeated-mode matrices or bonus checklists. Keep broader coverage in developer validation notes; provide a complete short sequence for the selected test session.
 - Prefer singleplayer for shared rules; use one-player dedicated for authority, persistence, creation, and reconnect; add two players for cross-player behavior. Do not postpone all multiplayer verification until release.
 - Batch the remaining Phase 1 owner tests with the Phase 2 acceptance session. Continue source review, game-VM checks and appropriate automated server checks during implementation; defer the live dedicated player session until the shop and purchases are available. Deferred checks remain unverified, not failed or passed.
 - Stop at the checkpoint handoff for owner feedback. Use **Test now** only for a verified available build, **Wait for a patch** when a known defect needs correction, or **Decision needed** when an explicit design choice or next implementation authorization is required.
@@ -54,7 +55,7 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 
 ## Phase 2 - Positive trait shop
 
-**Combined live acceptance after Checkpoint 4:** provide one complete owner checklist for standalone loading, health-hover shop access, initial Tokens, positive-trait purchases and effects, save/reload, dedicated reconnect/server restart, death/replacement and replacement reload. Include hosted account binding in the same test plan. Verify a nonzero wallet and purchased trait survive the appropriate reconnect/restart, creation grants do not repeat, and the replacement cannot recover the old wallet. This closes the deferred Phase 1 checks alongside Phase 2 behavior. Prepare exact prerequisites and expected results against the finished build before handing it off.
+**Live acceptance after Checkpoint 4:** combine foundation and shop behavior in each selected session, using only 4-8 short owner-facing steps. Start with the solo test in TEST_PHASE_2.md; track remaining dedicated/hosted and compatibility coverage in VALIDATION.md. Verify a nonzero wallet and purchased trait survive the appropriate reconnect/restart, creation grants do not repeat, and the replacement cannot recover the old wallet. Give each session's complete sequence and expected results up front without a repeated-mode matrix.
 
 ### Checkpoint 3 - Health-hover entry and progression window
 

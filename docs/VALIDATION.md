@@ -1,6 +1,6 @@
 # Future validation checklist
 
-This checklist defines broader gameplay acceptance expectations. See [PHASE_2.md](PHASE_2.md) for implemented shop/starting-Token behavior and automated/native evidence. [TEST_PHASE_2.md](TEST_PHASE_2.md) is the current complete owner test sequence. Reward earning and prestige creation-screen flows below remain future work.
+This is developer coverage tracking, not an owner-facing test script. See [PHASE_2.md](PHASE_2.md) for implemented shop/starting-Token behavior and automated/native evidence. [TEST_PHASE_2.md](TEST_PHASE_2.md) is the current eight-step solo test. Dedicated/hosted reconnect/restart, price-rounding, existing-save migration and UI/addon compatibility acceptance remain pending; prepare separate 4-8-step instructions when those sessions are selected. Reward earning and prestige creation-screen flows below remain future work.
 
 ## Documentation pass
 

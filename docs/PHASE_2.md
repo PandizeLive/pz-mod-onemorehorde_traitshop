@@ -1,6 +1,6 @@
 # Phase 2 - Positive trait shop
 
-Build **v0.3.0**, September 15, 2026. Checkpoints 3 and 4 are implemented. Owner acceptance is one combined session covering Phase 1 and Phase 2; see [TEST_PHASE_2.md](TEST_PHASE_2.md). XP rewards, prestige creation bonuses, negative removal and Horde Night score integration remain later phases.
+Build **v0.3.0**, September 15, 2026. Checkpoints 3 and 4 are implemented. The current owner handoff is the [eight-step solo test](TEST_PHASE_2.md), covering Phase 1 lifecycle and Phase 2 purchases together. Remaining multiplayer and compatibility coverage is tracked in [VALIDATION.md](VALIDATION.md); each later owner test must also be 4-8 short steps. XP rewards, prestige creation bonuses, negative removal and Horde Night score integration remain later phases.
 
 ## Player behavior
 
