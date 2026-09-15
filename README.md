@@ -2,7 +2,7 @@
 
 Standalone trait progression and purchasing addon for Project Zomboid Build 42, with optional OMH: Horde Night integration.
 
-**Status: Checkpoint 1 foundation prepared, v0.1.0.** The package and startup diagnostics are implemented. Kahlua compilation and isolated B42.20.4 dedicated-server startup passed; singleplayer world-entry verification remains pending. The shop, progression and OMH integration are not implemented. There is no Workshop item yet.
+**Status: Checkpoint 1 foundation prepared, v0.1.0.** The package and startup diagnostics are implemented. Kahlua compilation, isolated B42.20.4 dedicated-server startup, and singleplayer world entry alongside Horde Night/Cure Defense passed. Standalone singleplayer verification remains pending. The shop, progression and OMH integration are not implemented. There is no Workshop item yet.
 
 Players earn XP, gain Trait Levels, and receive Tokens to purchase traits. Every five earned Trait Levels awards one Prestige Point for future character creation; Token count never determines prestige. Tokens and Trait Level reset on death. The next character receives the available prestige as bonus creation points and retains 30% as prestige after entering the world, rounded to the nearest whole point. Prestige is not an undiminished permanent lifetime total.
 

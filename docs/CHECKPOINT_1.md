@@ -1,6 +1,6 @@
 # Checkpoint 1 - Package and integration feasibility
 
-Date: September 14, 2026. Build: **0.1.0**. Status: minimal package implemented; Kahlua compilation and isolated dedicated-server startup passed. Interactive singleplayer world-entry verification remains pending. Do not mark this checkpoint fully passed yet.
+Date: September 14, 2026. Build: **0.1.0**. Status: minimal package implemented; Kahlua compilation, isolated dedicated-server startup, and owner-run singleplayer world entry alongside Horde Night/Cure Defense passed. Standalone singleplayer verification remains pending. Do not mark this checkpoint fully passed yet.
 
 ## Implemented scope
 
@@ -61,10 +61,12 @@ The installed game is at `C:/Program Files (x86)/Steam/steamapps/common/ProjectZ
 | Test isolation | Verified | Separate cache, save, database and mod folder under `.local/server-smoke`; Steam/public listing/UPnP disabled, bound to 127.0.0.1:17261. |
 | Server shutdown | Process stopped after startup evidence | Input pipe was closed, so a graceful console quit was unavailable. Verified the owning loopback port and game Java path before stopping that test process. Save/reload is not claimed tested. |
 | Game startup log review | No Trait Shop failure found | The log is not error-free: native content reports missing assets/sounds, map-property exceptions and mannequin/basement data warnings. The addon only logs startup and does not load custom world content. These messages did not prevent server startup; no blanket claim that all game errors were fixed. |
-| Live singleplayer world entry | Pending | Requires the interactive test below; compilation/server startup do not substitute for this. |
+| Live singleplayer world entry with Horde Night/Cure Defense | Passed on B42.20.4 | Owner completed the test; normal-profile console contains both expected v0.1.0 markers, world save/exit, and GameThread exit. No Trait Shop failure or Lua stack trace found. See [singleplayer evidence](CHECKPOINT_1_SINGLEPLAYER_EVIDENCE.txt). Other fluid-container, recipe-icon, mannequin-zone and basement errors remain outside this addon's startup code. |
+| Installed package verification | Passed | Local mod and local Workshop staging each contain 6/6 files matching tagged source hashes. |
+| Standalone singleplayer world entry | Pending | Horde Night and Cure Defense were enabled during the owner test. Use option 6 below to verify without either mod. |
 | Multiplayer player join / prestige handshake | Not tested | Future checkpoint tests; no player connected in this startup-only test. |
 
-## Owner test
+## Remaining owner test: standalone singleplayer
 
 Close the game, run [OMH.cmd](../OMH.cmd), and choose **6 - Launch isolated Checkpoint 1 singleplayer test**. It launches the installed game with a separate `.local/client-smoke` cache and only this addon selected, leaving normal saves and mod selections alone. Start a **new singleplayer Sandbox game**, enter the world, then quit normally. No shop window or button should exist in this checkpoint.
 

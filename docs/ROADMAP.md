@@ -2,7 +2,7 @@
 
 This is the active phase/checkpoint roadmap. It organizes the approved product direction; creating the roadmap does not authorize implementation or publication.
 
-**Current status:** Checkpoint 1 package and feasibility report prepared. Kahlua compilation and isolated dedicated-server startup passed; interactive singleplayer verification remains pending. Checkpoints 2-14 have not started. Checkpoint numbering is sequential across phases, as requested by the owner.
+**Current status:** Checkpoint 1 package and feasibility report prepared. Kahlua compilation, isolated dedicated-server startup, and singleplayer world entry alongside Horde Night/Cure Defense passed; standalone singleplayer verification remains pending. Checkpoints 2-14 have not started. Checkpoint numbering is sequential across phases, as requested by the owner.
 
 Initial release follows Phase 5 and includes standalone progression, positive-trait purchasing, prestige, optional Horde Night rewards, and official-score integration. Negative-trait removal is Phase 6, after release. This ordering is proposed for execution; changes to scope or checkpoint boundaries should be recorded here.
 
@@ -38,7 +38,7 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 
 **Pass when:** the minimal package loads without Horde Night in singleplayer and dedicated multiplayer; relevant logs are clean; the source-backed feasibility notes establish paths for creation bonuses, remaining-point conversion, UI, and horde facts. A discovered API limitation is a decision/patch issue, not a passed checkpoint.
 
-**Evidence:** [Checkpoint 1 report](CHECKPOINT_1.md). Dedicated startup and compilation passed. Singleplayer world entry is pending, and pre-creation multiplayer prestige transport remains a conditional source-backed path to validate. The existing horde callback needs additional reward facts in Checkpoint 8. Do not mark full completion from the loader alone.
+**Evidence:** [Checkpoint 1 report](CHECKPOINT_1.md). Dedicated startup, compilation, and singleplayer world entry alongside Horde Night/Cure Defense passed. Standalone singleplayer world entry is pending, and pre-creation multiplayer prestige transport remains a conditional source-backed path to validate. The existing horde callback needs additional reward facts in Checkpoint 8. Do not mark full completion from the loader alone.
 
 ### Checkpoint 2 - Authoritative state and life identity
 
