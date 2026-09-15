@@ -63,18 +63,20 @@ The installed game is at `C:/Program Files (x86)/Steam/steamapps/common/ProjectZ
 | Game startup log review | No Trait Shop failure found | The log is not error-free: native content reports missing assets/sounds, map-property exceptions and mannequin/basement data warnings. The addon only logs startup and does not load custom world content. These messages did not prevent server startup; no blanket claim that all game errors were fixed. |
 | Live singleplayer world entry with Horde Night/Cure Defense | Passed on B42.20.4 | Owner completed the test; normal-profile console contains both expected v0.1.0 markers, world save/exit, and GameThread exit. No Trait Shop failure or Lua stack trace found. See [singleplayer evidence](CHECKPOINT_1_SINGLEPLAYER_EVIDENCE.txt). Other fluid-container, recipe-icon, mannequin-zone and basement errors remain outside this addon's startup code. |
 | Installed package verification | Passed | Local mod and local Workshop staging each contain 6/6 files matching tagged source hashes. |
-| Standalone singleplayer world entry | Pending | Horde Night and Cure Defense were enabled during the owner test. Use option 6 below to verify without either mod. |
+| Standalone singleplayer world entry | Pending | Horde Night and Cure Defense were enabled during the owner test. Follow the normal Steam-launch test below with only Trait Shop enabled. |
 | Multiplayer player join / prestige handshake | Not tested | Future checkpoint tests; no player connected in this startup-only test. |
 
 ## Remaining owner test: standalone singleplayer
 
-Close the game, run [OMH.cmd](../OMH.cmd), and choose **6 - Launch isolated Checkpoint 1 singleplayer test**. It launches the installed game with a separate `.local/client-smoke` cache and only this addon selected, leaving normal saves and mod selections alone. Start a **new singleplayer Sandbox game**, enter the world, then quit normally. No shop window or button should exist in this checkpoint.
+The subsequent **v0.1.1** package replaces the mod-list icon and updates the version markers; the v0.1.0 startup evidence above remains historical. The isolated launch menu option/helper was removed at the owner's request.
 
-The log to review is `.local/client-smoke/console.txt`. Expected markers:
+Install through [OMH.cmd](../OMH.cmd), **1 - Install locally**, while the game is closed, then launch Project Zomboid normally through Steam. Check the new mod-list icon. For the remaining standalone check, enable only Trait Shop for a **new singleplayer Sandbox game**, enter the world, then quit normally. No shop window or button should exist in this checkpoint.
+
+The log to review is `%USERPROFILE%/Zomboid/console.txt`. Expected markers:
 
 ```text
-[OMH Trait Shop] v0.1.0 shared loaded: singleplayer
-[OMH Trait Shop] v0.1.0 client game started; checkpoint 1
+[OMH Trait Shop] v0.1.1 shared loaded: singleplayer
+[OMH Trait Shop] v0.1.1 client game started; checkpoint 1
 ```
 
 Only after checking that log can the singleplayer load gate pass. Remaining pre-creation transport feasibility should be recorded as conditional until validated; it must not be represented as finished multiplayer prestige support.

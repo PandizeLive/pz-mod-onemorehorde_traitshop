@@ -1,5 +1,5 @@
 version=1
 id=0
 title=OMH: Trait Shop
-description=Private development build for OMH: Trait Shop. Version 0.1.0 contains package startup diagnostics only; trait purchasing, XP progression, prestige and Horde Night integration are not implemented yet.
+description=Private development build for OMH: Trait Shop. Version 0.1.1 contains package startup diagnostics only; trait purchasing, XP progression, prestige and Horde Night integration are not implemented yet.
 description=DISCLAIMER: This mod was made in tandem with ChatGPT

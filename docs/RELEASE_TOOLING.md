@@ -6,7 +6,7 @@ Prepared September 14, 2026. The owner selected a separate private repository: [
 
 A separate repository keeps the addon's standalone releases, Workshop identity and change history independent of Horde Night. Both projects can share the local GitHub CLI and SteamCMD installation. Coordinated gameplay changes still need matching work in Horde Night; this repository choice does not implement that integration.
 
-The current package is **v0.1.0, startup diagnostics only**. Release-tooling preparation does not make it a playable shop or mark later roadmap checkpoints complete.
+The current package is **v0.1.1, startup diagnostics only**, with the owner-supplied mod-list icon. Release-tooling preparation does not make it a playable shop or mark later roadmap checkpoints complete.
 
 ## One launcher
 
@@ -19,10 +19,9 @@ Run the root [OMH.cmd](../OMH.cmd). The stable wrapper calls `tools/OMH-Release.
 | 3 | Publish through SteamCMD. The first upload creates a private item; subsequent uploads update the recorded item. |
 | 4 | Check package and installation paths without changing files. |
 | 5 | Validate and display the Workshop upload manifest without files, credentials, network calls or upload. |
-| 6 | Launch the isolated Checkpoint 1 singleplayer test after the game is closed. |
 | 0 | Exit. |
 
-The former `Test-Checkpoint1.cmd` is replaced by option 6. Trait Shop does not need the core mod's leaderboard patch option.
+Install with option 1, then launch Project Zomboid normally through Steam. The owner requested removal of the isolated game-launch option and helper. Trait Shop does not need the core mod's leaderboard patch option.
 
 Useful command-line forms from this directory:
 
@@ -35,7 +34,7 @@ Useful command-line forms from this directory:
 
 ## Tagged content and local installation
 
-The release tag is `v<modversion>` (currently `v0.1.0`). Work from a named development branch. The tag must be an ancestor of HEAD, and all `Contents` files must match it. Untracked files, including ignored build debris, are rejected. Tooling/documentation commits may follow the tag when packaged content is unchanged. Never move an existing release tag; use a new version/tag for changed packages.
+The release tag is `v<modversion>` (currently `v0.1.1`). Work from a named development branch. The tag must be an ancestor of HEAD, and all `Contents` files must match it. Untracked files, including ignored build debris, are rejected. Tooling/documentation commits may follow the tag when packaged content is unchanged. Never move an existing release tag; use a new version/tag for changed packages.
 
 Only `Contents/mods/OneMoreHorde_TraitShop` is installed. Default destinations are:
 

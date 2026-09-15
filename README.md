@@ -2,7 +2,7 @@
 
 Standalone trait progression and purchasing addon for Project Zomboid Build 42, with optional OMH: Horde Night integration.
 
-**Status: Checkpoint 1 foundation prepared, v0.1.0.** The package and startup diagnostics are implemented. Kahlua compilation, isolated B42.20.4 dedicated-server startup, and singleplayer world entry alongside Horde Night/Cure Defense passed. Standalone singleplayer verification remains pending. The shop, progression and OMH integration are not implemented. There is no Workshop item yet.
+**Status: Checkpoint 1 foundation prepared, v0.1.1.** This update replaces the placeholder mod-list icon. The v0.1.0 foundation passed Kahlua compilation, isolated B42.20.4 dedicated-server startup, and singleplayer world entry alongside Horde Night/Cure Defense. Standalone singleplayer verification remains pending. The shop, progression and OMH integration are not implemented. There is no Workshop item yet.
 
 Players earn XP, gain Trait Levels, and receive Tokens to purchase traits. Every five earned Trait Levels awards one Prestige Point for future character creation; Token count never determines prestige. Tokens and Trait Level reset on death. The next character receives the available prestige as bonus creation points and retains 30% as prestige after entering the world, rounded to the nearest whole point. Prestige is not an undiminished permanent lifetime total.
 
@@ -35,15 +35,15 @@ Trait Shop/
   OMH.cmd
   workshop.txt
   WORKSHOP_CHANGELOG.txt
-  tools/  (menu, installer, mirror, publisher and isolated test helpers)
+  tools/  (menu, installer, mirror, publisher and tooling checks)
   .local/  (ignored test caches and logs)
 ```
 
 Mod ID: `OneMoreHorde_TraitShop`. Metadata minimum: 42.20.0; actual installed-game startup verification: 42.20.4. The package has no required Horde Night dependency. The independent private repository is [PandizeLive/pz-mod-onemorehorde_traitshop](https://github.com/PandizeLive/pz-mod-onemorehorde_traitshop). This project has its own history, release tags and Workshop identity; `id=0` means its Workshop item has not been created.
 
-Run [OMH.cmd](OMH.cmd) for local installation, GitHub mirroring, Workshop publication, read-only checks, and the isolated Checkpoint 1 test. Menu option 4 checks installation readiness; option 1 installs after the game is closed. Version 0.1.0 contains startup diagnostics only. Creating the private GitHub repository did not mirror source or publish a Workshop item.
+Run [OMH.cmd](OMH.cmd) for local installation, GitHub mirroring, Workshop publication and read-only checks. Menu option 4 checks installation readiness; option 1 installs after the game is closed. Launch the game normally through Steam after installation. Version 0.1.1 contains startup diagnostics only. Creating the private GitHub repository did not mirror source or publish a Workshop item.
 
-The owner-supplied icon remains at [traitshop ingame icon.png](../Images/Trait%20Shop/traitshop%20ingame%20icon.png). The [hover-menu reference](art/references/health-hover-reference.gif) records the intended interaction, not proof that the menu is native to Zomboid.
+The package's mod-list icon is copied unchanged from [icon_7.png](art/Images/icon_7.png). The separate health-hover asset remains at [traitshop ingame icon.png](../Images/Trait%20Shop/traitshop%20ingame%20icon.png). The [hover-menu reference](art/references/health-hover-reference.gif) records the intended interaction, not proof that the menu is native to Zomboid.
 
 ## Release boundary
 

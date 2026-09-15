@@ -21,6 +21,7 @@ Recorded September 14, 2026 from the OMH: Trait Shop conversation. New owner ins
 15. Use sequential Checkpoints 1-14 across the six phases, not dotted phase/checkpoint numbering. The owner authorized Checkpoint 1 implementation.
 16. Checkpoint 1 selected `OneMoreHorde_TraitShop` and v0.1.0 for the independent package. Metadata minimum is 42.20.0; dedicated startup and singleplayer world entry alongside Horde Night/Cure Defense verified on 42.20.4. Standalone singleplayer verification remains pending.
 17. Use a separate private GitHub repository, `PandizeLive/pz-mod-onemorehorde_traitshop`, as selected by the owner. Adapt the core OMH.cmd workflow for this addon, retaining independent packages, backups, tags, credentials/logs and Workshop identity. Repository creation is authorized; source mirroring and Steam publication remain owner-run menu actions.
+18. Install locally through OMH.cmd and launch Project Zomboid normally through Steam. The owner requested removal of the isolated singleplayer launch option and helper; game tests use the normal launch workflow.
 
 ## Open decisions
 

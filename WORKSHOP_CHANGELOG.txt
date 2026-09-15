@@ -1,6 +1,7 @@
-v0.1.0
+v0.1.1
 
-Development foundation
-- Added the standalone Trait Shop package and startup diagnostics.
-- Verified startup on a local B42.20.4 dedicated server without Horde Night.
+Presentation
+- Replaced the placeholder mod-list icon with the owner-supplied Trait Shop icon.
+
+Development status
 - Trait purchases, progression and prestige are not implemented in this checkpoint.
