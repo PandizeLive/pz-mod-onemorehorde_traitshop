@@ -1,0 +1,16 @@
+Owner solo-world entry reviewed September 14, 2026.
+Source: %USERPROFILE%/Zomboid/console.txt
+Build: 42.20.4; Trait Shop v0.2.0.
+Horde Night and Cure Defense were also loaded; standalone isolation is not claimed.
+State initialized as slot 0, life 1, revision 1; the client accepted life 1.
+No Trait Shop runtime error found. Save/reload and death/replacement are not yet verified.
+
+LOG  : Mod          f:0> loading OneMoreHorde_HordeNight
+LOG  : Mod          f:0> loading OneMoreHorde_CureDefense
+LOG  : Mod          f:0> loading OneMoreHorde_TraitShop
+LOG  : Lua          f:0> [OMH Trait Shop] v0.2.0 shared loaded: singleplayer
+LOG  : Lua          f:0> [OMH Trait Shop] authority ready; schema=1
+LOG  : Lua          f:0> [OMH Trait Shop] state created; slot=0; life=1; revision=1
+LOG  : Lua          f:0> [OMH Trait Shop] client state ready; slot=0; life=1
+LOG  : General      f:0> Saving GlobalModData
+LOG  : Lua          f:0> [OMH Trait Shop] v0.2.0 client game started; checkpoint 2

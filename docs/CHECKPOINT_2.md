@@ -41,6 +41,8 @@ The PZ modding, Lua and multiplayer skills were applied alongside decompiled sou
 
 ## Normal Steam tests for acceptance
 
+**Owner test recorded September 14:** v0.2.0 entered a B42.20.4 singleplayer world, initialized schema 1 and created slot 0 / life 1 / revision 1. The client accepted life 1, and no Trait Shop runtime error was found. Horde Night and Cure Defense were also loaded. This passes initial singleplayer state initialization with those addons; same-character reload, death/replacement, standalone isolation and multiplayer player tests remain pending. See [singleplayer evidence](CHECKPOINT_2_SINGLEPLAYER_EVIDENCE.txt).
+
 Close the game, install v0.2.0 using **OMH.cmd -> 1**, and launch through Steam normally. No shop button is expected and balances begin at zero; reward earning belongs to Phase 3.
 
 1. With only Trait Shop enabled, enter a new Sandbox world. Quit normally and reload that same character. Expect `authority ready`, `state created` on first entry, then `state resumed` with the same life ID and `client state ready`. This also covers Checkpoint 1's standalone SP gate.
