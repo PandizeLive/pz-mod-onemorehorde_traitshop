@@ -2,7 +2,7 @@
 
 This is the active phase/checkpoint roadmap. It organizes the approved product direction; creating the roadmap does not authorize implementation or publication.
 
-**Current status:** Phase 1 implementation is present in v0.2.0. Checkpoint 2 persistence and authority passed 53 checks in the installed game's Kahlua VM, including binary serialization. Live standalone singleplayer and real multiplayer player/reconnect verification remain before full acceptance. Checkpoints 3-14 have not started. Checkpoint numbering is sequential across phases, as requested by the owner.
+**Current status:** Phase 1 implementation is present in v0.2.0. Checkpoint 2 persistence and authority passed 53 checks in the installed game's Kahlua VM, including binary serialization, plus three native dedicated-server save/restart cycles. Live singleplayer initialization, reload and death/replacement passed alongside Horde Night/Cure Defense. On September 15 the owner deferred the dedicated player test until after Phase 2, so it can exercise the shop and purchases as well as persistence. This test is no longer a prerequisite for starting Phase 2; full live acceptance remains pending. Checkpoints 3-14 have not started. Checkpoint numbering is sequential across phases, as requested by the owner.
 
 Initial release follows Phase 5 and includes standalone progression, positive-trait purchasing, prestige, optional Horde Night rewards, and official-score integration. Negative-trait removal is Phase 6, after release. This ordering is proposed for execution; changes to scope or checkpoint boundaries should be recorded here.
 
@@ -13,6 +13,7 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 - Implement the checkpoint, run its smallest meaningful checks, and report changed behavior, evidence, limitations, and the exact build to test. Use [VALIDATION.md](VALIDATION.md) for the broader acceptance list.
 - Give the owner the complete test sequence, prerequisites, expected results and final reporting point together before testing begins. Include required reloads, deaths, replacement characters and restarts up front; do not drip-feed known steps across extra conversation turns.
 - Prefer singleplayer for shared rules; use one-player dedicated for authority, persistence, creation, and reconnect; add two players for cross-player behavior. Do not postpone all multiplayer verification until release.
+- Batch the remaining Phase 1 owner tests with the Phase 2 acceptance session. Continue source review, game-VM checks and appropriate automated server checks during implementation; defer the live dedicated player session until the shop and purchases are available. Deferred checks remain unverified, not failed or passed.
 - Stop at the checkpoint handoff for owner feedback. Use **Test now** only for a verified available build, **Wait for a patch** when a known defect needs correction, or **Decision needed** when an explicit design choice or next implementation authorization is required.
 - Record completion evidence below each checkpoint when it actually passes. No release, Git commit/tag, or Workshop state is implied by this document. Follow the target repository's applicable release instructions when preparing builds; external publishing requires explicit authorization.
 
@@ -20,7 +21,7 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 
 | Phase | Outcome | Checkpoints | Status |
 |---|---|---|---|
-| 1. Foundation | Loadable standalone package and reliable character/account state | 1-2 | Implemented; live player verification pending |
+| 1. Foundation | Loadable standalone package and reliable character/account state | 1-2 | Implemented; remaining live checks batched after Phase 2 |
 | 2. Positive trait shop | Usable health-hover entry and safe positive-trait purchases | 3-4 | Pending |
 | 3. Progression and prestige | XP rewards, Trait Levels, death resets, and next-character bonuses | 5-7 | Pending |
 | 4. Horde Night integration | Horde XP, official lock, persistent eligibility, and score display | 8-10 | Pending |
@@ -52,6 +53,8 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 **Pass when:** singleplayer save/reload and one-player dedicated reconnect/restart retain the correct state; a replacement life cannot recover the prior wallet; clients cannot assign their own balances. Any diagnostic controls are explicitly development-only and cannot award official progression.
 
 ## Phase 2 - Positive trait shop
+
+**Combined live acceptance after Checkpoint 4:** provide one complete owner checklist for standalone loading, health-hover shop access, initial Tokens, positive-trait purchases and effects, save/reload, dedicated reconnect/server restart, death/replacement and replacement reload. Include hosted account binding in the same test plan. Verify a nonzero wallet and purchased trait survive the appropriate reconnect/restart, creation grants do not repeat, and the replacement cannot recover the old wallet. This closes the deferred Phase 1 checks alongside Phase 2 behavior. Prepare exact prerequisites and expected results against the finished build before handing it off.
 
 ### Checkpoint 3 - Health-hover entry and progression window
 

@@ -41,6 +41,8 @@ The PZ modding, Lua and multiplayer skills were applied alongside decompiled sou
 
 ## Normal Steam tests for acceptance
 
+**Schedule updated September 15:** the owner deferred the dedicated player test until after Phase 2, when the shop and purchases provide meaningful visible behavior. Batch the remaining owner checks below into that complete acceptance checklist, including nonzero wallet and purchased-trait persistence. These checks do not block starting Phase 2 and are not being marked passed. Automated and source-based verification continues during implementation.
+
 **Owner tests recorded September 14-15:** v0.2.0 entered a B42.20.4 singleplayer world, initialized schema 1 and created slot 0 / life 1 / revision 1. After normal world save/exit, the same character reloaded and resumed life 1 / revision 1; the client accepted life 1 again. Death then settled life 1 exactly once in the reviewed log, and the replacement initialized slot 0 / life 2 / revision 3; the client accepted life 2. No Trait Shop runtime error was found. Horde Night and Cure Defense were also loaded. Initial state initialization, same-character world reload and death/replacement pass with those addons; this live test has zero balances. Replacement reload, standalone isolation and multiplayer player tests remain pending. See [singleplayer evidence](CHECKPOINT_2_SINGLEPLAYER_EVIDENCE.txt).
 
 Close the game, install v0.2.0 using **OMH.cmd -> 1**, and launch through Steam normally. No shop button is expected and balances begin at zero; reward earning belongs to Phase 3.

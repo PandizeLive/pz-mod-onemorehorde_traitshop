@@ -24,6 +24,8 @@ Recorded September 14, 2026 from the OMH: Trait Shop conversation. New owner ins
 18. Install locally through OMH.cmd and launch Project Zomboid normally through Steam. The owner requested removal of the isolated singleplayer launch option and helper; game tests use the normal launch workflow.
 19. The owner authorized completion of all Phase 1 after the persistence recommendations were presented. Apply save/server-scoped prestige, reset partial XP with Tokens/levels on death, and combine retained plus newly earned prestige for the next creation bonus. No cross-world transfer.
 20. Phase 1 implementation uses the authenticated server username plus native player slot for multiplayer records, and the local player slot within each singleplayer save. Split-screen slots remain separate; changing server login identity starts a separate record. This matches the native dedicated player-profile scope without rounding 64-bit Steam IDs through Lua numbers.
+21. Provide complete player test instructions, prerequisites, expected results and the final reporting point up front; do not drip-feed known steps across extra turns.
+22. September 15: defer the live dedicated player test until after Phase 2 so it covers shop access, purchases and actual balance/trait persistence along with Phase 1 lifecycle behavior. Batch remaining owner checks into that session. Continue automated and source-based verification during implementation; deferred live acceptance does not block starting Phase 2 and must not be described as passed.
 
 ## Open decisions
 

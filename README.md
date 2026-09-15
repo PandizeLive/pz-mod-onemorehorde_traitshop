@@ -8,7 +8,7 @@ Players earn XP, gain Trait Levels, and receive Tokens to purchase traits. Every
 
 ## Documentation
 
-- [Roadmap](docs/ROADMAP.md): six phases and sequential Checkpoints 1-14. Phase 1 is in verification; Phases 2-6 have not started.
+- [Roadmap](docs/ROADMAP.md): six phases and sequential Checkpoints 1-14. Phase 1 is implemented; remaining live checks are batched after Phase 2 by owner decision. Phases 2-6 have not started.
 - [Checkpoint 1 report](docs/CHECKPOINT_1.md): package identity, source-backed feasibility, integration gaps, actual results, and the singleplayer test.
 - [Checkpoint 2 report](docs/CHECKPOINT_2.md): implemented persistence/authority, automated evidence, limits, and normal Steam tests.
 - [Release tooling](docs/RELEASE_TOOLING.md): OMH.cmd, local install/restore, private GitHub mirror, Workshop setup, and verification.
