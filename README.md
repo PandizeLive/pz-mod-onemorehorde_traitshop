@@ -10,6 +10,7 @@ Players earn XP, gain Trait Levels, and receive Tokens to purchase traits. Every
 
 - [Roadmap](docs/ROADMAP.md): six phases and sequential Checkpoints 1-14. Checkpoint 1 is in verification; later checkpoints have not started.
 - [Checkpoint 1 report](docs/CHECKPOINT_1.md): package identity, source-backed feasibility, integration gaps, actual results, and the singleplayer test.
+- [Release tooling](docs/RELEASE_TOOLING.md): OMH.cmd, local install/restore, private GitHub mirror, Workshop setup, and verification.
 - [Design](docs/DESIGN.md): confirmed behavior, vocabulary, reward modes, shop UI, and death lifecycle.
 - [Sandbox options](docs/SANDBOX_OPTIONS_SPEC.md): settings, defaults, visibility, and values still to decide.
 - [OMH integration](docs/OMH_INTEGRATION.md): horde rewards, official eligibility, score multiplier, and difficulty-menu work.
@@ -31,12 +32,16 @@ Trait Shop/
     42.20/mod.info
     42.20/icon.png
     42.20/media/lua/{shared,client,server}/
-  tools/Launch-Checkpoint1.ps1
-  Test-Checkpoint1.cmd
+  OMH.cmd
+  workshop.txt
+  WORKSHOP_CHANGELOG.txt
+  tools/  (menu, installer, mirror, publisher and isolated test helpers)
   .local/  (ignored test caches and logs)
 ```
 
-Mod ID: `OneMoreHorde_TraitShop`. Metadata minimum: 42.20.0; actual installed-game startup verification: 42.20.4. The package has no required Horde Night dependency. Release publishing tools and identity will be added later; this project does not copy Horde Night's Git history, release versions, or Workshop identity.
+Mod ID: `OneMoreHorde_TraitShop`. Metadata minimum: 42.20.0; actual installed-game startup verification: 42.20.4. The package has no required Horde Night dependency. The independent private repository is [PandizeLive/pz-mod-onemorehorde_traitshop](https://github.com/PandizeLive/pz-mod-onemorehorde_traitshop). This project has its own history, release tags and Workshop identity; `id=0` means its Workshop item has not been created.
+
+Run [OMH.cmd](OMH.cmd) for local installation, GitHub mirroring, Workshop publication, read-only checks, and the isolated Checkpoint 1 test. Menu option 4 checks installation readiness; option 1 installs after the game is closed. Version 0.1.0 contains startup diagnostics only. Creating the private GitHub repository did not mirror source or publish a Workshop item.
 
 The owner-supplied icon remains at [traitshop ingame icon.png](../Images/Trait%20Shop/traitshop%20ingame%20icon.png). The [hover-menu reference](art/references/health-hover-reference.gif) records the intended interaction, not proof that the menu is native to Zomboid.
 

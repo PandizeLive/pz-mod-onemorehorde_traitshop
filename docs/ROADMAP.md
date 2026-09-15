@@ -32,7 +32,9 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 
 **Deliver:** confirm Mod ID and supported B42 build; create the standalone package using the existing OMH folder conventions. Inspect actual vanilla and reference-mod sources for health UI, character-creation remaining points, trait application, and multiplayer identity. Inspect Horde Night's extension callbacks and identify missing data without modifying the core yet. Document feasible integration paths and any blocker before building dependent systems.
 
-**Selected during implementation:** `OneMoreHorde_TraitShop`, version 0.1.0, `42.20/` layout with metadata minimum 42.20.0; actual installed build 42.20.4. Separate local source repository, no remote or Workshop identity. Do not copy Horde Night's release identity or bundle third-party code unchanged.
+**Selected during implementation:** `OneMoreHorde_TraitShop`, version 0.1.0, `42.20/` layout with metadata minimum 42.20.0; actual installed build 42.20.4. Separate private repository `PandizeLive/pz-mod-onemorehorde_traitshop`; Workshop identity remains unassigned. Do not copy Horde Night's release identity or bundle third-party code unchanged.
+
+**Supporting tooling:** the owner separately authorized a Trait Shop-specific OMH.cmd and private repository. Installer, mirror and publisher preparation is recorded in [RELEASE_TOOLING.md](RELEASE_TOOLING.md). This does not complete later gameplay checkpoints or the initial-release acceptance checks.
 
 **Pass when:** the minimal package loads without Horde Night in singleplayer and dedicated multiplayer; relevant logs are clean; the source-backed feasibility notes establish paths for creation bonuses, remaining-point conversion, UI, and horde facts. A discovered API limitation is a decision/patch issue, not a passed checkpoint.
 

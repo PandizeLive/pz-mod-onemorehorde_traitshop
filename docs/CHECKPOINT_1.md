@@ -8,7 +8,7 @@ Date: September 14, 2026. Build: **0.1.0**. Status: minimal package implemented;
 - Package: `Contents/mods/OneMoreHorde_TraitShop/common/` plus `42.20/`; metadata minimum 42.20.0, actually tested against installed 42.20.4 (Steam build 24909800). Earlier 42.20 patch compatibility is not yet tested; this is not a B41 package.
 - Three Lua files: shared module identity, client world-start marker, dedicated-server-start marker. They do not modify traits, settings, time, XP, player data, or scores. No required Horde Night dependency and no reward listeners.
 - Copied the owner's Trait Shop image unchanged as the package icon. No third-party source or art is bundled.
-- Independent local source project, with `.local/`, build output and Java classes ignored. No remote or Workshop identity assigned. Existing Horde Night repository and game/server settings were not edited.
+- Independent local source project, with `.local/`, build output and Java classes ignored. Subsequent owner-authorized tooling work connected a separate private GitHub repository; no Workshop item is assigned. Existing Horde Night repository and game/server settings were not edited.
 - Renumbered the roadmap globally as Checkpoints 1-14 while retaining six phases. Corrected references to the moved Horde Night repository.
 
 ## Source evidence
@@ -66,7 +66,7 @@ The installed game is at `C:/Program Files (x86)/Steam/steamapps/common/ProjectZ
 
 ## Owner test
 
-Run [Test-Checkpoint1.cmd](../Test-Checkpoint1.cmd). It launches the installed game with a separate `.local/client-smoke` cache and only this addon selected, leaving normal saves and mod selections alone. Start a **new singleplayer Sandbox game**, enter the world, then quit normally. No shop window or button should exist in this checkpoint.
+Close the game, run [OMH.cmd](../OMH.cmd), and choose **6 - Launch isolated Checkpoint 1 singleplayer test**. It launches the installed game with a separate `.local/client-smoke` cache and only this addon selected, leaving normal saves and mod selections alone. Start a **new singleplayer Sandbox game**, enter the world, then quit normally. No shop window or button should exist in this checkpoint.
 
 The log to review is `.local/client-smoke/console.txt`. Expected markers:
 

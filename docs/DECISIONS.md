@@ -20,6 +20,7 @@ Recorded September 14, 2026 from the OMH: Trait Shop conversation. New owner ins
 14. Prestige retention rounds to the nearest whole point, with no minimum-one guarantee: 3 -> 1 -> 0 at 30% without new earnings. The documented tie convention is half up for nonnegative values; always rounding upward is rejected.
 15. Use sequential Checkpoints 1-14 across the six phases, not dotted phase/checkpoint numbering. The owner authorized Checkpoint 1 implementation.
 16. Checkpoint 1 selected `OneMoreHorde_TraitShop` and v0.1.0 for the independent package. Metadata minimum is 42.20.0; actual dedicated startup verified on 42.20.4. Singleplayer world-entry verification remains pending.
+17. Use a separate private GitHub repository, `PandizeLive/pz-mod-onemorehorde_traitshop`, as selected by the owner. Adapt the core OMH.cmd workflow for this addon, retaining independent packages, backups, tags, credentials/logs and Workshop identity. Repository creation is authorized; source mirroring and Steam publication remain owner-run menu actions.
 
 ## Open decisions
 
@@ -39,7 +40,7 @@ Recorded September 14, 2026 from the OMH: Trait Shop conversation. New owner ins
 | Initial catalog | Which positive traits are runtime-safe; prices and conflict handling. | Must be verified before sale. Broad negative removal support can wait. |
 | Score detection | Enabled mod versus mere subscription; adding/removing during a run. | Recommend enabled runtime detection plus durable affected-run history. |
 | UI conveniences | Tooltip, optional keybind, exact menu integration. | Tooltip/keybind suggested; inspect vanilla and reference mod before UI work. |
-| Release setup | Remote repository and Workshop identity/publishing workflow. | Local package identity is selected; future remote/publishing work needs explicit authorization. |
+| Workshop presentation | Final cover, description, visibility and readiness for public release. | Tooling creates a private development item on first owner-run publication; live updates preserve existing presentation. No Workshop ID is invented or borrowed. |
 
 ## Superseded proposals
 
@@ -53,4 +54,4 @@ Recorded September 14, 2026 from the OMH: Trait Shop conversation. New owner ins
 
 ## Implementation boundary
 
-The owner authorized Checkpoint 1 in the [roadmap](ROADMAP.md): minimal package, feasibility, and loading verification. Later gameplay checkpoints, core changes and publishing are not part of that checkpoint. No third-party implementation is bundled. Remaining prestige combination details and the official preset need resolution before dependent implementation. The roadmap assigns each open decision to its first dependent checkpoint.
+The owner authorized Checkpoint 1 in the [roadmap](ROADMAP.md): minimal package, feasibility, and loading verification, then separately authorized [release tooling](RELEASE_TOOLING.md) and a private repository. Later gameplay checkpoints, core changes and publication are not completed by that tooling work. No third-party gameplay implementation is bundled. Remaining prestige combination details and the official preset need resolution before dependent implementation. The roadmap assigns each open decision to its first dependent checkpoint.
