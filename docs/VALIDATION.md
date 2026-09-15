@@ -1,6 +1,6 @@
 # Future validation checklist
 
-This checklist defines future gameplay acceptance expectations. Only Checkpoint 1 package compilation and dedicated startup have been exercised; see [CHECKPOINT_1.md](CHECKPOINT_1.md) for actual results. Gameplay checks below have not run.
+This checklist defines broader gameplay acceptance expectations. See [CHECKPOINT_1.md](CHECKPOINT_1.md) and [CHECKPOINT_2.md](CHECKPOINT_2.md) for completed startup, state/serialization and dedicated disk tests. Full reward, purchase and creation-screen flows below are not implemented or validated yet.
 
 ## Documentation pass
 
@@ -19,7 +19,7 @@ This checklist defines future gameplay acceptance expectations. Only Checkpoint 
 - Validate repeated retention over at least three lives. Agreed nearest-whole rounding at 30% gives 3 -> 1 -> 0 without new earnings. Verify the documented half-up convention at exact ties and no minimum-one guarantee.
 - Validate the separate retention setting, including 0% and 100% if supported, without changing the full bonus offered at that transition.
 - Reconnect, canceled creation, repeated spawn callbacks, and crash recovery cannot repeat the bonus or retention step. Do not apply decay both at death and spawn.
-- Test retained-plus-newly-earned prestige according to the eventual approved combination rule. Verify Trait Level resets on death; partial XP policy remains to be confirmed.
+- Test retained-plus-newly-earned prestige as the next bonus total. Verify Tokens, Trait Level and partial XP reset on death.
 
 ## Rewards
 

@@ -1,0 +1,164 @@
+if isClient() then return end
+
+local State = {}
+State.SCHEMA = 1
+State.LIMIT = 1000000000
+
+---@param value any
+---@return boolean
+function State.isCounter(value)
+    return type(value) == "number" and value >= 0 and value <= State.LIMIT
+        and value == math.floor(value)
+end
+
+---@param value any
+---@return boolean
+function State.isXP(value)
+    return type(value) == "number" and value >= 0 and value <= State.LIMIT
+end
+
+---@param store table
+---@return boolean
+function State.initialize(store)
+    if store.schema == nil then
+        for _ in pairs(store) do
+            return false
+        end
+        store.schema = State.SCHEMA
+        store.nextLife = 0
+        store.accounts = {}
+    end
+    return store.schema == State.SCHEMA and State.isCounter(store.nextLife)
+        and type(store.accounts) == "table"
+end
+
+---@param record any
+---@return boolean
+function State.isRecord(record)
+    if type(record) ~= "table" or not State.isCounter(record.revision)
+        or type(record.prestige) ~= "table" or type(record.life) ~= "table" then return false end
+    local prestige = record.prestige
+    local life = record.life
+    return State.isCounter(prestige.retained) and State.isCounter(prestige.earned)
+        and State.isCounter(prestige.pending) and State.isCounter(prestige.settledLife)
+        and State.isCounter(life.id) and State.isCounter(life.characterId)
+        and State.isCounter(life.tokens) and State.isCounter(life.level)
+        and State.isXP(life.xp) and State.isXP(life.hours)
+        and (life.status == "alive" or life.status == "dead")
+        and type(record.unofficial) == "boolean"
+end
+
+---@param record table
+---@param lifeId number
+---@return boolean
+function State.settleDeath(record, lifeId)
+    if record.life.id ~= lifeId or record.life.status == "dead" then return false end
+    local prestige = record.prestige
+    local pending = prestige.pending + prestige.retained + prestige.earned
+    if not State.isCounter(pending) or record.revision >= State.LIMIT then return false end
+    prestige.pending = pending
+    prestige.retained = 0
+    prestige.earned = 0
+    prestige.settledLife = lifeId
+    record.life.tokens = 0
+    record.life.xp = 0
+    record.life.level = 0
+    record.life.status = "dead"
+    record.revision = record.revision + 1
+    return true
+end
+
+---@param store table
+---@param account string
+---@param characterId number
+---@param hours number
+---@return table|nil
+---@return string
+function State.attach(store, account, characterId, hours)
+    if not State.isCounter(characterId) or not State.isXP(hours) then return nil, "invalid_character" end
+    local record = store.accounts[account]
+    if record and not State.isRecord(record) then return nil, "invalid_record" end
+    if record and record.revision >= State.LIMIT - 1 then return nil, "revision_limit" end
+    if record and record.life.status == "alive" then
+        if record.life.characterId == characterId and (hours > 0 or record.life.hours == 0) then
+            if hours > record.life.hours then
+                record.life.hours = hours
+            end
+            return record, "resumed"
+        end
+        if not State.settleDeath(record, record.life.id) then return nil, "settlement_failed" end
+    end
+    if store.nextLife >= State.LIMIT then return nil, "life_limit" end
+    store.nextLife = store.nextLife + 1
+    if not record then
+        record = {
+            revision = 0,
+            prestige = { retained = 0, earned = 0, pending = 0, settledLife = 0 },
+            unofficial = true,
+        }
+        store.accounts[account] = record
+    end
+    record.life = {
+        id = store.nextLife,
+        characterId = characterId,
+        hours = hours,
+        status = "alive",
+        tokens = 0,
+        xp = 0,
+        level = 0,
+    }
+    record.revision = record.revision + 1
+    return record, "created"
+end
+
+---@param record table
+---@param lifeId number
+---@param revision number
+---@param changes table
+---@return boolean
+function State.update(record, lifeId, revision, changes)
+    if not State.isRecord(record) or record.life.status ~= "alive"
+        or record.life.id ~= lifeId or record.revision ~= revision
+        or revision >= State.LIMIT or type(changes) ~= "table" then return false end
+    local changed = false
+    for key, value in pairs(changes) do
+        if key == "xp" then
+            if not State.isXP(value) then return false end
+        elseif key == "tokens" or key == "level" then
+            if not State.isCounter(value) then return false end
+        else
+            return false
+        end
+        if record.life[key] ~= value then
+            changed = true
+        end
+    end
+    if not changed then return false end
+    for key, value in pairs(changes) do
+        record.life[key] = value
+    end
+    record.revision = record.revision + 1
+    return true
+end
+
+---@param record table
+---@param playerNum number
+---@return table
+function State.snapshot(record, playerNum)
+    return {
+        schema = State.SCHEMA,
+        playerNum = playerNum,
+        lifeId = record.life.id,
+        revision = record.revision,
+        status = record.life.status,
+        tokens = record.life.tokens,
+        xp = record.life.xp,
+        level = record.life.level,
+        retainedPrestige = record.prestige.retained,
+        earnedPrestige = record.prestige.earned,
+        pendingPrestige = record.prestige.pending,
+        unofficial = record.unofficial,
+    }
+end
+
+return State

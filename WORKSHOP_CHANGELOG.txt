@@ -1,7 +1,9 @@
-v0.1.1
+v0.2.0
 
-Presentation
-- Replaced the placeholder mod-list icon with the owner-supplied Trait Shop icon.
+Foundation
+- Added save-scoped character state for Tokens, XP, Trait Level and separate prestige balances.
+- Added server-owned state snapshots, reconnect handling and repeat-safe death settlement.
+- Death clears Tokens, Trait Level and partial XP while reserving prestige for the later creation flow.
 
 Development status
-- Trait purchases, progression and prestige are not implemented in this checkpoint.
+- Trait purchases, reward earning and prestige character-creation bonuses are not implemented yet.

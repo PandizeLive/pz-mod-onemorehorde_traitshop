@@ -22,14 +22,14 @@ Recorded September 14, 2026 from the OMH: Trait Shop conversation. New owner ins
 16. Checkpoint 1 selected `OneMoreHorde_TraitShop` and v0.1.0 for the independent package. Metadata minimum is 42.20.0; dedicated startup and singleplayer world entry alongside Horde Night/Cure Defense verified on 42.20.4. Standalone singleplayer verification remains pending.
 17. Use a separate private GitHub repository, `PandizeLive/pz-mod-onemorehorde_traitshop`, as selected by the owner. Adapt the core OMH.cmd workflow for this addon, retaining independent packages, backups, tags, credentials/logs and Workshop identity. Repository creation is authorized; source mirroring and Steam publication remain owner-run menu actions.
 18. Install locally through OMH.cmd and launch Project Zomboid normally through Steam. The owner requested removal of the isolated singleplayer launch option and helper; game tests use the normal launch workflow.
+19. The owner authorized completion of all Phase 1 after the persistence recommendations were presented. Apply save/server-scoped prestige, reset partial XP with Tokens/levels on death, and combine retained plus newly earned prestige for the next creation bonus. No cross-world transfer.
+20. Phase 1 implementation uses the authenticated server username plus native player slot for multiplayer records, and the local player slot within each singleplayer save. Split-screen slots remain separate; changing server login identity starts a separate record. This matches the native dedicated player-profile scope without rounding 64-bit Steam IDs through Lua numbers.
 
 ## Open decisions
 
 | Topic | Unresolved choice | Recommendation / impact |
 |---|---|---|
 | Cost formulas | Multiplier defaults, Token rounding, and whether negative removal keeps the proposed flat +2. | Setting names are settled; a multiplier does not itself express a surcharge. Decide removal details with the later feature. |
-| Retained plus earned prestige | Confirm that retained prestige and this life's newly earned prestige form the next creation bonus. | Working interpretation: retained 1 + newly earned 2 -> +3 creation points next life, then apply retention to 3 once. |
-| Partial XP lifecycle | Trait Level reset is confirmed; explicitly reset partial XP too? | Recommend resetting partial XP on death. |
 | Prestige conversion | Can unused prestige-derived creation points also become starting Tokens? | Owner's general unused-points rule suggests yes, without prestige credit. Confirm this edge case. |
 | Official prestige provenance | What happens when custom-earned prestige enters a new character/run? | Persist provenance; do not silently treat it as official after changing settings. Decide whether to exclude that prestige from an official start or make the affected run unofficial. |
 | Official preset | XP rates/curve, prices, caps, eligible traits, prestige lifecycle and limits, future removal settings. | Must be explicit and versioned; 50% score alone cannot establish fairness. |
@@ -55,4 +55,4 @@ Recorded September 14, 2026 from the OMH: Trait Shop conversation. New owner ins
 
 ## Implementation boundary
 
-The owner authorized Checkpoint 1 in the [roadmap](ROADMAP.md): minimal package, feasibility, and loading verification, then separately authorized [release tooling](RELEASE_TOOLING.md) and a private repository. Later gameplay checkpoints, core changes and publication are not completed by that tooling work. No third-party gameplay implementation is bundled. Remaining prestige combination details and the official preset need resolution before dependent implementation. The roadmap assigns each open decision to its first dependent checkpoint.
+The owner authorized all Phase 1 in the [roadmap](ROADMAP.md), plus [release tooling](RELEASE_TOOLING.md) and a private repository. Phase 1 includes persistence and lifecycle handling, but no shop, earning rewards, creation-screen grants, core patches or publication. No third-party gameplay implementation is bundled. Remaining prestige conversion details and the official preset still need resolution before their dependent phases. The roadmap assigns each open decision to its first dependent checkpoint.

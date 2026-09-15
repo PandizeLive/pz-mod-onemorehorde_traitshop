@@ -2,7 +2,7 @@
 
 This is the active phase/checkpoint roadmap. It organizes the approved product direction; creating the roadmap does not authorize implementation or publication.
 
-**Current status:** Checkpoint 1 package and feasibility report prepared. Kahlua compilation, isolated dedicated-server startup, and singleplayer world entry alongside Horde Night/Cure Defense passed; standalone singleplayer verification remains pending. Checkpoints 2-14 have not started. Checkpoint numbering is sequential across phases, as requested by the owner.
+**Current status:** Phase 1 implementation is present in v0.2.0. Checkpoint 2 persistence and authority passed 53 checks in the installed game's Kahlua VM, including binary serialization. Live standalone singleplayer and real multiplayer player/reconnect verification remain before full acceptance. Checkpoints 3-14 have not started. Checkpoint numbering is sequential across phases, as requested by the owner.
 
 Initial release follows Phase 5 and includes standalone progression, positive-trait purchasing, prestige, optional Horde Night rewards, and official-score integration. Negative-trait removal is Phase 6, after release. This ordering is proposed for execution; changes to scope or checkpoint boundaries should be recorded here.
 
@@ -19,7 +19,7 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 
 | Phase | Outcome | Checkpoints | Status |
 |---|---|---|---|
-| 1. Foundation | Loadable standalone package and reliable character/account state | 1-2 | Checkpoint 1 in verification; 2 pending |
+| 1. Foundation | Loadable standalone package and reliable character/account state | 1-2 | Implemented; live player verification pending |
 | 2. Positive trait shop | Usable health-hover entry and safe positive-trait purchases | 3-4 | Pending |
 | 3. Progression and prestige | XP rewards, Trait Levels, death resets, and next-character bonuses | 5-7 | Pending |
 | 4. Horde Night integration | Horde XP, official lock, persistent eligibility, and score display | 8-10 | Pending |
@@ -44,7 +44,9 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 
 **Deliver:** character-life identity, Token wallet, level/XP fields, separate prestige state, versioned persistence, and minimal client state transport. Establish retry-safe initialization and mutation boundaries. Add only the development diagnostics needed to verify this checkpoint; no public reward/admin feature is implied.
 
-**Decisions needed:** stable player/account identity and save scope based on Checkpoint 1 evidence. State must distinguish retained prestige, newly earned prestige, and pending creation grants.
+**Decisions resolved:** use native server account/slot identity and save/world scope. State distinguishes retained prestige, newly earned prestige, and pending creation grants.
+
+**Implemented:** authenticated multiplayer username/native slot and singleplayer save/local-slot identity; generated life IDs; schema-versioned world state; per-life wallet/XP/level; separate retained/earned/pending prestige; repeat-safe death settlement; read-only client requests and per-player snapshots. Partial XP resets on death. Details and test results: [Checkpoint 2 report](CHECKPOINT_2.md).
 
 **Pass when:** singleplayer save/reload and one-player dedicated reconnect/restart retain the correct state; a replacement life cannot recover the prior wallet; clients cannot assign their own balances. Any diagnostic controls are explicitly development-only and cannot award official progression.
 
@@ -72,7 +74,7 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 
 **Deliver:** XP thresholds, one Token per earned Trait Level, one newly earned Prestige Point every five Trait Levels, and death resets. Threshold calculations must handle a reward crossing multiple levels without duplicate milestones. Token grants/spending/refunds never create prestige.
 
-**Decisions needed:** XP requirement/curve and partial XP reset on death. Trait Level and Token reset are already confirmed.
+**Decisions needed:** XP requirement/curve. Partial XP, Trait Level and Token reset on death are confirmed and handled by the Phase 1 lifecycle.
 
 **Pass when:** level transitions 4 -> 5 and 9 -> 10 grant exactly one Prestige Point each; multi-level gains grant the expected Tokens and milestones; reload/replayed requests do not repeat awards; death resets the appropriate life fields while preserving the intended next-character prestige entitlement. Verify shared rules and dedicated persistence.
 
@@ -88,7 +90,7 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 
 **Deliver:** the full next-character prestige creation bonus, followed by the separate Prestige Retention Percentage setting (default 30%) after successful world entry. Round retention to the nearest whole point; use half-up at exact ties and no minimum-one guarantee. Persist one-time bonus/retention markers through creation cancellation, reconnect, restart, and death.
 
-**Decisions needed:** confirm retained-plus-newly-earned prestige as the next bonus total. General nearest-whole rounding is agreed; half-up tie handling is the documented convention. Resolve any remaining character-creation integration constraints from Checkpoint 1.
+**Decisions needed:** resolve remaining character-creation integration constraints from Checkpoint 1. Retained-plus-newly-earned prestige as the next bonus total and nearest-whole rounding are agreed; half-up tie handling is the documented convention.
 
 **Pass when:** 3 prestige gives +3 creation points then 1 retained point at Trait Level 0; without new earnings, consecutive lives demonstrate 3 -> 1 -> 0. Spending Tokens never changes this. Canceled creation and repeated load callbacks do not grant twice or decay twice. Verify the sequence in singleplayer and one-player dedicated, with two-player account isolation where needed.
 
@@ -153,11 +155,11 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 | Resolve before | Decisions |
 |---|---|
 | 1 | Mod ID, supported build, repository setup |
-| 2 | Player/account identity and persistence scope |
+| 2 | Player/account identity and persistence scope - resolved for Phase 1 |
 | 4 | Positive multiplier/rounding/catalog; unused prestige-derived creation points |
-| 5 | XP thresholds/curve; partial XP reset |
+| 5 | XP thresholds/curve |
 | 6 | Standalone default; non-horde reward values; uniqueness; survival timing; Hybrid overlap |
-| 7 | Retained plus newly earned prestige total |
+| 7 | Remaining character-creation transport and transaction details |
 | 8 | Horde XP values; dependency changes with saved settings |
 | 9 | Official preset/lock default; detection; custom-earned prestige and retained-benefit policy |
 | 13-14 | Negative multiplier/rounding/+2 surcharge, removable traits, and official removal policy |

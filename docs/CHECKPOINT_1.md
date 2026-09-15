@@ -68,15 +68,15 @@ The installed game is at `C:/Program Files (x86)/Steam/steamapps/common/ProjectZ
 
 ## Remaining owner test: standalone singleplayer
 
-The subsequent **v0.1.1** package replaces the mod-list icon and updates the version markers; the v0.1.0 startup evidence above remains historical. The isolated launch menu option/helper was removed at the owner's request.
+The **v0.1.1** package replaced the mod-list icon. The current **v0.2.0** package adds Phase 1 persistent state; the v0.1.0 startup evidence above remains historical. The isolated launch menu option/helper was removed at the owner's request. Follow [Checkpoint 2's normal Steam tests](CHECKPOINT_2.md) to cover the remaining standalone gate and new persistence together.
 
 Install through [OMH.cmd](../OMH.cmd), **1 - Install locally**, while the game is closed, then launch Project Zomboid normally through Steam. Check the new mod-list icon. For the remaining standalone check, enable only Trait Shop for a **new singleplayer Sandbox game**, enter the world, then quit normally. No shop window or button should exist in this checkpoint.
 
 The log to review is `%USERPROFILE%/Zomboid/console.txt`. Expected markers:
 
 ```text
-[OMH Trait Shop] v0.1.1 shared loaded: singleplayer
-[OMH Trait Shop] v0.1.1 client game started; checkpoint 1
+[OMH Trait Shop] v0.2.0 shared loaded: singleplayer
+[OMH Trait Shop] v0.2.0 client game started; checkpoint 2
 ```
 
 Only after checking that log can the singleplayer load gate pass. Remaining pre-creation transport feasibility should be recorded as conditional until validated; it must not be represented as finished multiplayer prestige support.

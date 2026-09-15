@@ -1,6 +1,6 @@
 name=OMH: Trait Shop
 id=OneMoreHorde_TraitShop
-modversion=0.1.1
+modversion=0.2.0
 versionMin=42.20.0
 icon=icon.png
-description=Development foundation for OMH: Trait Shop. Checkpoint 1 provides package loading and startup diagnostics only. Trait purchasing and progression are not implemented yet.
+description=Development foundation for OMH: Trait Shop. Phase 1 provides persistent character state and startup diagnostics. Trait purchasing and progression are not implemented yet.

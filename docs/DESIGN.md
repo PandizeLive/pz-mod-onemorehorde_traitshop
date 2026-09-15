@@ -21,7 +21,7 @@ Examples:
 - A character enters the world with five unused creation points: grant five starting Tokens once, with no earned levels or prestige.
 - Five earned Trait Levels: five Tokens awarded over those levels and one Prestige Point earned, regardless of spending.
 - Twelve earned Trait Levels: twelve Tokens awarded and two Prestige Points earned. Token balance may be lower after purchases.
-- Death wipes the character's remaining Tokens and resets Trait Level. Partial XP reset is recommended but still needs confirmation.
+- Death wipes the character's remaining Tokens, resets Trait Level, and resets partial XP.
 
 Prestige grants bonus points at new-character creation, not a direct Token payout. Any conversion of unused creation points happens after character creation. Starting Tokens, refunds, and prestige-derived creation points must never count as earned levels.
 
@@ -33,7 +33,7 @@ Owner example: die with 3 Prestige Points -> next character receives +3 creation
 
 Agreed rounding: nearest whole point, with no minimum-one guarantee. The documented exact-tie convention is half up for nonnegative values. At 30%, a no-new-earnings sequence is 3 -> 1 -> 0. Do not always round up: that would keep the final point forever and undermine decay.
 
-Working interpretation for later implementation: available prestige at death equals retained prestige plus new points earned from this life's Trait Levels. Thus a character retaining 1 and earning 2 more would offer +3 creation points next time, then retain 30% of 3. This combination example needs confirmation; it is not a separate lifetime prestige total. Retained prestige itself never grants levels or Tokens.
+Confirmed with Phase 1 approval: available prestige at death equals retained prestige plus new points earned from this life's Trait Levels. Thus a character retaining 1 and earning 2 more would offer +3 creation points next time, then retain 30% of 3. This is not a separate lifetime prestige total. Retained prestige itself never grants levels or Tokens. Phase 1 reserves this amount as pending state; the creation-screen grant and retention step are implemented in the later prestige phase.
 
 ## Reward modes
 
