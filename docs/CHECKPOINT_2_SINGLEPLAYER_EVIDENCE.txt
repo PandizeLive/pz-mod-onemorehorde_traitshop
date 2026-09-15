@@ -28,3 +28,14 @@ Death/replacement, standalone isolation and multiplayer player tests remain pend
 891: LOG  : Lua          f:0> [OMH Trait Shop] state resumed; slot=0; life=1; revision=1
 892: LOG  : Lua          f:0> [OMH Trait Shop] client state ready; slot=0; life=1
 1323: LOG  : Lua          f:0> [OMH Trait Shop] v0.2.0 client game started; checkpoint 2
+
+Owner death and replacement reviewed September 15, 2026.
+The current console contains exactly one death settlement for life 1.
+The replacement initialized slot 0, life 2, revision 3; the client accepted life 2.
+No Trait Shop runtime error found. This zero-balance live test confirms lifecycle transitions;
+nonzero wallet/XP/level resets remain covered by automated tests.
+Replacement reload, standalone isolation and multiplayer player tests remain pending.
+
+1349: LOG  : Lua          f:1554> [OMH Trait Shop] death settled; life=1; wallet reset
+1354: LOG  : Lua          f:2226> [OMH Trait Shop] state created; slot=0; life=2; revision=3
+1355: LOG  : Lua          f:2226> [OMH Trait Shop] client state ready; slot=0; life=2
