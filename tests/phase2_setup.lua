@@ -25,6 +25,11 @@ function traitFixture(constant, id, cost)
     return definition
 end
 CharacterTraitDefinition.getCharacterTraitDefinition = function(trait) return testDefinitions[trait] end
+CharacterTraitDefinition.getTraits = function()
+    local definitions = {}
+    for _, definition in pairs(testDefinitions) do definitions[#definitions + 1] = definition end
+    return fixtureList(definitions)
+end
 traitFixture("DEXTROUS", "base:dextrous", 2)
 traitFixture("FAST_READER", "base:fastreader", 2)
 traitFixture("BRAVE", "base:brave", 4)

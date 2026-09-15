@@ -58,11 +58,15 @@ A late-connected member can qualify under this rule. A casualty must not regain 
 
 ## Shop and UI
 
-One progression window contains the trait catalog, costs, Token balance, XP bar, Trait Level, and Prestige Points. Distinguish retained prestige from prestige earned during the current life, and clearly show the projected next-character creation bonus.
+One progression window contains the trait catalog, costs, Token balance, XP bar, Trait Level, and Prestige Points. The approved September 15 revision centers Trait Level above a gold progress bar with white percentage text; Tokens and Prestige have equal emphasis. Display one Prestige total (retained plus newly earned), with those components in its tooltip. The Token tooltip explains starting grants, spending and current balance, including the creation calculation's prestige contribution when implemented. No separate next-character total or permanent creation explanation fills the window.
 
-The owner wants a Trait Purchase System-style hover menu beside the health icon, using the supplied Trait Shop icon. Treat this as custom integration to inspect and recreate, not a presumed vanilla feature. Preserve existing health-button behavior and coexist with other mods adding nearby buttons. The menu must remain reachable when the pointer moves from the health icon to the shop button.
+Use the owner's three-box layout: unowned positive traits on the left, current positive/free profession traits at upper right, and current negative traits at lower right. Buying transfers the selected row to the owned panel after authority confirmation. Removal later removes a negative from the current-traits panel rather than transferring it into the positive catalog. Until implemented, negatives remain inspectable with removal disabled.
 
-Tooltip and optional keybind were suggested, not explicitly approved. UI scaling, resolution, and competing health-menu mods need validation. The owner's GIF is preserved in `art/references/health-hover-reference.gif`.
+Show the loaded native/modded registry and keep unsupported or otherwise unavailable unowned traits visible in grey with a reason. Purchase eligibility remains separate from discovery. Sort by actual Token price, then localized name, with stable ID as a deterministic tie-breaker. Current negatives use absolute creation cost until their removal prices exist. Add search and availability filters to the catalog, preserve selection/scroll, and use a compact shared description footer plus full hover descriptions. Owned names/icons are gold; selection adds the leaderboard gold outline and muted green/red fill for buying/removal context. Use explicit action labels as well as colors.
+
+The owner wants a Trait Purchase System-style hover menu beside the health icon, using the supplied Trait Shop icon. Treat this as custom integration to inspect and recreate, not a presumed vanilla feature. Preserve existing health-button behavior and coexist with other mods adding nearby buttons. Only hovering the health area opens the menu; hovering hidden shop coordinates must not reveal it. Keep it open while moving onto the visible shop button, then hide it when leaving both.
+
+Tooltips are part of the approved UI revision. A separate keybind remains unimplemented. UI scaling, resolution, and competing health-menu mods need validation. The owner's GIF is preserved in `art/references/health-hover-reference.gif`.
 
 ## Purchasing and later negative-trait removal
 

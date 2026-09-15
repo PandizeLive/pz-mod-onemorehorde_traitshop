@@ -2,7 +2,7 @@
 
 This is the active phase/checkpoint roadmap. It organizes the approved product direction; creating the roadmap does not authorize implementation or publication.
 
-**Current status:** Phases 1 and 2 are implemented in v0.3.0. All 53 foundation and 93 Phase 2 game-VM assertions pass; the native dedicated probe verifies purchases, trait effects and receipt recovery across saves/restarts. The owner authorized both Phase 2 checkpoints and deferred live dedicated acceptance until they were implemented. The current [eight-step solo test](TEST_PHASE_2.md) covers the shop and foundation lifecycle together; multiplayer acceptance remains pending. Checkpoints 5-14 have not started. Checkpoint numbering is sequential across phases, as requested by the owner.
+**Current status:** Phases 1 and 2 are implemented. The owner reported the v0.3.0 solo purchase/reload/death sequence passed. The approved v0.3.1 UI patch adds the three-panel layout, registry discovery, compact resource breakdowns and health-only hover activation; see [UI patch evidence](UI_PATCH_v0.3.1.md). The current [six-step UI test](TEST_PHASE_2.md) covers the revision; live multiplayer acceptance remains pending. Checkpoints 5-14 have not started. Checkpoint numbering stays sequential across phases.
 
 Initial release follows Phase 5 and includes standalone progression, positive-trait purchasing, prestige, optional Horde Night rewards, and official-score integration. Negative-trait removal is Phase 6, after release. This ordering is proposed for execution; changes to scope or checkpoint boundaries should be recorded here.
 
@@ -22,8 +22,8 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 
 | Phase | Outcome | Checkpoints | Status |
 |---|---|---|---|
-| 1. Foundation | Loadable standalone package and reliable character/account state | 1-2 | Implemented; combined live acceptance pending |
-| 2. Positive trait shop | Usable health-hover entry and safe positive-trait purchases | 3-4 | Implemented in v0.3.0; combined live acceptance pending |
+| 1. Foundation | Loadable standalone package and reliable character/account state | 1-2 | Implemented; solo sequence reported passed, live multiplayer pending |
+| 2. Positive trait shop | Usable health-hover entry and safe positive-trait purchases | 3-4 | v0.3.1 UI revision implemented; short UI/live multiplayer acceptance pending |
 | 3. Progression and prestige | XP rewards, Trait Levels, death resets, and next-character bonuses | 5-7 | Pending |
 | 4. Horde Night integration | Horde XP, official lock, persistent eligibility, and score display | 8-10 | Pending |
 | 5. Initial release | Verified standalone and OMH builds, documentation, release package | 11-12 | Pending |
@@ -59,9 +59,9 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 
 ### Checkpoint 3 - Health-hover entry and progression window
 
-**Deliver:** the custom health-icon hover interaction using the owner's asset, and one window showing Tokens, XP, Trait Level, prestige, and a read-only positive-trait catalog. Clearly distinguish retained and newly earned prestige. Preserve the normal health UI.
+**Deliver:** the custom health-icon hover interaction using the owner's asset, and one window showing Tokens, XP, Trait Level, prestige, and a read-only positive-trait catalog. Display one Prestige total, with retained and newly earned components in its tooltip. Preserve the normal health UI.
 
-**Implemented:** independent health-hover button using the owner's ingame icon; tooltip; scrollable catalog with trait descriptions, server prices and unavailable reasons; separate state totals and responsive window size. Vanilla health behavior is preserved. A separate keybind is not added. Source and test details: [Phase 2 report](PHASE_2.md).
+**Implemented:** v0.3.1 opens through health only, with visible-button and reference-popup continuity. The approved three-panel layout has catalog search/filtering, compact descriptions, gold owned/selection styling, equal Tokens/Prestige emphasis, one Prestige total with tooltip components and a centered level/gold percentage bar. Sources and checks: [UI patch report](UI_PATCH_v0.3.1.md).
 
 **Pass when:** the pointer can move from the health icon onto the shop button without losing the menu; the window opens/closes correctly at supported UI scales; state updates correctly in dedicated play; relevant competing health-menu mods do not break the interaction.
 

@@ -22,6 +22,7 @@ $translationFixture = Join-Path $output 'translations.lua'
 & javac.exe -d $output (Join-Path $PSScriptRoot 'KahluaBehaviorCheck.java')
 if ($LASTEXITCODE -ne 0) { throw 'Could not compile the game-VM runner.' }
 $stages = @(
+    "_=$GamePath\stdlib.lua",
     "_=$tests\phase1_setup.lua",
     "_=$tests\phase2_setup.lua",
     "OMHTS_Bootstrap=$lua\shared\OMHTS_Bootstrap.lua",
@@ -36,6 +37,8 @@ $stages = @(
     "_=$tests\phase2_client.lua",
     "_=$translationFixture",
     "_=$tests\phase2_ui_setup.lua",
+    "OMHTS_Presentation=$lua\client\OMHTS_Presentation.lua",
+    "_=$tests\phase2_catalog.lua",
     "OMHTS_ShopWindow=$lua\client\OMHTS_ShopWindow.lua",
     "_=$lua\client\OMHTS_HealthButton.lua",
     "_=$tests\phase2_ui.lua"

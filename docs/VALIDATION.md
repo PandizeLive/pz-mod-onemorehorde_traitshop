@@ -1,6 +1,6 @@
 # Future validation checklist
 
-This is developer coverage tracking, not an owner-facing test script. See [PHASE_2.md](PHASE_2.md) for implemented shop/starting-Token behavior and automated/native evidence. [TEST_PHASE_2.md](TEST_PHASE_2.md) is the current eight-step solo test. Dedicated/hosted reconnect/restart, price-rounding, existing-save migration and UI/addon compatibility acceptance remain pending; prepare separate 4-8-step instructions when those sessions are selected. Reward earning and prestige creation-screen flows below remain future work.
+This is developer coverage tracking, not an owner-facing test script. See [PHASE_2.md](PHASE_2.md) for the foundation and [UI_PATCH_v0.3.1.md](UI_PATCH_v0.3.1.md) for the current UI revision. The owner reported the v0.3.0 solo lifecycle/purchase sequence passed; the reviewed log includes Horde Night, so standalone loading is not independently established by that log. [TEST_PHASE_2.md](TEST_PHASE_2.md) is the current six-step UI test. Dedicated/hosted reconnect/restart, price-rounding, existing-save migration and broader UI/addon compatibility acceptance remain pending; prepare separate 4-8-step instructions when those sessions are selected. Reward earning and prestige creation-screen flows below remain future work.
 
 ## Documentation pass
 
@@ -33,7 +33,9 @@ This is developer coverage tracking, not an owner-facing test script. See [PHASE
 
 - Purchases validate funds, ownership, conflicts, catalog eligibility, and actual trait effects.
 - Repeated purchase requests cannot double-spend or grant duplicate traits; failure leaves a recoverable balance/trait state.
-- Hovering reveals the button; moving onto it keeps it usable; clicking opens the shop without breaking health UI.
+- Only health hover reveals the button; hidden button coordinates do not. Moving onto the visible button keeps it usable; clicking opens the shop without breaking health UI.
+- Verify all three panels, price ordering, search/filter states, grey inspectable unavailable traits and gold owned/selection styling. A completed purchase transfers selection to the owned positive panel; all current negatives remain inspectable with removal disabled.
+- Verify resource tooltip breakdowns, equal Tokens/Prestige emphasis, centered level and gold percentage bar. Modded trait discovery must not bypass effect support or server purchase validation.
 - Verify icon scaling and coexistence with reference mods that modify the same UI area.
 - Before initial release, negative removal is unavailable. Later, verify default-off toggle, approved price formula, and actual effect removal separately.
 - Verify the exact labels Positive Cost Multiplier and Negative Cost Multiplier, their authoritative price calculations, and eventual whole-Token rounding. Keep exclusions separate from price controls.

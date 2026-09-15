@@ -6,7 +6,7 @@ Prepared September 14, 2026. The owner selected a separate private repository: [
 
 A separate repository keeps the addon's standalone releases, Workshop identity and change history independent of Horde Night. Both projects can share the local GitHub CLI and SteamCMD installation. Coordinated gameplay changes still need matching work in Horde Night; this repository choice does not implement that integration.
 
-The current package is **v0.2.0, Phase 1 persistence and lifecycle foundation**, with the owner-supplied mod-list icon. It is not yet a playable shop. Live player acceptance status is in [CHECKPOINT_2.md](CHECKPOINT_2.md).
+The current package is **v0.3.1, the Phase 2 shop UI revision**, with the owner-supplied icons. Current behavior and acceptance are recorded in [UI_PATCH_v0.3.1.md](UI_PATCH_v0.3.1.md).
 
 ## One launcher
 
@@ -34,7 +34,7 @@ Useful command-line forms from this directory:
 
 ## Tagged content and local installation
 
-The release tag is `v<modversion>` (currently `v0.3.0`). Work from a named development branch. The tag must be an ancestor of HEAD, and all `Contents` files must match it. Untracked files, including ignored build debris, are rejected. Tooling/documentation commits may follow the tag when packaged content is unchanged. Never move an existing release tag; use a new version/tag for changed packages.
+The release tag is `v<modversion>` (currently `v0.3.1`). Work from a named development branch. The tag must be an ancestor of HEAD, and all `Contents` files must match it. Untracked files, including ignored build debris, are rejected. Tooling/documentation commits may follow the tag when packaged content is unchanged. Never move an existing release tag; use a new version/tag for changed packages.
 
 Only `Contents/mods/OneMoreHorde_TraitShop` is installed. Default destinations are:
 

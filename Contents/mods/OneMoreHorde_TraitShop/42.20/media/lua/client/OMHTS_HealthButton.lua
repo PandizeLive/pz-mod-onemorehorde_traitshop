@@ -24,12 +24,22 @@ local function openShop(sidebar)
     TraitShop.toggleWindow(sidebar.chr)
 end
 
+---@param button ISButton
+---@return nil
+local function hideButton(button)
+    button:setVisible(false)
+    if button.tooltipUI then
+        button.tooltipUI:setVisible(false)
+        button.tooltipUI:removeFromUIManager()
+    end
+end
+
 ---@return nil
 function ISEquippedItem:prerender()
     originalPrerender(self)
-    if not self.healthBtn or not self:getIsVisible() then
+    if not self.healthBtn or not self:getIsVisible() or not self.healthBtn:getIsVisible() then
         if self.omhTraitShopButton then
-            self.omhTraitShopButton:setVisible(false)
+            hideButton(self.omhTraitShopButton)
         end
         return
     end
@@ -56,16 +66,29 @@ function ISEquippedItem:prerender()
     button:setY(self.healthBtn:getAbsoluteY())
     local mouseX = getMouseX()
     local mouseY = getMouseY()
-    local hover = contains(self.healthBtn, mouseX, mouseY) or contains(button, mouseX, mouseY)
-    if self.traitsPopup and contains(self.traitsPopup, mouseX, mouseY) then
+    local hover = self.healthBtn:isMouseOver()
+    if self.traitsPopup and self.traitsPopup:getIsVisible() and self.traitsPopup:isMouseOver()
+        and contains(self.healthBtn, mouseX, mouseY) then
         hover = true
     end
-    button:setVisible(hover and not self.chr:isDead())
+    if button:getIsVisible() and button:isMouseOver() then
+        hover = true
+    end
+    if button:getIsVisible() and self.traitsPopup and self.traitsPopup:getIsVisible()
+        and contains(self.traitsPopup, mouseX, mouseY) then
+        hover = true
+    end
+    if hover and not self.chr:isDead() then
+        button:setVisible(true)
+    else
+        hideButton(button)
+    end
 end
 
 ---@return nil
 function ISEquippedItem:removeFromUIManager()
     if self.omhTraitShopButton then
+        hideButton(self.omhTraitShopButton)
         self.omhTraitShopButton:removeFromUIManager()
         self.omhTraitShopButton = nil
     end

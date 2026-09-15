@@ -16,7 +16,8 @@ function fixtureList(values)
         isEmpty = function() return #values == 0 end }
 end
 CharacterTrait = {}
-CharacterTraitDefinition = { getCharacterTraitDefinition = function() return nil end }
+CharacterTraitDefinition = { getCharacterTraitDefinition = function() return nil end,
+    getTraits = function() return fixtureList({}) end }
 CharacterProfessionDefinition = { getCharacterProfessionDefinition = function()
     return { getCost = function() return 0 end, getGrantedTraits = function() return fixtureList({}) end }
 end }

@@ -9,6 +9,22 @@ local malformed = nativeRoundTrip(testPhase2Snapshot)
 malformed.offers[1].price = 0 / 0
 shop.acceptState(malformed)
 check(shop.getState(0).offers[1].price == 2, "NaN server quote rejected")
+malformed = nativeRoundTrip(testPhase2Snapshot)
+malformed.revision = malformed.revision + 1
+malformed.tokens = 999
+malformed.offers[2].id = malformed.offers[1].id
+shop.acceptState(malformed)
+check(shop.getState(0).tokens == 5, "duplicate dynamic offer IDs cannot enter cache")
+malformed = nativeRoundTrip(testPhase2Snapshot)
+malformed.revision = malformed.revision + 1
+malformed.spentTokens = 0 / 0
+shop.acceptState(malformed)
+check(shop.getState(0).revision == testPhase2Snapshot.revision, "nonfinite spending breakdown rejected")
+malformed = nativeRoundTrip(testPhase2Snapshot)
+malformed.revision = malformed.revision + 1
+for index = 11, 101 do malformed.offers[index] = { id = "test:large" .. index, price = 1, status = "available" } end
+shop.acceptState(malformed)
+check(shop.getState(0).revision == testPhase2Snapshot.revision, "oversized dynamic offer list rejected")
 testPackets = {}
 check(shop.purchase(testPlayers[1], "base:dextrous"), "UI sends selected authoritative quote")
 check(shop.purchasePending(0) and not shop.purchase(testPlayers[1], "base:fastreader"), "pending request prevents a second UI spend")

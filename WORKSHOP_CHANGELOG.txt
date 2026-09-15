@@ -1,10 +1,10 @@
-v0.3.0
+v0.3.1
 
-Positive trait shop
-- Added the owner's health-hover icon and shop window with descriptions, prices and availability.
-- Added ten verified positive traits, server-authoritative purchases and Positive Cost Multiplier.
-- New characters receive unused creation points as starting Tokens exactly once.
-- Added purchase receipts, reconnect recovery, native trait synchronization and safe save migration.
-
-Development status
-- XP rewards, prestige character-creation bonuses, negative removal and Horde Night scoring remain later work.
+Trait Shop UI revision
+- Fixed invisible shop-button hover activation; enter through health and move onto the visible button.
+- Added the three-panel catalog/current-positive/current-negative layout, search and availability filters.
+- Expanded displayed traits to the loaded registry, including modded traits, sorted by price.
+- Added gold owned/selection styling, compact descriptions, equal Tokens/Prestige emphasis and hover breakdowns.
+- Added a gold percentage XP bar; progression remains deferred and reads 0% in this build.
+- Added explicit compatibility registration for verified membership-only modded traits.
+- Negative removal, XP rewards, prestige creation bonuses and Horde Night scoring remain later work.

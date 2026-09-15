@@ -1,6 +1,4 @@
 testStage = "UI lifecycle and hover geometry"
-function math.min(a, b) if a < b then return a end return b end
-function math.max(a, b) if a > b then return a end return b end
 UIFont = { Small = 1, Medium = 2 }
 testFontHeight = 18
 testScreenWidth = 1280
@@ -14,8 +12,10 @@ function getCore()
         getScreenHeight = function() return testScreenHeight end }
 end
 function getTextManager()
-    return { getFontHeight = function() return testFontHeight end }
+    return { getFontHeight = function() return testFontHeight end,
+        MeasureStringX = function(self, font, text) return #text * testFontHeight * 0.45 end }
 end
+function string.sort(a, b) return a > b end
 function getText(key, a, b, c)
     local text = UI_EN[key]
     if not text then error("Missing translation: " .. key) end
@@ -48,7 +48,13 @@ function Panel:instantiate()
     self:createChildren()
 end
 function Panel:createChildren() end
-function Panel:addChild(child) self.children[#self.children + 1] = child; child.parent = self end
+local nextUIId = 100
+function Panel:addChild(child)
+    nextUIId = nextUIId + 1
+    child.ID = nextUIId
+    self.children[child.ID] = child
+    child.parent = self
+end
 function Panel:addToUIManager() testUI[self] = true end
 function Panel:removeFromUIManager() testUI[self] = nil end
 function Panel:bringToTop() end
@@ -57,6 +63,11 @@ function Panel:getIsVisible() return self.visible end
 function Panel:setVisible(value) self.visible = value end
 function Panel:setEnable(value) self.enable = value end
 function Panel:setTitle(value) self.title = value end
+function Panel:setFont(value) self.font = value end
+function Panel:isMouseOver()
+    return self.visible and testMouseX >= self:getAbsoluteX() and testMouseY >= self:getAbsoluteY()
+        and testMouseX < self:getAbsoluteX() + self.width and testMouseY < self:getAbsoluteY() + self.height
+end
 function Panel:setX(value) self.x = value end
 function Panel:setY(value) self.y = value end
 function Panel:getAbsoluteX()
@@ -84,15 +95,26 @@ function Panel:clear() self.items = {}; self.selected = 1; self.scroll = 0 end
 function Panel:addItem(text, value)
     self.items[#self.items + 1] = { text = text, item = value, index = #self.items + 1 }
 end
+function Panel:setOnMouseDownFunction(target, callback) self.target = target; self.onmousedown = callback end
+function Panel:setPlaceholderText(value) self.placeholder = value end
+function Panel:setClearButton(value) self.clearButton = value end
+function Panel:getInternalText() return self.title end
+function Panel:setText(value) self.title = value end
 function Panel:drawRect(x, y, w, h) check(w >= 0 and h >= 0, "UI rectangle has nonnegative dimensions") end
 function Panel:drawTextureScaled() end
 function Panel:drawText(text, x, y) testDraws[#testDraws + 1] = { text = text, x = x, y = y } end
 Panel.drawTextRight = Panel.drawText
+Panel.drawTextCentre = Panel.drawText
+Panel.drawRectBorder = Panel.drawRect
 ISCollapsableWindow = Panel:derive("ISCollapsableWindow")
 ISScrollingListBox = Panel:derive("ISScrollingListBox")
 ISRichTextPanel = Panel:derive("ISRichTextPanel")
 ISPanel = Panel
 ISButton = Panel:derive("ISButton")
+ISTextEntryBox = Panel:derive("ISTextEntryBox")
+function ISTextEntryBox:new(text, x, y, width, height)
+    return Panel.new(self, x, y, width, height, text)
+end
 ISEquippedItem = Panel:derive("ISEquippedItem")
 function ISEquippedItem:prerender() self.vanillaRenders = (self.vanillaRenders or 0) + 1 end
 function ISEquippedItem:removeFromUIManager() self.vanillaRemoved = true; testUI[self] = nil end

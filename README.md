@@ -2,7 +2,7 @@
 
 Standalone trait progression and purchasing addon for Project Zomboid Build 42, with optional OMH: Horde Night integration.
 
-**Status: Phases 1 and 2 implemented, v0.3.0; combined live acceptance pending.** The health-hover shop offers ten verified positive traits, authoritative Token purchases and starting Tokens from unused creation points. Persistent purchase receipts recover paid traits on reconnect, and v0.2.0 saves migrate without resetting counters. XP rewards, prestige creation bonuses, negative removal and OMH score integration remain later phases. There is no Workshop item yet.
+**Status: Phases 1 and 2 implemented; UI patch v0.3.1.** The owner reported the v0.3.0 solo purchase/reload/death test passed. The revised health-hover shop has three trait panels, registry discovery including modded traits, search, price sorting and compact resource tooltips. Ten verified native traits are purchasable; additional verified membership-only traits can register through the compatibility hook. Unsupported traits remain visible and disabled. Starting Tokens and saved purchase recovery remain active. XP rewards, prestige creation bonuses, negative removal and OMH score integration remain later phases. Live multiplayer acceptance is pending; there is no Workshop item yet.
 
 Players earn XP, gain Trait Levels, and receive Tokens to purchase traits. Every five earned Trait Levels awards one Prestige Point for future character creation; Token count never determines prestige. Tokens and Trait Level reset on death. The next character receives the available prestige as bonus creation points and retains 30% as prestige after entering the world, rounded to the nearest whole point. Prestige is not an undiminished permanent lifetime total.
 
@@ -10,7 +10,8 @@ Players earn XP, gain Trait Levels, and receive Tokens to purchase traits. Every
 
 - [Roadmap](docs/ROADMAP.md): six phases and sequential Checkpoints 1-14. Phases 1-2 are implemented; their remaining owner checks are combined. Phases 3-6 have not started.
 - [Phase 2 report](docs/PHASE_2.md): shop, catalog, starting Tokens, purchase recovery, source evidence and verification limits.
-- [Test now: eight-step solo check](docs/TEST_PHASE_2.md): shop purchases, reload, death and replacement, with expected balances.
+- [v0.3.1 UI patch](docs/UI_PATCH_v0.3.1.md): three-panel layout, registry discovery, mod compatibility hook and source evidence.
+- [Test now: six-step UI check](docs/TEST_PHASE_2.md): health hover, layout, search, one purchase and reload.
 - [Checkpoint 1 report](docs/CHECKPOINT_1.md): package identity, source-backed feasibility, integration gaps, actual results, and the singleplayer test.
 - [Checkpoint 2 report](docs/CHECKPOINT_2.md): implemented persistence/authority, automated evidence, limits, and normal Steam tests.
 - [Release tooling](docs/RELEASE_TOOLING.md): OMH.cmd, local install/restore, private GitHub mirror, Workshop setup, and verification.

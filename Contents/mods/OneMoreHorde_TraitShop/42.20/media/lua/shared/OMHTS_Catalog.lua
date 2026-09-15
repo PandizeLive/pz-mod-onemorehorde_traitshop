@@ -1,4 +1,5 @@
 local Catalog = {}
+Catalog.MAX_PURCHASE_TRAITS = 100
 Catalog.entries = {
     { id = "base:dextrous", constant = "DEXTROUS" },
     { id = "base:fastreader", constant = "FAST_READER" },
@@ -11,27 +12,56 @@ Catalog.entries = {
     { id = "base:fasthealer", constant = "FAST_HEALER" },
     { id = "base:organized", constant = "ORGANIZED" },
 }
+local approved = {}
+for index = 1, #Catalog.entries do
+    approved[Catalog.entries[index].id] = true
+end
+local registryTypes = {}
+local registrySize = -1
+
+---@return ArrayList
+function Catalog.definitions()
+    local definitions = CharacterTraitDefinition.getTraits()
+    registryTypes = {}
+    for index = 0, definitions:size() - 1 do
+        local trait = definitions:get(index):getType()
+        registryTypes[tostring(trait)] = trait
+    end
+    registrySize = definitions:size()
+    return definitions
+end
+
+---@param id string
+---@return boolean
+function Catalog.registerMembershipTrait(id)
+    if type(id) ~= "string" or #id > 128
+        or not string.match(id, "^[a-z0-9_.%-]+:[a-z0-9_./%-]+$") then return false end
+    if approved[id] then return true end
+    if #Catalog.entries >= Catalog.MAX_PURCHASE_TRAITS then return false end
+    approved[id] = true
+    Catalog.entries[#Catalog.entries + 1] = { id = id }
+    registrySize = -1
+    return true
+end
 
 ---@nodiscard
 ---@param id string
 ---@return CharacterTraitDefinition|nil
 function Catalog.definition(id)
-    for index = 1, #Catalog.entries do
-        local entry = Catalog.entries[index]
-        if entry.id == id then
-            local trait = CharacterTrait[entry.constant]
-            if not trait then return nil end
-            return CharacterTraitDefinition.getCharacterTraitDefinition(trait)
-        end
+    if registrySize < 0 then
+        Catalog.definitions()
     end
-    return nil
+    local trait = registryTypes[id]
+    if not trait then return nil end
+    return CharacterTraitDefinition.getCharacterTraitDefinition(trait)
 end
 
 ---@nodiscard
 ---@param definition CharacterTraitDefinition|nil
 ---@return boolean
 function Catalog.supported(definition)
-    return definition ~= nil and not definition:isFree() and definition:getCost() > 0
+    return definition ~= nil and approved[tostring(definition:getType())] == true
+        and not definition:isFree() and definition:getCost() > 0
         and definition:getXpBoosts():isEmpty() and definition:getGrantedTraits():isEmpty()
         and definition:getGrantedRecipes():isEmpty()
         and (not (isClient() or isServer()) or not definition:isDisabledInMultiplayer())
@@ -52,7 +82,7 @@ end
 ---@return number|nil
 function Catalog.price(definition)
     local multiplier = Catalog.multiplier()
-    if not multiplier or not Catalog.supported(definition) then return nil end
+    if not multiplier or not definition or definition:getCost() <= 0 then return nil end
     local price = math.ceil(definition:getCost() * multiplier)
     if price < 1 or price > 1000000000 then return nil end
     return price
@@ -73,4 +103,11 @@ function Catalog.conflicts(player, definition)
     return false
 end
 
+---@return nil
+local function resetRegistry()
+    registryTypes = {}
+    registrySize = -1
+end
+
+Events.OnInitGlobalModData.Add(resetRegistry)
 return Catalog

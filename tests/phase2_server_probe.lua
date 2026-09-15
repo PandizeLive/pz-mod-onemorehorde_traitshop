@@ -10,6 +10,20 @@ local function verifyNativeShop()
     assert(getText("Sandbox_OMHTraitShop_PositiveCostMultiplier") == "Positive Cost Multiplier", "Sandbox JSON translations did not load")
     local store = ModData.getOrCreate("OMHTraitShop_State_v1")
     assert(State.initialize(store))
+    local definitions = Catalog.definitions()
+    assert(definitions:size() > 10, "full native trait registry missing")
+    local unverified = 0
+    for index = 0, definitions:size() - 1 do
+        local definition = definitions:get(index)
+        assert(Catalog.definition(tostring(definition:getType())) == definition, "registry ID lookup mismatch")
+        if definition:getCost() > 0 and not definition:isFree() and not Catalog.supported(definition) then
+            assert(Catalog.price(definition) > 0, "unverified trait lacks display price")
+            unverified = unverified + 1
+        end
+    end
+    assert(unverified > 0, "discovery unexpectedly enables every positive trait")
+    assert(string.find(getText("UI_OMHTS_PrestigeTip", "1", "2"), "Retained") ~= nil)
+    print("[OMHTS TEST] native registry " .. definitions:size() .. "; visible unverified positives " .. unverified)
     for index = 1, #Catalog.entries do
         local entry = Catalog.entries[index]
         local definition = Catalog.definition(entry.id)

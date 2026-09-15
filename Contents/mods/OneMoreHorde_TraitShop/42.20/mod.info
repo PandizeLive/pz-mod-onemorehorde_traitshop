@@ -1,6 +1,6 @@
 name=OMH: Trait Shop
 id=OneMoreHorde_TraitShop
-modversion=0.3.0
+modversion=0.3.1
 versionMin=42.20.0
 icon=icon.png
 description=Purchase verified positive traits through the health-hover shop. Unused creation points become starting Tokens for new characters. Persistent server-owned state; XP rewards and prestige creation bonuses arrive in later builds.

@@ -36,6 +36,11 @@ function Shop.offer(player, record, id)
     local price = Catalog.price(definition)
     if not price then return "settings", 0 end
     if record.life.purchases[id] or player:hasTrait(definition:getType()) then return "owned", price end
+    local purchaseCount = 0
+    for _ in pairs(record.life.purchases) do
+        purchaseCount = purchaseCount + 1
+        if purchaseCount >= Catalog.MAX_PURCHASE_TRAITS then return "limit", price end
+    end
     if Catalog.conflicts(player, definition) then return "conflict", price end
     if record.life.status ~= "alive" or player:isDead() then return "dead", price end
     if record.life.creation.status == "pending" then return "loading", price end
@@ -48,6 +53,10 @@ end
 ---@return table
 function Shop.snapshot(player, record)
     local snapshot = State.snapshot(record, player:getPlayerNum())
+    snapshot.spentTokens = 0
+    for _, price in pairs(record.life.purchases) do
+        snapshot.spentTokens = snapshot.spentTokens + price
+    end
     snapshot.offers = {}
     for index = 1, #Catalog.entries do
         local id = Catalog.entries[index].id

@@ -30,6 +30,7 @@ public final class KahluaBehaviorCheck {
         Method call = threadType.getMethod("call", Object.class, Object[].class);
         Method get = tableType.getMethod("rawget", Object.class);
         Method set = tableType.getMethod("rawset", Object.class, Object.class);
+        set.invoke(env, "testUnicodeLabel", "A" + "\uD83D\uDE00".repeat(4));
         Class<?> functionType = Class.forName("se.krka.kahlua.vm.JavaFunction");
         Object roundTrip = java.lang.reflect.Proxy.newProxyInstance(functionType.getClassLoader(), new Class<?>[] {functionType}, (proxy, method, values) -> {
             if (!method.getName().equals("call")) return null;

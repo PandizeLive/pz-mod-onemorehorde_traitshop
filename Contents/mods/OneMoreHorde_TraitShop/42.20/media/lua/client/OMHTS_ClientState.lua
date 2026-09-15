@@ -8,9 +8,9 @@ local purchases = {}
 local nextRequest = 0
 local counters = { "lifeId", "revision", "tokens", "level", "retainedPrestige", "earnedPrestige", "pendingPrestige", "startingTokens" }
 local statuses = { available = true, owned = true, conflict = true, dead = true, loading = true,
-    funds = true, unsupported = true, settings = true }
+    funds = true, unsupported = true, settings = true, limit = true }
 local results = { purchased = true, busy = true, invalid = true, dead = true, stale = true, price_changed = true,
-    owned = true, conflict = true, funds = true, unsupported = true, settings = true, loading = true }
+    owned = true, conflict = true, funds = true, unsupported = true, settings = true, loading = true, limit = true }
 
 ---@param snapshot any
 ---@return nil
@@ -20,7 +20,7 @@ function TraitShop.acceptState(snapshot)
         or snapshot.playerNum > 3 or snapshot.playerNum ~= math.floor(snapshot.playerNum)
         or (snapshot.status ~= "alive" and snapshot.status ~= "dead")
         or type(snapshot.unofficial) ~= "boolean" or type(snapshot.offers) ~= "table"
-        or #snapshot.offers ~= #Catalog.entries then return end
+        or #snapshot.offers > Catalog.MAX_PURCHASE_TRAITS then return end
     if snapshot.creationStatus ~= "pending" and snapshot.creationStatus ~= "granted"
         and snapshot.creationStatus ~= "legacy" and snapshot.creationStatus ~= "invalid" then return end
     local copy = {}
@@ -32,13 +32,18 @@ function TraitShop.acceptState(snapshot)
         copy[key] = value
     end
     if type(snapshot.xp) ~= "number" or not (snapshot.xp >= 0 and snapshot.xp <= 1000000000) then return end
+    if type(snapshot.spentTokens) ~= "number" or snapshot.spentTokens < 0
+        or snapshot.spentTokens > 100000000000 or snapshot.spentTokens ~= math.floor(snapshot.spentTokens) then return end
+    copy.spentTokens = snapshot.spentTokens
     copy.offers = {}
-    for index = 1, #Catalog.entries do
+    local seen = {}
+    for index = 1, #snapshot.offers do
         local offer = snapshot.offers[index]
-        if type(offer) ~= "table" or offer.id ~= Catalog.entries[index].id
+        if type(offer) ~= "table" or type(offer.id) ~= "string" or #offer.id > 128 or seen[offer.id]
             or not statuses[offer.status] or type(offer.price) ~= "number"
             or offer.price < 0 or offer.price > 1000000000 or offer.price ~= math.floor(offer.price) then return end
         copy.offers[index] = { id = offer.id, status = offer.status, price = offer.price }
+        seen[offer.id] = true
     end
     local previous = states[snapshot.playerNum]
     if previous and (snapshot.lifeId < previous.lifeId
