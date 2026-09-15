@@ -1,6 +1,6 @@
 # Sandbox options specification
 
-Design only; labels below are working labels unless quoted from the owner. XP defaults, caps, and the complete official preset remain undecided. The owner has specified the initial 0.50 score multiplier and 30% prestige retention default.
+Positive Cost Multiplier is implemented in v0.3.0; the remaining options below are design specifications for later phases. XP defaults, caps, and the complete official preset remain undecided. The owner has specified the initial 0.50 score multiplier and 30% prestige retention default.
 
 | Setting | Behavior / default | Status |
 |---|---|---|
@@ -17,7 +17,7 @@ Design only; labels below are working labels unless quoted from the owner. XP de
 | Prestige Retention Percentage | Retain 30% of the previous available prestige after the next character receives its full creation bonus and enters the world. Repeats once per life transition; round to nearest whole point with no minimum-one guarantee. | Separate setting, 30% default, and nearest-whole rounding confirmed; label working. |
 | Allow Negative Trait Removal | Disabled by default; implemented after initial release. | Confirmed; unavailable until feature exists. |
 | Negative Cost Multiplier | Multiply a removable negative trait's absolute creation-point value by this value. Whether to add the earlier proposed flat +2 remains open. | Owner-approved label; default and rounding pending; later feature. |
-| Positive Cost Multiplier | Multiply a purchasable positive trait's absolute creation-point value by this value. Catalog exclusions are handled separately. | Owner-approved label; default, rounding, and approved catalog pending. |
+| Positive Cost Multiplier | Multiply the native positive creation-point cost by this value, then round up to a whole Token. Default 1.0; range 0.1-100. Catalog exclusions are separate. | Implemented in Phase 2 with ten verified traits; this does not finalize the official preset. |
 | Trait Shop score multiplier | 0.50 for official scoring, applied after existing score modifiers. | Initial owner value; future tuning allowed through a versioned official policy. |
 
 Score reductions compose by multiplying the remaining-score factors, never by adding reduction percentages. See [OMH_INTEGRATION.md](OMH_INTEGRATION.md). Prestige retention is a separate progression setting, not a score modifier.

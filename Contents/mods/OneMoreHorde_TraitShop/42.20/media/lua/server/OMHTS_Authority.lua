@@ -2,6 +2,8 @@ if isClient() then return end
 
 local TraitShop = require("OMHTS_Bootstrap")
 local State = require("OMHTS_State")
+local Creation = require("OMHTS_Creation")
+local Shop = require("OMHTS_Shop")
 local Authority = {}
 TraitShop.Authority = Authority
 local store
@@ -27,7 +29,7 @@ end
 ---@param binding table
 ---@return nil
 local function sendSnapshot(player, binding)
-    local snapshot = State.snapshot(binding.record, player:getPlayerNum())
+    local snapshot = Shop.snapshot(player, binding.record)
     if isServer() then
         sendServerCommand(player, "OMHTraitShop", "state", snapshot)
     elseif TraitShop.acceptState then
@@ -53,7 +55,10 @@ local function bind(player)
         print("[OMH Trait Shop] state unavailable: " .. result .. "; saved data preserved")
         return nil
     end
-    current = { record = record, lifeId = record.life.id, lastRequest = -10000 }
+    Creation.settle(player, record)
+    Shop.reconcile(player, record, true)
+    current = { record = record, lifeId = record.life.id, lastRequest = -10000,
+        lastPurchase = -10000, lastBusy = -10000 }
     bindings[player] = current
     print("[OMH Trait Shop] state " .. result .. "; slot=" .. player:getPlayerNum()
         .. "; life=" .. record.life.id .. "; revision=" .. record.revision)
@@ -111,6 +116,7 @@ local function scanPlayers()
             else
                 local binding = bind(player)
                 if binding and binding.record.life.id == binding.lifeId then
+                    Shop.reconcile(player, binding.record, false)
                     local hours = player:getHoursSurvived()
                     if State.isXP(hours) and hours > binding.record.life.hours then
                         binding.record.life.hours = hours
@@ -152,7 +158,12 @@ end
 ---@param args table
 ---@return nil
 local function onClientCommand(module, command, player, args)
-    if module ~= "OMHTraitShop" or command ~= "requestState" or type(args) ~= "table" then return end
+    if module ~= "OMHTraitShop" or type(args) ~= "table" then return end
+    if command == "purchase" then
+        Authority.purchase(player, args)
+        return
+    end
+    if command ~= "requestState" then return end
     for _ in pairs(args) do
         return
     end
@@ -161,6 +172,7 @@ local function onClientCommand(module, command, player, args)
     local now = getTimestampMs()
     if now - binding.lastRequest < 1000 then return end
     binding.lastRequest = now
+    Shop.reconcile(player, binding.record, true)
     sendSnapshot(player, binding)
 end
 
@@ -169,7 +181,36 @@ end
 function Authority.getState(player)
     local binding = bind(player)
     if not binding then return nil end
-    return State.snapshot(binding.record, player:getPlayerNum())
+    return Shop.snapshot(player, binding.record)
+end
+
+---@param player IsoPlayer
+---@param args table
+---@return string
+function Authority.purchase(player, args)
+    local binding = bind(player)
+    if not binding then return "unavailable" end
+    local now = getTimestampMs()
+    local result
+    if now - binding.lastPurchase < 500 then
+        if now - binding.lastBusy < 500 then return "busy" end
+        binding.lastBusy = now
+        result = "busy"
+    else
+        binding.lastPurchase = now
+        result = Shop.purchase(player, binding.record, args)
+    end
+    local snapshot = Shop.snapshot(player, binding.record)
+    snapshot.result = result
+    if type(args) == "table" and State.isCounter(args.revision) then
+        snapshot.requestRevision = args.revision
+    end
+    if isServer() then
+        sendServerCommand(player, "OMHTraitShop", "state", snapshot)
+    elseif TraitShop.acceptState then
+        TraitShop.acceptState(snapshot)
+    end
+    return result
 end
 
 ---@param player IsoPlayer

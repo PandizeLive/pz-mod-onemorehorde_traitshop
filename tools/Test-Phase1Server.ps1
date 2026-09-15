@@ -1,14 +1,17 @@
 [CmdletBinding()]
-param([string]$GamePath = 'C:\Program Files (x86)\Steam\steamapps\common\ProjectZomboid')
+param(
+    [string]$GamePath = 'C:\Program Files (x86)\Steam\steamapps\common\ProjectZomboid',
+    [ValidateSet(1, 2)][int]$Phase = 1
+)
 
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path -Parent $PSScriptRoot
-$cache = Join-Path $repo ('.local\phase1-server-' + [guid]::NewGuid().ToString('N'))
+$cache = Join-Path $repo ('.local\phase' + $Phase + '-server-' + [guid]::NewGuid().ToString('N'))
 $mods = Join-Path $cache 'mods'
 $settings = Join-Path $cache 'Server'
 New-Item -ItemType Directory -Path $mods, $settings -Force | Out-Null
 Copy-Item -LiteralPath (Join-Path $repo 'Contents\mods\OneMoreHorde_TraitShop') -Destination $mods -Recurse
-Copy-Item -LiteralPath (Join-Path $repo 'tests\phase1_server_probe.lua') -Destination (Join-Path $mods 'OneMoreHorde_TraitShop\42.20\media\lua\server\ZZ_Phase1Probe.lua')
+Copy-Item -LiteralPath (Join-Path $repo "tests\phase${Phase}_server_probe.lua") -Destination (Join-Path $mods 'OneMoreHorde_TraitShop\42.20\media\lua\server\ZZ_StateProbe.lua')
 @'
 PauseEmpty=true
 Open=false
@@ -52,6 +55,7 @@ for ($stage = 1; $stage -le 3; $stage++) {
                     $line = $task.GetAwaiter().GetResult()
                     if ($null -eq $line) { Set-Variable -Name $stream -Value $null; break }
                     $lines.Add($line)
+                    if ($line.Contains('ZZ_StateProbe.lua:')) { throw "Native probe failed; inspect $cache." }
                     if ($line.Contains("[OMHTS TEST] disk stage $stage ready")) { $ready = $true }
                     $reader = if ($stream -eq 'stdout') { $process.StandardOutput } else { $process.StandardError }
                     $task = $reader.ReadLineAsync()

@@ -11,6 +11,24 @@ function require(name) return __modules[name] end
 function isClient() return testSide == "client" end
 function isServer() return testSide == "server" end
 function getTimestampMs() return testClock end
+function fixtureList(values)
+    return { size = function() return #values end, get = function(self, index) return values[index + 1] end,
+        isEmpty = function() return #values == 0 end }
+end
+CharacterTrait = {}
+CharacterTraitDefinition = { getCharacterTraitDefinition = function() return nil end }
+CharacterProfessionDefinition = { getCharacterProfessionDefinition = function()
+    return { getCost = function() return 0 end, getGrantedTraits = function() return fixtureList({}) end }
+end }
+function getSandboxOptions()
+    return { getOptionByName = function(self, key)
+        return { getValue = function()
+            if key == "CharacterFreePoints" then return 0 end
+            return 1
+        end }
+    end }
+end
+function sendSyncPlayerFields(player, flags) end
 function instanceof(object, name) return object.kind == name end
 function getNumActivePlayers() return #testPlayers end
 function getSpecificPlayer(index) return testPlayers[index + 1] end
@@ -49,7 +67,10 @@ function player(name, slot, characterId, hours)
     local value = { kind = "IsoPlayer", name = name, slot = slot, characterId = characterId, hours = hours, dead = false, modData = {} }
     function value:getPlayerNum() return self.slot end
     function value:getUsername() return self.name end
-    function value:getDescriptor() return { getID = function() return self.characterId end } end
+    function value:getDescriptor() return { getID = function() return self.characterId end,
+        getCharacterProfession = function() return "unemployed" end } end
+    function value:getCharacterTraits() return { getKnownTraits = function() return fixtureList({}) end } end
+    function value:hasTrait(trait) return false end
     function value:getHoursSurvived() return self.hours end
     function value:isDead() return self.dead end
     function value:getModData() return self.modData end

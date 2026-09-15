@@ -2,7 +2,7 @@
 
 This is the active phase/checkpoint roadmap. It organizes the approved product direction; creating the roadmap does not authorize implementation or publication.
 
-**Current status:** Phase 1 implementation is present in v0.2.0. Checkpoint 2 persistence and authority passed 53 checks in the installed game's Kahlua VM, including binary serialization, plus three native dedicated-server save/restart cycles. Live singleplayer initialization, reload and death/replacement passed alongside Horde Night/Cure Defense. On September 15 the owner deferred the dedicated player test until after Phase 2, so it can exercise the shop and purchases as well as persistence. This test is no longer a prerequisite for starting Phase 2; full live acceptance remains pending. Checkpoints 3-14 have not started. Checkpoint numbering is sequential across phases, as requested by the owner.
+**Current status:** Phases 1 and 2 are implemented in v0.3.0. All 53 foundation and 93 Phase 2 game-VM assertions pass; the native dedicated probe verifies purchases, trait effects and receipt recovery across saves/restarts. The owner authorized both Phase 2 checkpoints and deferred live dedicated acceptance until they were implemented. The [complete combined test checklist](TEST_PHASE_2.md) now covers the shop and remaining foundation checks. Checkpoints 5-14 have not started. Checkpoint numbering is sequential across phases, as requested by the owner.
 
 Initial release follows Phase 5 and includes standalone progression, positive-trait purchasing, prestige, optional Horde Night rewards, and official-score integration. Negative-trait removal is Phase 6, after release. This ordering is proposed for execution; changes to scope or checkpoint boundaries should be recorded here.
 
@@ -21,8 +21,8 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 
 | Phase | Outcome | Checkpoints | Status |
 |---|---|---|---|
-| 1. Foundation | Loadable standalone package and reliable character/account state | 1-2 | Implemented; remaining live checks batched after Phase 2 |
-| 2. Positive trait shop | Usable health-hover entry and safe positive-trait purchases | 3-4 | Pending |
+| 1. Foundation | Loadable standalone package and reliable character/account state | 1-2 | Implemented; combined live acceptance pending |
+| 2. Positive trait shop | Usable health-hover entry and safe positive-trait purchases | 3-4 | Implemented in v0.3.0; combined live acceptance pending |
 | 3. Progression and prestige | XP rewards, Trait Levels, death resets, and next-character bonuses | 5-7 | Pending |
 | 4. Horde Night integration | Horde XP, official lock, persistent eligibility, and score display | 8-10 | Pending |
 | 5. Initial release | Verified standalone and OMH builds, documentation, release package | 11-12 | Pending |
@@ -60,7 +60,7 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 
 **Deliver:** the custom health-icon hover interaction using the owner's asset, and one window showing Tokens, XP, Trait Level, prestige, and a read-only positive-trait catalog. Clearly distinguish retained and newly earned prestige. Preserve the normal health UI.
 
-**Decisions needed:** initial catalog presentation; optional tooltip/keybind only if chosen. UI integration must follow the findings from Checkpoint 1.
+**Implemented:** independent health-hover button using the owner's ingame icon; tooltip; scrollable catalog with trait descriptions, server prices and unavailable reasons; separate state totals and responsive window size. Vanilla health behavior is preserved. A separate keybind is not added. Source and test details: [Phase 2 report](PHASE_2.md).
 
 **Pass when:** the pointer can move from the health icon onto the shop button without losing the menu; the window opens/closes correctly at supported UI scales; state updates correctly in dedicated play; relevant competing health-menu mods do not break the interaction.
 
@@ -68,7 +68,7 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 
 **Deliver:** Positive Cost Multiplier, a small verified positive-trait catalog, authoritative purchase validation and actual trait effect activation. Convert unused creation points into starting Tokens once. Protect against duplicate requests and interrupted purchases. Keep negative removal unavailable.
 
-**Decisions needed:** positive multiplier default, whole-Token price rounding, initial approved traits, and treatment of unused prestige-derived creation points. Exclusions stay separate from price controls.
+**Implemented:** ten verified native traits; Positive Cost Multiplier default 1.0 with upward whole-Token rounding; authoritative native-budget reconstruction for new-life grants; per-life debit/receipt records, native trait sync and reconnect recovery; schema-1 migration with no retroactive grant. Prestige creation bonuses remain Phase 3, including their contribution to unused creation points. Exclusions stay separate from price controls. The owner authorized all Phase 2 rather than a separate stop between Checkpoints 3 and 4.
 
 **Pass when:** a character with five unused creation points receives five Tokens once and no levels/prestige; purchases consume the correct amount and activate effects; conflicts, duplicates, and insufficient funds are rejected. Singleplayer and one-player dedicated confirm reconnect and interrupted-purchase recovery without free traits or lost payments.
 

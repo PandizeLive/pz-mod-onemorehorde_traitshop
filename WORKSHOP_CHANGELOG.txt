@@ -1,9 +1,10 @@
-v0.2.0
+v0.3.0
 
-Foundation
-- Added save-scoped character state for Tokens, XP, Trait Level and separate prestige balances.
-- Added server-owned state snapshots, reconnect handling and repeat-safe death settlement.
-- Death clears Tokens, Trait Level and partial XP while reserving prestige for the later creation flow.
+Positive trait shop
+- Added the owner's health-hover icon and shop window with descriptions, prices and availability.
+- Added ten verified positive traits, server-authoritative purchases and Positive Cost Multiplier.
+- New characters receive unused creation points as starting Tokens exactly once.
+- Added purchase receipts, reconnect recovery, native trait synchronization and safe save migration.
 
 Development status
-- Trait purchases, reward earning and prestige character-creation bonuses are not implemented yet.
+- XP rewards, prestige character-creation bonuses, negative removal and Horde Night scoring remain later work.

@@ -1,6 +1,6 @@
 name=OMH: Trait Shop
 id=OneMoreHorde_TraitShop
-modversion=0.2.0
+modversion=0.3.0
 versionMin=42.20.0
 icon=icon.png
-description=Development foundation for OMH: Trait Shop. Phase 1 provides persistent character state and startup diagnostics. Trait purchasing and progression are not implemented yet.
+description=Purchase verified positive traits through the health-hover shop. Unused creation points become starting Tokens for new characters. Persistent server-owned state; XP rewards and prestige creation bonuses arrive in later builds.

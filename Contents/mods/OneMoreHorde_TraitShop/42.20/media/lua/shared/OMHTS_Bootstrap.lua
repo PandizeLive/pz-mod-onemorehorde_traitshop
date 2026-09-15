@@ -3,17 +3,17 @@ if existing then return existing end
 
 local TraitShop = {
     MOD_ID = "OneMoreHorde_TraitShop",
-    VERSION = "0.2.0",
-    CHECKPOINT = 2,
+    VERSION = "0.3.0",
+    CHECKPOINT = 4,
 }
 OneMoreHordeTraitShop = TraitShop
 
 if isClient() then
-    print("[OMH Trait Shop] v0.2.0 shared loaded: multiplayer-client")
+    print("[OMH Trait Shop] v0.3.0 shared loaded: multiplayer-client")
 elseif isServer() then
-    print("[OMH Trait Shop] v0.2.0 shared loaded: server")
+    print("[OMH Trait Shop] v0.3.0 shared loaded: server")
 else
-    print("[OMH Trait Shop] v0.2.0 shared loaded: singleplayer")
+    print("[OMH Trait Shop] v0.3.0 shared loaded: singleplayer")
 end
 
 return TraitShop

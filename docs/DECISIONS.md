@@ -26,12 +26,15 @@ Recorded September 14, 2026 from the OMH: Trait Shop conversation. New owner ins
 20. Phase 1 implementation uses the authenticated server username plus native player slot for multiplayer records, and the local player slot within each singleplayer save. Split-screen slots remain separate; changing server login identity starts a separate record. This matches the native dedicated player-profile scope without rounding 64-bit Steam IDs through Lua numbers.
 21. Provide complete player test instructions, prerequisites, expected results and the final reporting point up front; do not drip-feed known steps across extra turns.
 22. September 15: defer the live dedicated player test until after Phase 2 so it covers shop access, purchases and actual balance/trait persistence along with Phase 1 lifecycle behavior. Batch remaining owner checks into that session. Continue automated and source-based verification during implementation; deferred live acceptance does not block starting Phase 2 and must not be described as passed.
+23. The owner authorized full Phase 2 implementation, both Checkpoints 3 and 4, using the three PZ skills and native/decompiled sources. v0.3.0 implements the health-hover shop and positive purchases; the complete combined owner test plan is TEST_PHASE_2.md.
+24. Phase 2 implementation choices: Positive Cost Multiplier defaults to 1.0 (range 0.1-100), prices round upward, and the initial catalog contains ten source-verified native traits requiring only membership effects. The tooltip is included; no additional keybind. Native costs and translations supply presentation. These defaults do not settle the later official scoring preset.
+25. Starting-Token conversion applies to new zero-age lives under the new code. Existing characters and migrated v0.2.0 records preserve counters without retroactive grants. Purchase receipts are per-life entitlements used to repair missing native trait membership; restoring full world backups is the supported persistence boundary.
 
 ## Open decisions
 
 | Topic | Unresolved choice | Recommendation / impact |
 |---|---|---|
-| Cost formulas | Multiplier defaults, Token rounding, and whether negative removal keeps the proposed flat +2. | Setting names are settled; a multiplier does not itself express a surcharge. Decide removal details with the later feature. |
+| Negative cost formula | Negative multiplier default/rounding and whether removal keeps the proposed flat +2. | Positive pricing is implemented in Phase 2; negative removal remains deferred. |
 | Prestige conversion | Can unused prestige-derived creation points also become starting Tokens? | Owner's general unused-points rule suggests yes, without prestige credit. Confirm this edge case. |
 | Official prestige provenance | What happens when custom-earned prestige enters a new character/run? | Persist provenance; do not silently treat it as official after changing settings. Decide whether to exclude that prestige from an official start or make the affected run unofficial. |
 | Official preset | XP rates/curve, prices, caps, eligible traits, prestige lifecycle and limits, future removal settings. | Must be explicit and versioned; 50% score alone cannot establish fairness. |
@@ -40,9 +43,9 @@ Recorded September 14, 2026 from the OMH: Trait Shop conversation. New owner ins
 | Hybrid kills | Stack ordinary and horde-zombie XP? | Recommend no double payout. |
 | Unique Player | Account identity and how long uniqueness lasts. | Recommend account-based identity; scope still pending. |
 | Survival rewards | Day/night definition, elapsed-time requirements, sleep, offline and time-skip treatment. | Owner relaxed horde attendance only; do not assume that settles survival timing. |
-| Initial catalog | Which positive traits are runtime-safe; prices and conflict handling. | Must be verified before sale. Broad negative removal support can wait. |
+| Catalog expansion | Additional positive traits requiring XP, skill or recipe initialization. | Phase 2 includes ten verified flag-based traits. Add adapters and tests before expanding. Broad negative removal remains deferred. |
 | Score detection | Enabled mod versus mere subscription; adding/removing during a run. | Recommend enabled runtime detection plus durable affected-run history. |
-| UI conveniences | Tooltip, optional keybind, exact menu integration. | Tooltip/keybind suggested; inspect vanilla and reference mod before UI work. |
+| UI conveniences | Optional keybind beyond the implemented hover button and tooltip. | Add only if desired; live scale and competing-popup checks remain in the test plan. |
 | Workshop presentation | Final cover, description, visibility and readiness for public release. | Tooling creates a private development item on first owner-run publication; live updates preserve existing presentation. No Workshop ID is invented or borrowed. |
 
 ## Superseded proposals
@@ -57,4 +60,4 @@ Recorded September 14, 2026 from the OMH: Trait Shop conversation. New owner ins
 
 ## Implementation boundary
 
-The owner authorized all Phase 1 in the [roadmap](ROADMAP.md), plus [release tooling](RELEASE_TOOLING.md) and a private repository. Phase 1 includes persistence and lifecycle handling, but no shop, earning rewards, creation-screen grants, core patches or publication. No third-party gameplay implementation is bundled. Remaining prestige conversion details and the official preset still need resolution before their dependent phases. The roadmap assigns each open decision to its first dependent checkpoint.
+The owner authorized all Phases 1 and 2 in the [roadmap](ROADMAP.md), plus [release tooling](RELEASE_TOOLING.md) and a private repository. This includes state, lifecycle handling, the positive shop, purchases and unused-point starting Tokens. Reward earning, prestige creation-screen grants, core patches and publication remain outside this implementation. No third-party gameplay implementation is bundled. Remaining prestige conversion details and the official preset still need resolution before their dependent phases.

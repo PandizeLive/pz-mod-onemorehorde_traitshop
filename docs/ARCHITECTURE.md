@@ -1,6 +1,6 @@
-# Proposed architecture
+# Architecture and later systems
 
-Phase 1 persistence and authority are implemented in v0.2.0. The shop, earning and creation-screen systems below remain future work. See [CHECKPOINT_1.md](CHECKPOINT_1.md) for feasibility and [CHECKPOINT_2.md](CHECKPOINT_2.md) for the implemented state design, source anchors and verification limits.
+Phases 1 and 2 are implemented in v0.3.0. See [PHASE_2.md](PHASE_2.md) for the shop, starting-point conversion, schema migration and purchase receipts; [CHECKPOINT_2.md](CHECKPOINT_2.md) preserves the foundation design and evidence. Reward earning and prestige creation-screen systems below remain future work.
 
 ## Packaging
 
@@ -21,7 +21,7 @@ Contents/mods/OneMoreHorde_TraitShop/
       textures/
 ```
 
-Mod ID is `OneMoreHorde_TraitShop`, with metadata minimum 42.20.0 and real dedicated startup verified on installed 42.20.4. Earlier 42.20 patch compatibility is not yet tested. Translation placement and texture content will expand when player-facing gameplay UI is implemented. The current build persists state and logs lifecycle diagnostics; do not describe it as a working trait shop or assign an invented Workshop identity.
+Mod ID is `OneMoreHorde_TraitShop`, with metadata minimum 42.20.0 and native verification on installed 42.20.4. Earlier 42.20 patch compatibility is not yet tested. UI and Sandbox translations use the current build's JSON files; the owner's icon is a standalone texture. No Workshop identity is assigned yet.
 
 ## Responsibilities
 
@@ -45,7 +45,7 @@ Separate character-life state from the player/account prestige record. A replace
 
 Implemented identity: authenticated multiplayer username/native player slot, or singleplayer local slot, inside the current world's registry. Display names are not used. The server/singleplayer registry uses native global ModData persistence and is never replaced from client packets; it contains no credentials. Global ModData is not a confidentiality boundary, as explained in the Checkpoint 2 report. Avoid unbounded reward ledgers; retention and compaction must preserve replay protection.
 
-Creation-point conversion, level rewards, five-level milestones, purchases, and death settlement must be retry-safe. Reconnecting or recreating a character must not replay starting grants or prestige. A crash between debit and trait application must not leave a free trait or permanent lost payment; select a recoverable transaction sequence based on verified trait APIs.
+Creation-point conversion, level rewards, five-level milestones, purchases, and death settlement must be retry-safe. Phase 2 records debit and receipt before applying a trait, allowing a saved receipt to repair an older character profile without another charge. Reconnecting cannot repeat grants. Native player files and world global ModData are not atomic with each other; abrupt power-loss rollback across independently saved files is not claimed solved. Normal save/restart and complete world backups are the verified boundary.
 
 Snapshot the full creation bonus for the replacement character before applying retention. Once that character successfully enters the world, retain 30% by default, exactly once. Reopening/canceling character creation or ordinary reconnect must not apply another retention step or duplicate the bonus. Do not reduce prestige both at death and at spawn. The retained amount is for a subsequent transition, not another bonus for the character just created.
 

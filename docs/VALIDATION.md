@@ -1,6 +1,6 @@
 # Future validation checklist
 
-This checklist defines broader gameplay acceptance expectations. See [CHECKPOINT_1.md](CHECKPOINT_1.md) and [CHECKPOINT_2.md](CHECKPOINT_2.md) for completed startup, state/serialization and dedicated disk tests. Full reward, purchase and creation-screen flows below are not implemented or validated yet.
+This checklist defines broader gameplay acceptance expectations. See [PHASE_2.md](PHASE_2.md) for implemented shop/starting-Token behavior and automated/native evidence. [TEST_PHASE_2.md](TEST_PHASE_2.md) is the current complete owner test sequence. Reward earning and prestige creation-screen flows below remain future work.
 
 ## Documentation pass
 

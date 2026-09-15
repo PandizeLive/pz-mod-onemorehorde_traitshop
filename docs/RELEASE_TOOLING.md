@@ -34,7 +34,7 @@ Useful command-line forms from this directory:
 
 ## Tagged content and local installation
 
-The release tag is `v<modversion>` (currently `v0.2.0`). Work from a named development branch. The tag must be an ancestor of HEAD, and all `Contents` files must match it. Untracked files, including ignored build debris, are rejected. Tooling/documentation commits may follow the tag when packaged content is unchanged. Never move an existing release tag; use a new version/tag for changed packages.
+The release tag is `v<modversion>` (currently `v0.3.0`). Work from a named development branch. The tag must be an ancestor of HEAD, and all `Contents` files must match it. Untracked files, including ignored build debris, are rejected. Tooling/documentation commits may follow the tag when packaged content is unchanged. Never move an existing release tag; use a new version/tag for changed packages.
 
 Only `Contents/mods/OneMoreHorde_TraitShop` is installed. Default destinations are:
 

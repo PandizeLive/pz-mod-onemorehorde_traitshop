@@ -1,7 +1,7 @@
 if isClient() then return end
 
 local State = {}
-State.SCHEMA = 1
+State.SCHEMA = 2
 State.LIMIT = 1000000000
 
 ---@param value any
@@ -28,13 +28,24 @@ function State.initialize(store)
         store.nextLife = 0
         store.accounts = {}
     end
+    if store.schema == 1 and State.isCounter(store.nextLife) and type(store.accounts) == "table" then
+        for _, record in pairs(store.accounts) do
+            if not State.isLegacyRecord(record) or record.life.creation ~= nil
+                or record.life.purchases ~= nil then return false end
+        end
+        for _, record in pairs(store.accounts) do
+            record.life.creation = { status = "legacy", tokens = 0 }
+            record.life.purchases = {}
+        end
+        store.schema = State.SCHEMA
+    end
     return store.schema == State.SCHEMA and State.isCounter(store.nextLife)
         and type(store.accounts) == "table"
 end
 
 ---@param record any
 ---@return boolean
-function State.isRecord(record)
+function State.isLegacyRecord(record)
     if type(record) ~= "table" or not State.isCounter(record.revision)
         or type(record.prestige) ~= "table" or type(record.life) ~= "table" then return false end
     local prestige = record.prestige
@@ -46,6 +57,25 @@ function State.isRecord(record)
         and State.isXP(life.xp) and State.isXP(life.hours)
         and (life.status == "alive" or life.status == "dead")
         and type(record.unofficial) == "boolean"
+end
+
+---@nodiscard
+---@param record any
+---@return boolean
+function State.isRecord(record)
+    if not State.isLegacyRecord(record) then return false end
+    local creation = record.life.creation
+    if type(creation) ~= "table" or not State.isCounter(creation.tokens)
+        or type(record.life.purchases) ~= "table" then return false end
+    if creation.status ~= "pending" and creation.status ~= "granted"
+        and creation.status ~= "legacy" and creation.status ~= "invalid" then return false end
+    local count = 0
+    for id, price in pairs(record.life.purchases) do
+        if type(id) ~= "string" or #id > 128 or not State.isCounter(price) or price < 1 then return false end
+        count = count + 1
+        if count > 100 then return false end
+    end
+    return true
 end
 
 ---@param record table
@@ -63,6 +93,7 @@ function State.settleDeath(record, lifeId)
     record.life.tokens = 0
     record.life.xp = 0
     record.life.level = 0
+    record.life.purchases = {}
     record.life.status = "dead"
     record.revision = record.revision + 1
     return true
@@ -106,7 +137,12 @@ function State.attach(store, account, characterId, hours)
         tokens = 0,
         xp = 0,
         level = 0,
+        creation = { status = "legacy", tokens = 0 },
+        purchases = {},
     }
+    if hours == 0 then
+        record.life.creation.status = "pending"
+    end
     record.revision = record.revision + 1
     return record, "created"
 end
@@ -158,6 +194,8 @@ function State.snapshot(record, playerNum)
         earnedPrestige = record.prestige.earned,
         pendingPrestige = record.prestige.pending,
         unofficial = record.unofficial,
+        creationStatus = record.life.creation.status,
+        startingTokens = record.life.creation.tokens,
     }
 end
 
