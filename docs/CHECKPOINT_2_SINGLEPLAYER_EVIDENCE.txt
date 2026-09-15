@@ -14,3 +14,17 @@ LOG  : Lua          f:0> [OMH Trait Shop] state created; slot=0; life=1; revisio
 LOG  : Lua          f:0> [OMH Trait Shop] client state ready; slot=0; life=1
 LOG  : General      f:0> Saving GlobalModData
 LOG  : Lua          f:0> [OMH Trait Shop] v0.2.0 client game started; checkpoint 2
+
+Owner same-character reload reviewed September 15, 2026.
+Normal world save/exit followed by a world reload in the same game process.
+Confirmed: slot 0 resumed life 1, revision 1; client accepted life 1 again.
+No Trait Shop runtime error found. Nonzero balances remain covered by automated tests, not this zero-balance live test.
+Death/replacement, standalone isolation and multiplayer player tests remain pending.
+
+735: LOG  : General      f:784> Saving GlobalModData
+738: LOG  : General      f:784> STATE: exit zombie.gameStates.IngameState
+772: LOG  : Lua          f:0> [OMH Trait Shop] v0.2.0 shared loaded: singleplayer
+820: LOG  : Lua          f:0> [OMH Trait Shop] authority ready; schema=1
+891: LOG  : Lua          f:0> [OMH Trait Shop] state resumed; slot=0; life=1; revision=1
+892: LOG  : Lua          f:0> [OMH Trait Shop] client state ready; slot=0; life=1
+1323: LOG  : Lua          f:0> [OMH Trait Shop] v0.2.0 client game started; checkpoint 2
