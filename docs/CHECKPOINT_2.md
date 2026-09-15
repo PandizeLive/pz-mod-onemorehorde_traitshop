@@ -35,6 +35,10 @@ Native global ModData is requestable by clients who know a table name. This stor
 
 `tools/Test-Phase1Server.ps1` is a developer-only dedicated-server disk test, not a game-launch menu option. It stages an unshipped probe in a disposable loopback server, saves a nonzero record, restarts to check and settle it, then restarts again to verify the zero wallet and pending prestige. No player joins this test; its results cannot substitute for the reconnect test below. Probe code exists only under `tests/` and the ignored fixture cache.
 
+**Three native B42.20.4 dedicated save/restart cycles passed**, each with a graceful console quit. The second process restored 37 Tokens, 2.5 XP, level 9 and distinct 1 retained/2 earned prestige; the third restored the replacement's zero wallet/XP/level and 3 pending prestige. Relevant log excerpts and hashes are in [CHECKPOINT_2_EVIDENCE.txt](CHECKPOINT_2_EVIDENCE.txt). Native asset/map warnings remain; no Trait Shop runtime error was found. The 30 release-tooling checks also passed with this build.
+
+The PZ modding, Lua and multiplayer skills were applied alongside decompiled source and installed-JAR verification. The packaged Lua audit rejects `pcall`, `xpcall`, `ipairs`, `next`, `goto` and tabs. No custom Lua events, client-side currency writes or per-frame world scans were introduced.
+
 ## Normal Steam tests for acceptance
 
 Close the game, install v0.2.0 using **OMH.cmd -> 1**, and launch through Steam normally. No shop button is expected and balances begin at zero; reward earning belongs to Phase 3.
