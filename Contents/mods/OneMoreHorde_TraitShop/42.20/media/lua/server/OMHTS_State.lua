@@ -1,7 +1,8 @@
 if isClient() then return end
 
+local Effects = require("OMHTS_Effects")
 local State = {}
-State.SCHEMA = 2
+State.SCHEMA = 3
 State.LIMIT = 1000000000
 
 ---@param value any
@@ -31,11 +32,35 @@ function State.initialize(store)
     if store.schema == 1 and State.isCounter(store.nextLife) and type(store.accounts) == "table" then
         for _, record in pairs(store.accounts) do
             if not State.isLegacyRecord(record) or record.life.creation ~= nil
-                or record.life.purchases ~= nil then return false end
+                or record.life.purchases ~= nil or record.life.effects ~= nil
+                or record.life.removals ~= nil then return false end
         end
         for _, record in pairs(store.accounts) do
             record.life.creation = { status = "legacy", tokens = 0 }
             record.life.purchases = {}
+        end
+        store.schema = 2
+    end
+    if store.schema == 2 and State.isCounter(store.nextLife) and type(store.accounts) == "table" then
+        for _, record in pairs(store.accounts) do
+            if not State.isLegacyRecord(record) or type(record.life.creation) ~= "table"
+                or type(record.life.purchases) ~= "table" or record.life.removals ~= nil
+                or record.life.effects ~= nil then return false end
+            local candidate = { revision = record.revision, prestige = record.prestige,
+                unofficial = record.unofficial, life = {} }
+            for key, value in pairs(record.life) do
+                candidate.life[key] = value
+            end
+            candidate.life.removals = {}
+            candidate.life.effects = { traits = {}, recipes = {}, perks = {} }
+            if not State.isRecord(candidate) then return false end
+        end
+        for _, record in pairs(store.accounts) do
+            record.life.removals = {}
+            record.life.effects = { traits = {}, recipes = {}, perks = {} }
+            for id in pairs(record.life.purchases) do
+                record.life.effects.traits[id] = true
+            end
         end
         store.schema = State.SCHEMA
     end
@@ -66,14 +91,20 @@ function State.isRecord(record)
     if not State.isLegacyRecord(record) then return false end
     local creation = record.life.creation
     if type(creation) ~= "table" or not State.isCounter(creation.tokens)
-        or type(record.life.purchases) ~= "table" then return false end
+        or type(record.life.purchases) ~= "table" or type(record.life.removals) ~= "table"
+        or not Effects.valid(record.life.effects) then return false end
     if creation.status ~= "pending" and creation.status ~= "granted"
         and creation.status ~= "legacy" and creation.status ~= "invalid" then return false end
     local count = 0
     for id, price in pairs(record.life.purchases) do
         if type(id) ~= "string" or #id > 128 or not State.isCounter(price) or price < 1 then return false end
         count = count + 1
-        if count > 100 then return false end
+        if count > 256 then return false end
+    end
+    for id, price in pairs(record.life.removals) do
+        if type(id) ~= "string" or #id > 128 or not State.isCounter(price) or price < 1 then return false end
+        count = count + 1
+        if count > 256 then return false end
     end
     return true
 end
@@ -94,6 +125,8 @@ function State.settleDeath(record, lifeId)
     record.life.xp = 0
     record.life.level = 0
     record.life.purchases = {}
+    record.life.removals = {}
+    record.life.effects = { traits = {}, recipes = {}, perks = {} }
     record.life.status = "dead"
     record.revision = record.revision + 1
     return true
@@ -139,6 +172,8 @@ function State.attach(store, account, characterId, hours)
         level = 0,
         creation = { status = "legacy", tokens = 0 },
         purchases = {},
+        removals = {},
+        effects = { traits = {}, recipes = {}, perks = {} },
     }
     if hours == 0 then
         record.life.creation.status = "pending"

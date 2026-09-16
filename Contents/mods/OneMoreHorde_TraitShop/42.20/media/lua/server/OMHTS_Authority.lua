@@ -27,9 +27,11 @@ end
 
 ---@param player IsoPlayer
 ---@param binding table
+---@param nonce number|nil
 ---@return nil
-local function sendSnapshot(player, binding)
+local function sendSnapshot(player, binding, nonce)
     local snapshot = Shop.snapshot(player, binding.record)
+    snapshot.nonce = nonce
     if isServer() then
         sendServerCommand(player, "OMHTraitShop", "state", snapshot)
     elseif TraitShop.acceptState then
@@ -164,16 +166,17 @@ local function onClientCommand(module, command, player, args)
         return
     end
     if command ~= "requestState" then return end
-    for _ in pairs(args) do
-        return
+    for key in pairs(args) do
+        if key ~= "nonce" then return end
     end
+    if args.nonce ~= nil and not State.isCounter(args.nonce) then return end
     local binding = bind(player)
     if not binding then return end
     local now = getTimestampMs()
     if now - binding.lastRequest < 1000 then return end
     binding.lastRequest = now
     Shop.reconcile(player, binding.record, true)
-    sendSnapshot(player, binding)
+    sendSnapshot(player, binding, args.nonce)
 end
 
 ---@param player IsoPlayer

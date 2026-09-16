@@ -1,5 +1,5 @@
 version=1
 id=0
 title=OMH: Trait Shop
-description=Private development build for OMH: Trait Shop. Version 0.3.0 adds the health-hover shop, ten supported positive traits, authoritative purchases and starting Tokens from unused creation points. XP rewards, prestige creation bonuses and Horde Night scoring integration are not implemented yet.
+description=Private development build for OMH: Trait Shop. Version 0.4.0 adds a resizable cart shop, broad native/modded trait support, optional negative removal, and description search. Unused creation points become starting Tokens. XP rewards, prestige creation bonuses and Horde Night scoring integration are not implemented yet.
 description=DISCLAIMER: This mod was made in tandem with ChatGPT

@@ -48,64 +48,127 @@ legacy.schema = 1
 for _, value in pairs(legacy.accounts) do
     value.life.creation = nil
     value.life.purchases = nil
+    value.life.removals = nil
+    value.life.effects = nil
 end
-check(State.initialize(legacy) and legacy.schema == 2, "v1 save migrates explicitly to v2")
+check(State.initialize(legacy) and legacy.schema == 3, "v1 save migrates explicitly to v3")
 check(legacy.accounts["user:Alice"].life.tokens == 5 and legacy.accounts["user:Alice"].life.creation.status == "legacy", "migration preserves wallet and prevents retroactive grants")
 check(State.initialize(legacy), "migration is idempotent")
 local corrupt = nativeRoundTrip(legacy)
 corrupt.schema = 1
 check(not State.initialize(corrupt) and corrupt.schema == 1, "ambiguous migration leaves data untouched")
-local function purchase(id, overrides)
-    local args = { traitId = id, lifeId = record.life.id, revision = record.revision, price = 2 }
+local function checkout(items, overrides)
+    local args = { lifeId = record.life.id, revision = record.revision, items = items }
     if overrides then for key, value in pairs(overrides) do args[key] = value end end
     return Shop.purchase(alice, record, args), args
 end
-local before = record.life.tokens
-check(purchase("missing:trait") == "unsupported" and record.life.tokens == before, "unlisted trait cannot be purchased")
-check(purchase("base:dextrous", { tokens = 999 }) == "invalid", "unknown fields cannot smuggle a balance")
-check(purchase("base:dextrous", { price = 0 / 0 }) == "invalid", "NaN price rejected")
-check(purchase("base:dextrous", { lifeId = 999 }) == "stale", "wrong life rejected")
-check(purchase("base:dextrous", { price = 1 }) == "price_changed", "client price cannot discount purchase")
+local buyDex = { id = "base:dextrous", price = 2, remove = false }
+local removeThumbs = { id = "base:allthumbs", price = 4, remove = true }
 alice.traits["base:allthumbs"] = true
-check(purchase("base:dextrous") == "conflict", "reverse-only trait exclusion enforced")
-alice.traits = {}
-testOptions["OMHTraitShop.PositiveCostMultiplier"] = 1.1
-check(Catalog.price(testDefinitions["base:dextrous"]) == 3, "fractional price rounds up")
-check(purchase("base:dextrous") == "price_changed", "settings change between render and click requires new quote")
-testOptions["OMHTraitShop.PositiveCostMultiplier"] = 0 / 0
-check(purchase("base:dextrous") == "settings", "invalid price settings cannot enable free purchases")
-testOptions["OMHTraitShop.PositiveCostMultiplier"] = 1
-testDefinitions["base:dextrous"].boosts = { 1 }
-check(purchase("base:dextrous") == "unsupported", "modified trait needing XP adapter is excluded")
-testDefinitions["base:dextrous"].boosts = {}
-testDefinitions["base:dextrous"].recipes = { "recipe" }
-check(purchase("base:dextrous") == "unsupported", "modified trait granting recipes is excluded")
-testDefinitions["base:dextrous"].recipes = {}
-local result, request = purchase("base:dextrous")
-check(result == "purchased" and record.life.tokens == 3 and alice:hasTrait("base:dextrous"), "purchase charges authoritative price and applies trait")
-check(testSyncs[#testSyncs].flags == 2 and testSyncs[#testSyncs].player == alice, "purchase uses native server-to-owner trait synchronization")
-check(Shop.purchase(alice, record, request) == "stale" and record.life.tokens == 3, "replayed request cannot charge twice")
-check(purchase("base:dextrous") == "owned" and alice.addCount == 1, "fresh request for owned trait cannot add duplicate native membership")
-check(purchase("base:organized", { price = 6 }) == "funds" and record.life.tokens == 3, "insufficient funds rejected")
-check(record.life.level == 0 and record.prestige.earned == 0, "purchases cannot generate prestige")
-alice.traits = {}
-store = nativeRoundTrip(store)
-record = store.accounts["user:Alice"]
-check(Shop.reconcile(alice, record, false) and alice:hasTrait("base:dextrous"), "persisted receipt recovers a trait absent from older player profile")
-check(record.life.tokens == 3 and not Shop.reconcile(alice, record, false), "recovery is idempotent and never recharges")
-record.life.purchases["base:fastreader"] = 2
-record.life.tokens = 1
-check(Shop.reconcile(alice, record, false) and alice:hasTrait("base:fastreader"), "interrupted commit-before-effect recovers the owed trait")
-local deadRequest = { lifeId = record.life.id, revision = record.revision, traitId = "base:outdoorsman", price = 2 }
-local lifeId = record.life.id
-State.settleDeath(record, lifeId)
-check(Shop.purchase(alice, record, deadRequest) == "dead", "death before request rejects purchase")
-local replacement = player("Alice", 0, 41, 0)
-record = State.attach(store, "user:Alice", 41, 0)
-Creation.settle(replacement, record)
-check(record.life.tokens == 5 and not Shop.reconcile(replacement, record, false), "replacement receives only its own starting grant and no retired purchases")
-check(Shop.purchase(replacement, record, deadRequest) == "stale", "old request cannot target replacement wallet")
-local snapshot = Shop.snapshot(replacement, record)
-check(#snapshot.offers == 10 and snapshot.startingTokens == 5, "bounded shop snapshot contains catalog and creation grant")
-testPhase2Snapshot = nativeRoundTrip(snapshot)
+record.life.tokens = 20
+check(checkout({removeThumbs}) == "removal_disabled", "removal disabled by default")
+testOptions["OMHTraitShop.AllowNegativeRemoval"] = true
+check(checkout({buyDex}) == "conflict", "reverse-only conflict rejected")
+check(checkout({buyDex, buyDex}) == "invalid", "duplicate cart lines rejected")
+check(checkout({buyDex}, {tokens = 999}) == "invalid", "cart cannot inject wallet")
+check(checkout({buyDex}, {lifeId = 999}) == "stale", "foreign life rejected")
+check(checkout({{id="base:fastreader", price=0/0, remove=false}}) == "invalid", "NaN quote rejected")
+check(checkout({{id="base:fastreader", price=1, remove=false}}) == "price_changed", "price tampering rejected")
+check(checkout({buyDex, {id="missing:trait",price=1,remove=false}}) == "unsupported"
+    and record.life.tokens == 20 and not alice:hasTrait("base:dextrous"), "invalid later line never partially charges or applies")
+record.life.tokens = 5
+check(checkout({buyDex, removeThumbs}) == "funds" and alice:hasTrait("base:allthumbs"), "aggregate cost checked before removal")
+record.life.tokens = 20
+local result, request = checkout({buyDex, removeThumbs})
+check(result == "purchased" and record.life.tokens == 14 and alice:hasTrait("base:dextrous")
+    and not alice:hasTrait("base:allthumbs"), "mixed cart removes conflict then buys positive for exact combined price")
+check(record.life.removals["base:allthumbs"] == 4 and record.life.purchases["base:dextrous"] == 2, "separate receipts record purchase and removal")
+check(Shop.purchase(alice, record, request) == "stale" and record.life.tokens == 14, "replay does not charge twice")
+check(testSyncs[#testSyncs].flags == 3, "native sync includes traits and recipes")
+check(not Shop.reconcile(alice, record, false), "effect recovery idempotent")
+alice.traits = { ["base:allthumbs"] = true }
+record = nativeRoundTrip(record)
+check(Shop.reconcile(alice, record, false) and not alice:hasTrait("base:allthumbs") and alice:hasTrait("base:dextrous"), "native save roundtrip repairs both sides of mixed cart")
+check(record.life.tokens == 14, "receipt repair never charges again")
+local cooking = Perks.FromString("Cooking")
+local modded = traitFixture("MODDED", "mod:chef", 3)
+modded.boosts = {[cooking] = 1}
+modded.recipes = {"Soup"}
+modded.grants = {"mod:child"}
+traitFixture("CHILD", "mod:child", 0).free = true
+Catalog.definitions()
+alice.skillXP.Cooking = 125
+alice.boosts.Cooking = 1
+check(Catalog.supported(modded), "modded trait with standard skill recipe and child effects needs no allowlist")
+check(checkout({{id="mod:chef",price=3,remove=false}}) == "purchased", "generic modded trait purchased")
+check(alice.skillXP.Cooking == 425 and alice.boosts.Cooking == 2 and alice.recipes.Soup
+    and alice:hasTrait("mod:child"), "standard effects apply including partial skill XP preservation")
+check(not Shop.reconcile(alice, record, false) and alice.skillXP.Cooking == 425, "skill bonuses cannot stack on recovery")
+alice.skillXP.Cooking = 500
+check(not Shop.reconcile(alice, record, false) and alice.skillXP.Cooking == 500, "later earned XP is never rewound")
+local Effects = require("OMHTS_Effects")
+local duplicateGrant = Effects.plan(alice, record.life.effects, {["mod:chef"]=false,["mod:child"]=false})
+check(duplicateGrant ~= nil, "already owned effects cannot grant a child twice")
+local training = traitFixture("TRAINING", "mod:trained", 2)
+training.boosts = {[cooking] = 1}
+Catalog.definitions()
+check(checkout({{id="mod:trained",price=2,remove=false}}) == "purchased" and alice.skillXP.Cooking == 1000,
+    "second trait stacks its contribution once")
+alice.boosts.Cooking = 0
+alice.skillXP.Cooking = 0
+check(Shop.reconcile(alice, record, false) and alice.boosts.Cooking == 3 and alice.skillXP.Cooking == 1000,
+    "latest cumulative skill receipt repairs rollback older than multiple purchases")
+local childParent = traitFixture("CHILD_PARENT", "mod:parent", 1)
+childParent.grants = {"mod:paidchild"}
+traitFixture("PAID_CHILD", "mod:paidchild", 1)
+Catalog.definitions()
+local effectPlan, effectReason = Effects.plan(alice, record.life.effects, {["mod:parent"]=false,["mod:paidchild"]=false})
+check(effectPlan == nil and effectReason == "conflict", "cart cannot pay twice for a parent and its granted child")
+local cycleA = traitFixture("CYCLE_A", "mod:cyclea", 1)
+local cycleB = traitFixture("CYCLE_B", "mod:cycleb", 0)
+cycleA.grants = {"mod:cycleb"}
+cycleB.grants = {"mod:cyclea"}
+Catalog.definitions()
+effectPlan = Effects.plan(alice, record.life.effects, {["mod:cyclea"]=false})
+check(effectPlan == nil, "cyclic grants reject the cart without recursive effects")
+local body = traitFixture("BODY", "mod:fitness", 1)
+body.boosts = {[Perks.FromString("Fitness")] = 1}
+Catalog.definitions()
+check(checkout({{id="mod:fitness",price=1,remove=false}}) == "body", "body stat metadata exclusion covers modded IDs")
+Catalog.excludeTrait("mod:trained")
+check(Catalog.exclusion(training) == "excluded", "integration can exclude known custom incompatibility")
+local bad = traitFixture("BAD", "mod:negativegrant", -1)
+bad.grants = {"mod:child"}
+alice.traits["mod:negativegrant"] = true
+Catalog.definitions()
+check(checkout({{id="mod:negativegrant",price=2,remove=true}}) == "grants", "negative child-trait cleanup requires adapter")
+testProfession.grants = {"test:negative2"}
+alice.traits["test:negative2"] = true
+check(checkout({{id="test:negative2",price=4,remove=true}}) == "granted", "profession traits cannot be stripped")
+testProfession.grants = {}
+local snapshot = Shop.snapshot(alice, record)
+check(snapshot.spentTokens == 11, "spending breakdown includes removals and all additions")
+check(require("OMHTS_Effects").valid(snapshot.effects), "wire skill target shape bounded and valid")
+local beforeDeath = record.life.id
+check(State.settleDeath(record, beforeDeath) and record.life.tokens == 0, "death clears wallet")
+check(not pairs(record.life.effects.traits)(), "death clears trait effect entitlements")
+local v2 = nativeRoundTrip(store)
+v2.schema = 2
+for _, value in pairs(v2.accounts) do
+    value.life.removals = nil
+    value.life.effects = nil
+end
+check(State.initialize(v2) and v2.schema == 3, "v2 receipts migrate without new grants or charges")
+local corruptV2 = nativeRoundTrip(v2)
+corruptV2.schema = 2
+for _, value in pairs(corruptV2.accounts) do
+    value.life.removals = nil
+    value.life.effects = nil
+end
+corruptV2.accounts["user:Alice"].life.purchases.bad = -5
+check(not State.initialize(corruptV2) and corruptV2.schema == 2
+    and corruptV2.accounts["user:Alice"].life.effects == nil, "corrupt migration preserves original data")
+testProfession.cost = 5
+testOptions["OMHTraitShop.AllowNegativeRemoval"] = false
+testPhase2Snapshot = snapshot
 testTransportPackets = { snapshot }

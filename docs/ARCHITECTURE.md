@@ -1,6 +1,6 @@
 # Architecture and later systems
 
-Phases 1 and 2 are implemented in v0.3.0. See [PHASE_2.md](PHASE_2.md) for the shop, starting-point conversion, schema migration and purchase receipts; [CHECKPOINT_2.md](CHECKPOINT_2.md) preserves the foundation design and evidence. Reward earning and prestige creation-screen systems below remain future work.
+Phases 1 and 2 are implemented; v0.4.0 adds the mixed cart and common removal. See [PATCH_v0.4.0.md](PATCH_v0.4.0.md) for schema 3, effects, the nonce handshake and native evidence. See [PHASE_2.md](PHASE_2.md) for the shop, starting-point conversion, schema migration and purchase receipts; [CHECKPOINT_2.md](CHECKPOINT_2.md) preserves the foundation design and evidence. Reward earning and prestige creation-screen systems below remain future work.
 
 ## Packaging
 
@@ -57,4 +57,4 @@ Prefer reward and lifecycle events. No continuous world scans for the shop. Surv
 
 Inspect the current Trait Purchase System and vanilla health UI before implementing the custom hover menu. Recreate the interaction with supported hooks; do not assume that menu is native or copy third-party source/assets without checking permission. The owner-supplied icon is the intended asset.
 
-Broad trait discovery is not proof that runtime purchase/removal works. Start with verified positive traits and add explicit support where initialization is required. Negative removal and its complex compatibility work are deferred until after the initial release.
+Broad default eligibility and declared-effect processing replace the original allowlist in v0.4.0. Explicit body/grant exclusions and targeted Smoker cleanup cover known exceptions; arbitrary custom scripts still need compatibility work. Common removal is implemented early, default-off.

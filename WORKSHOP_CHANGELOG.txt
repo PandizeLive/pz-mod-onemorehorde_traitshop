@@ -1,10 +1,12 @@
-v0.3.1
+v0.4.0
 
-Trait Shop UI revision
-- Fixed invisible shop-button hover activation; enter through health and move onto the visible button.
-- Added the three-panel catalog/current-positive/current-negative layout, search and availability filters.
-- Expanded displayed traits to the loaded registry, including modded traits, sorted by price.
-- Added gold owned/selection styling, compact descriptions, equal Tokens/Prestige emphasis and hover breakdowns.
-- Added a gold percentage XP bar; progression remains deferred and reads 0% in this build.
-- Added explicit compatibility registration for verified membership-only modded traits.
-- Negative removal, XP rewards, prestige creation bonuses and Horde Night scoring remain later work.
+Trait Shop cart and compatibility update
+- Added one receipt and Purchase button for trait additions and optional negative removals.
+- Added Ctrl/Shift selection, Reset and Close; search names and descriptions by relevance.
+- Replaced the pinned window with a movable, resizable OMH panel and consistent red/green/gold styling.
+- Centered Trait Level and changed XP text to 0 / 100; XP earning remains future work.
+- Enabled ordinary native/modded traits through common skill, XP-boost, recipe and child-trait handling.
+- Added default-off negative removal and Negative Cost Multiplier (default 2, no surcharge).
+- Added Smoker withdrawal cleanup, schema migration, recoverable effects and current-character synchronization guards.
+- Kept body-progression exclusions and documented custom-mod compatibility limits.
+- Prestige creation bonuses and Horde Night official-score integration remain future work.

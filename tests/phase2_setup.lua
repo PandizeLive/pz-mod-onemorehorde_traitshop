@@ -72,3 +72,53 @@ function player(name, slot, characterId, hours)
     end
     return value
 end
+
+function transformIntoKahluaTable(map) return map.values end
+Perks = { MAX = "MAX", None = "None" }
+local fixturePerks = {}
+function perkFixture(id)
+    local perk = setmetatable({ id = id }, { __tostring = function(self) return self.id end })
+    function perk:getTotalXpForLevel(level) return level * level * 100 end
+    fixturePerks[id] = perk
+    return perk
+end
+function Perks.FromString(id) return fixturePerks[id] or Perks.MAX end
+perkFixture("Cooking")
+perkFixture("Fitness")
+testOptions["OMHTraitShop.NegativeCostMultiplier"] = 2
+testOptions["OMHTraitShop.AllowNegativeRemoval"] = false
+local basicShopPlayer = player
+function player(name, slot, characterId, hours)
+    local value = basicShopPlayer(name, slot, characterId, hours)
+    local getTraits = value.getCharacterTraits
+    function value:getCharacterTraits()
+        local traits = getTraits(self)
+        traits.remove = function(self, id) value.traits[id] = nil end
+        return traits
+    end
+    value.skillXP = {}
+    value.boosts = {}
+    value.recipes = {}
+    value.sleeping = false
+    function value:isAsleep() return self.sleeping end
+    function value:getKnownRecipes()
+        return { contains = function(self, name) return value.recipes[name] == true end }
+    end
+    function value:learnRecipe(name) self.recipes[name] = true end
+    function value:getPerkLevel(perk)
+        return math.floor(math.sqrt(self.skillXP[tostring(perk)] or 0) / 10)
+    end
+    function value:getXp()
+        return {
+            getXP = function(self, perk) return value.skillXP[tostring(perk)] or 0 end,
+            getPerkBoost = function(self, perk) return value.boosts[tostring(perk)] or 0 end,
+            setPerkBoost = function(self, perk, boost) value.boosts[tostring(perk)] = boost end,
+            AddXP = function(self, perk, amount, callLua, boost, remote)
+                check(not callLua and not boost and not remote, "effect recovery never reapplies XP multipliers or sends XP requests")
+                local id = tostring(perk)
+                value.skillXP[id] = (value.skillXP[id] or 0) + amount
+            end,
+        }
+    end
+    return value
+end

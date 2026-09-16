@@ -1,31 +1,56 @@
 local Catalog = {}
-Catalog.MAX_PURCHASE_TRAITS = 100
-Catalog.entries = {
-    { id = "base:dextrous", constant = "DEXTROUS" },
-    { id = "base:fastreader", constant = "FAST_READER" },
-    { id = "base:brave", constant = "BRAVE" },
-    { id = "base:outdoorsman", constant = "OUTDOORSMAN" },
-    { id = "base:irongut", constant = "IRON_GUT" },
-    { id = "base:resilient", constant = "RESILIENT" },
-    { id = "base:lighteater", constant = "LIGHT_EATER" },
-    { id = "base:lowthirst", constant = "LOW_THIRST" },
-    { id = "base:fasthealer", constant = "FAST_HEALER" },
-    { id = "base:organized", constant = "ORGANIZED" },
-}
-local approved = {}
-for index = 1, #Catalog.entries do
-    approved[Catalog.entries[index].id] = true
-end
+Catalog.MAX_PURCHASE_TRAITS = 192
+Catalog.MAX_CART = 64
+Catalog.entries = {}
 local registryTypes = {}
 local registrySize = -1
+local exclusions = {
+    ["base:emaciated"] = "body", ["base:very underweight"] = "body",
+    ["base:underweight"] = "body", ["base:overweight"] = "body", ["base:obese"] = "body",
+    ["base:fit"] = "body", ["base:athletic"] = "body", ["base:unfit"] = "body",
+    ["base:out of shape"] = "body", ["base:stout"] = "body", ["base:strong"] = "body",
+    ["base:weak"] = "body", ["base:feeble"] = "body",
+}
 
+---@nodiscard
+---@param id any
+---@return boolean
+function Catalog.validId(id)
+    if type(id) ~= "string" or #id == 0 or #id > 128 then return false end
+    local bytes = 0
+    for index = 1, #id do
+        local unit = string.byte(id, index)
+        if unit < 128 then
+            bytes = bytes + 1
+        elseif unit < 2048 then
+            bytes = bytes + 2
+        else
+            bytes = bytes + 3
+        end
+    end
+    return bytes <= 128
+end
+
+---@param definitions ArrayList|nil
 ---@return ArrayList
-function Catalog.definitions()
-    local definitions = CharacterTraitDefinition.getTraits()
+function Catalog.definitions(definitions)
+    if not definitions then
+        definitions = CharacterTraitDefinition.getTraits()
+    end
     registryTypes = {}
+    Catalog.entries = {}
+    local ids = {}
     for index = 0, definitions:size() - 1 do
-        local trait = definitions:get(index):getType()
-        registryTypes[tostring(trait)] = trait
+        local definition = definitions:get(index)
+        local id = tostring(definition:getType())
+        registryTypes[id] = definition:getType()
+        if definition:getCost() ~= 0 and not definition:isFree() and Catalog.validId(id) then
+            ids[#ids + 1] = id
+        end
+    end
+    table.sort(ids)
+    for index = 1, math.min(#ids, Catalog.MAX_PURCHASE_TRAITS) do
+        Catalog.entries[index] = { id = ids[index] }
     end
     registrySize = definitions:size()
     return definitions
@@ -36,15 +61,18 @@ end
 function Catalog.registerMembershipTrait(id)
     if type(id) ~= "string" or #id > 128
         or not string.match(id, "^[a-z0-9_.%-]+:[a-z0-9_./%-]+$") then return false end
-    if approved[id] then return true end
-    if #Catalog.entries >= Catalog.MAX_PURCHASE_TRAITS then return false end
-    approved[id] = true
-    Catalog.entries[#Catalog.entries + 1] = { id = id }
     registrySize = -1
     return true
 end
 
----@nodiscard
+---@param id string
+---@return boolean
+function Catalog.excludeTrait(id)
+    if type(id) ~= "string" or #id > 128 then return false end
+    exclusions[id] = "excluded"
+    return true
+end
+
 ---@param id string
 ---@return CharacterTraitDefinition|nil
 function Catalog.definition(id)
@@ -58,19 +86,41 @@ end
 
 ---@nodiscard
 ---@param definition CharacterTraitDefinition|nil
----@return boolean
-function Catalog.supported(definition)
-    return definition ~= nil and approved[tostring(definition:getType())] == true
-        and not definition:isFree() and definition:getCost() > 0
-        and definition:getXpBoosts():isEmpty() and definition:getGrantedTraits():isEmpty()
-        and definition:getGrantedRecipes():isEmpty()
-        and (not (isClient() or isServer()) or not definition:isDisabledInMultiplayer())
+---@return string|nil
+function Catalog.exclusion(definition)
+    if not definition then return "unsupported" end
+    if not Catalog.validId(tostring(definition:getType())) then return "unsupported" end
+    local reason = exclusions[tostring(definition:getType())]
+    if reason then return reason end
+    if (isClient() or isServer()) and definition:isDisabledInMultiplayer() then return "multiplayer" end
+    local boosts = transformIntoKahluaTable(definition:getXpBoosts())
+    for perk, value in pairs(boosts) do
+        value = tonumber(tostring(value))
+        if tostring(perk) == "Fitness" or tostring(perk) == "Strength" then return "body" end
+        if type(value) ~= "number" or value ~= math.floor(value) or value < -10 or value > 10 then
+            return "unsupported"
+        end
+    end
+    return nil
 end
 
 ---@nodiscard
+---@param definition CharacterTraitDefinition|nil
+---@return boolean
+function Catalog.supported(definition)
+    return definition ~= nil and not definition:isFree() and definition:getCost() > 0
+        and Catalog.exclusion(definition) == nil
+end
+
+---@nodiscard
+---@param removing boolean|nil
 ---@return number|nil
-function Catalog.multiplier()
-    local option = getSandboxOptions():getOptionByName("OMHTraitShop.PositiveCostMultiplier")
+function Catalog.multiplier(removing)
+    local key = "OMHTraitShop.PositiveCostMultiplier"
+    if removing then
+        key = "OMHTraitShop.NegativeCostMultiplier"
+    end
+    local option = getSandboxOptions():getOptionByName(key)
     if not option then return nil end
     local value = option:getValue()
     if type(value) ~= "number" or not (value >= 0.1 and value <= 100) then return nil end
@@ -78,12 +128,20 @@ function Catalog.multiplier()
 end
 
 ---@nodiscard
----@param definition CharacterTraitDefinition
+---@return boolean
+function Catalog.removalEnabled()
+    local option = getSandboxOptions():getOptionByName("OMHTraitShop.AllowNegativeRemoval")
+    return option ~= nil and option:getValue() == true
+end
+
+---@nodiscard
+---@param definition CharacterTraitDefinition|nil
 ---@return number|nil
 function Catalog.price(definition)
-    local multiplier = Catalog.multiplier()
-    if not multiplier or not definition or definition:getCost() <= 0 then return nil end
-    local price = math.ceil(definition:getCost() * multiplier)
+    if not definition or definition:getCost() == 0 then return nil end
+    local multiplier = Catalog.multiplier(definition:getCost() < 0)
+    if not multiplier then return nil end
+    local price = math.ceil(math.abs(definition:getCost()) * multiplier)
     if price < 1 or price > 1000000000 then return nil end
     return price
 end
@@ -105,7 +163,6 @@ end
 
 ---@return nil
 local function resetRegistry()
-    registryTypes = {}
     registrySize = -1
 end
 

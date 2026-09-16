@@ -1,6 +1,6 @@
 # Future validation checklist
 
-This is developer coverage tracking, not an owner-facing test script. See [PHASE_2.md](PHASE_2.md) for the foundation and [UI_PATCH_v0.3.1.md](UI_PATCH_v0.3.1.md) for the current UI revision. The owner reported the v0.3.0 solo lifecycle/purchase sequence passed; the reviewed log includes Horde Night, so standalone loading is not independently established by that log. [TEST_PHASE_2.md](TEST_PHASE_2.md) is the current six-step UI test. Dedicated/hosted reconnect/restart, price-rounding, existing-save migration and broader UI/addon compatibility acceptance remain pending; prepare separate 4-8-step instructions when those sessions are selected. Reward earning and prestige creation-screen flows below remain future work.
+This is developer coverage tracking, not an owner-facing test script. See [PHASE_2.md](PHASE_2.md) for the foundation and [PATCH_v0.4.0.md](PATCH_v0.4.0.md) for the current cart/removal revision. The owner reported the v0.3.0 solo lifecycle/purchase sequence passed; the reviewed log includes Horde Night, so standalone loading is not independently established by that log. [TEST_PHASE_2.md](TEST_PHASE_2.md) is the current seven-step patch test. Dedicated/hosted reconnect/restart, price-rounding, existing-save migration and broader UI/addon compatibility acceptance remain pending; prepare separate 4-8-step instructions when those sessions are selected. Reward earning and prestige creation-screen flows below remain future work.
 
 ## Documentation pass
 

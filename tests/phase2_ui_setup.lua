@@ -94,6 +94,7 @@ function Panel:close() self.visible = false end
 function Panel:clear() self.items = {}; self.selected = 1; self.scroll = 0 end
 function Panel:addItem(text, value)
     self.items[#self.items + 1] = { text = text, item = value, index = #self.items + 1 }
+    return self.items[#self.items]
 end
 function Panel:setOnMouseDownFunction(target, callback) self.target = target; self.onmousedown = callback end
 function Panel:setPlaceholderText(value) self.placeholder = value end
@@ -118,3 +119,11 @@ end
 ISEquippedItem = Panel:derive("ISEquippedItem")
 function ISEquippedItem:prerender() self.vanillaRenders = (self.vanillaRenders or 0) + 1 end
 function ISEquippedItem:removeFromUIManager() self.vanillaRemoved = true; testUI[self] = nil end
+
+function Panel:setWidth(value) self.width = value end
+function Panel:setHeight(value) self.height = value end
+ISResizeWidget = Panel:derive("ISResizeWidget")
+testCtrl = false
+testShift = false
+function isCtrlKeyDown() return testCtrl end
+function isShiftKeyDown() return testShift end

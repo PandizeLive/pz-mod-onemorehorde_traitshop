@@ -2,10 +2,9 @@
 
 This is the active phase/checkpoint roadmap. It organizes the approved product direction; creating the roadmap does not authorize implementation or publication.
 
-**Current status:** Phases 1 and 2 are implemented. The owner reported the v0.3.0 solo purchase/reload/death sequence passed. The approved v0.3.1 UI patch adds the three-panel layout, registry discovery, compact resource breakdowns and health-only hover activation; see [UI patch evidence](UI_PATCH_v0.3.1.md). The current [six-step UI test](TEST_PHASE_2.md) covers the revision; live multiplayer acceptance remains pending. Checkpoints 5-14 have not started. Checkpoint numbering stays sequential across phases.
+**Current status:** Phases 1 and 2 are implemented with the v0.4.0 cart/UI/compatibility update. The owner brought common negative removal (work from Checkpoints 13-14) forward into this patch. Live UI and multiplayer acceptance remain pending. See [patch report](PATCH_v0.4.0.md) and the [seven-step test](TEST_PHASE_2.md). Checkpoints 5-12 remain future work; sequential checkpoint numbers are unchanged.
 
-Initial release follows Phase 5 and includes standalone progression, positive-trait purchasing, prestige, optional Horde Night rewards, and official-score integration. Negative-trait removal is Phase 6, after release. This ordering is proposed for execution; changes to scope or checkpoint boundaries should be recorded here.
-
+The intended full release still includes progression, prestige, Horde Night rewards and official scoring. Common negative removal now arrives early, disabled by default; its official policy remains undecided.
 ## Checkpoint workflow
 
 - Resolve only the decisions needed for the upcoming checkpoint. Keep the remaining decisions in [DECISIONS.md](DECISIONS.md); do not silently implement recommendations as approved values.
@@ -61,15 +60,15 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 
 **Deliver:** the custom health-icon hover interaction using the owner's asset, and one window showing Tokens, XP, Trait Level, prestige, and a read-only positive-trait catalog. Display one Prestige total, with retained and newly earned components in its tooltip. Preserve the normal health UI.
 
-**Implemented:** v0.3.1 opens through health only, with visible-button and reference-popup continuity. The approved three-panel layout has catalog search/filtering, compact descriptions, gold owned/selection styling, equal Tokens/Prestige emphasis, one Prestige total with tooltip components and a centered level/gold percentage bar. Sources and checks: [UI patch report](UI_PATCH_v0.3.1.md).
+**Implemented:** v0.4.0 retains health-only hover and adds the resizable three-panel cart, name/description search, equal currencies, gold two-line level and `0 / 100` bar. See [patch report](PATCH_v0.4.0.md).
 
 **Pass when:** the pointer can move from the health icon onto the shop button without losing the menu; the window opens/closes correctly at supported UI scales; state updates correctly in dedicated play; relevant competing health-menu mods do not break the interaction.
 
 ### Checkpoint 4 - Positive purchases and initial Token grants
 
-**Deliver:** Positive Cost Multiplier, a small verified positive-trait catalog, authoritative purchase validation and actual trait effect activation. Convert unused creation points into starting Tokens once. Protect against duplicate requests and interrupted purchases. Keep negative removal unavailable.
+**Deliver:** Positive Cost Multiplier, broad ordinary-trait support with explicit exclusions, authoritative purchase validation and actual trait effect activation. Convert unused creation points into starting Tokens once. Protect against duplicate requests and interrupted purchases. Include the owner-approved optional removal cart.
 
-**Implemented:** ten verified native traits; Positive Cost Multiplier default 1.0 with upward whole-Token rounding; authoritative native-budget reconstruction for new-life grants; per-life debit/receipt records, native trait sync and reconnect recovery; schema-1 migration with no retroactive grant. Prestige creation bonuses remain Phase 3, including their contribution to unused creation points. Exclusions stay separate from price controls. The owner authorized all Phase 2 rather than a separate stop between Checkpoints 3 and 4.
+**Implemented:** generic declared trait effects; default multipliers 1 and 2; whole-cart server validation; starting Tokens; schema 1/2 to 3 migration; recoverable addition/removal/skill/recipe targets. XP and prestige creation bonuses remain Phase 3. Native API/persistence checks pass; live player acceptance remains separate.
 
 **Pass when:** a character with five unused creation points receives five Tokens once and no levels/prestige; purchases consume the correct amount and activate effects; conflicts, duplicates, and insufficient funds are rejected. Singleplayer and one-player dedicated confirm reconnect and interrupted-purchase recovery without free traits or lost payments.
 
@@ -79,7 +78,7 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 
 **Deliver:** XP thresholds, one Token per earned Trait Level, one newly earned Prestige Point every five Trait Levels, and death resets. Threshold calculations must handle a reward crossing multiple levels without duplicate milestones. Token grants/spending/refunds never create prestige.
 
-**Decisions needed:** XP requirement/curve. Partial XP, Trait Level and Token reset on death are confirmed and handled by the Phase 1 lifecycle.
+**Decisions needed:** XP requirements after Level 1 (100 XP confirmed). Partial XP, Trait Level and Token reset on death are confirmed and handled by the Phase 1 lifecycle.
 
 **Pass when:** level transitions 4 -> 5 and 9 -> 10 grant exactly one Prestige Point each; multi-level gains grant the expected Tokens and milestones; reload/replayed requests do not repeat awards; death resets the appropriate life fields while preserving the intended next-character prestige entitlement. Verify shared rules and dedicated persistence.
 
@@ -129,7 +128,7 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 
 ### Checkpoint 11 - Complete-flow acceptance and balancing
 
-**Deliver:** one complete verified flow from creation through XP earning, purchases, horde rewards where enabled, death, prestige creation bonus, and retention. Resolve release-blocking bugs and tune explicitly approved values. Document the verified initial catalog and compatibility limits. Negative removal stays unavailable.
+**Deliver:** one complete verified flow from creation through XP earning, purchases, horde rewards where enabled, death, prestige creation bonus, and retention. Resolve release-blocking bugs and tune explicitly approved values. Document the verified initial catalog and compatibility limits. Optional common negative removal is already implemented.
 
 **Pass when:** the applicable [validation checklist](VALIDATION.md) passes in standalone singleplayer, hosted multiplayer, and dedicated multiplayer. Use focused two-player scenarios for casualties, unique-player rewards, ownership isolation, and repeated requests. Logs show no unresolved material errors; reward processing and UI updates do not introduce noticeable continuous load. Repeat tests only for changed or unresolved behavior.
 
@@ -139,19 +138,19 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 
 **Pass when:** package contents match tested source, a clean installation loads the intended version, required official-score integration is available, and the owner has a concrete release package to review. Publishing is a separate explicitly authorized action; a prepared package is not a published release. Record actual publication and post-publication verification when they occur.
 
-**Initial release boundary:** positive purchases, all agreed reward modes, prestige, and optional official OMH integration are present; negative-trait removal is not required. An earlier reduced release would need an explicit scope decision.
+**Initial release boundary:** positive purchases, all agreed reward modes, prestige, and optional official OMH integration are present; common negative removal is included, with official-policy decisions still pending. An earlier reduced release would need an explicit scope decision.
 
-## Phase 6 - Negative-trait removal (after initial release)
+## Phase 6 - Negative-trait removal and compatibility (common support brought forward)
 
 ### Checkpoint 13 - Removal rules and verified trait support
 
-**Deliver:** decide Negative Cost Multiplier default/rounding and whether to retain the proposed +2 surcharge. Audit removable traits and implement effect cleanup for a small verified set. Document exclusions and any trait-specific initialization/cleanup requirements. Do not expose unsupported traits for sale/removal.
+**Implemented in v0.4.0:** default-2 multiplier, upward rounding, no surcharge; common negative removal, body/grant exclusions, and Smoker cleanup. Remaining work is live multiplayer acceptance and adapters for demonstrated custom incompatibilities.
 
 **Pass when:** verified removals actually remove effects in singleplayer and multiplayer, survive reload appropriately, and respect conflicts. The catalog and prices are reviewable; complex traits are either supported with evidence or excluded.
 
 ### Checkpoint 14 - Optional UI, official policy, and removal release
 
-**Deliver:** default-off Allow Negative Trait Removal setting, removal UI and transactions, Negative Cost Multiplier controls, and updated compatibility documentation. Review whether/how removal is permitted in the official preset; update rules history and release materials accordingly.
+**Implemented in v0.4.0:** default-off removal setting, mixed cart and pricing controls, persistence and compatibility documentation. **Remaining:** decide and implement official removal policy with the scoring phase.
 
 **Pass when:** the default disables removal; enabling it permits only validated removals at the correct prices; duplicate/interrupted requests are safe; official eligibility follows the approved policy. Positive purchasing, progression, prestige, and score regressions pass. Prepare a separate versioned release for owner review.
 
@@ -167,6 +166,6 @@ Initial release follows Phase 5 and includes standalone progression, positive-tr
 | 7 | Remaining character-creation transport and transaction details |
 | 8 | Horde XP values; dependency changes with saved settings |
 | 9 | Official preset/lock default; detection; custom-earned prestige and retained-benefit policy |
-| 13-14 | Negative multiplier/rounding/+2 surcharge, removable traits, and official removal policy |
+| 13-14 | Official removal policy and any custom trait adapters; multiplier 2/no surcharge is settled |
 
 No open Phase 6 decision blocks the initial release. No unimplemented checkpoint should be marked complete solely because its design is documented.

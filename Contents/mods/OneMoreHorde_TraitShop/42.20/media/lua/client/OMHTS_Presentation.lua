@@ -2,7 +2,37 @@ if isServer() then return end
 
 local Catalog = require("OMHTS_Catalog")
 local Presentation = {}
-Presentation.GOLD = { r = 0.99, g = 0.88, b = 0.49, a = 1 }
+Presentation.GOLD = { r = 231 / 255, g = 180 / 255, b = 40 / 255, a = 1 }
+Presentation.GREEN = { r = 114 / 255, g = 184 / 255, b = 109 / 255, a = 1 }
+Presentation.RED = { r = 217 / 255, g = 64 / 255, b = 64 / 255, a = 1 }
+
+---@nodiscard
+---@param text string
+---@return string
+function Presentation.normalize(text)
+    return string.match(string.gsub(string.lower(text), "%s+", " "), "^%s*(.-)%s*$")
+end
+
+---@nodiscard
+---@param row table
+---@param query string
+---@return number|nil
+function Presentation.relevance(row, query)
+    if query == "" then return 0 end
+    local name = Presentation.normalize(row.name)
+    if name == query then return 1 end
+    if string.find(name, query, 1, true) then return 2 end
+    if string.find(string.lower(row.id), query, 1, true) then return 3 end
+    local description = Presentation.normalize(row.description)
+    if string.find(description, query, 1, true) then return 4 end
+    local remaining = query .. " "
+    while remaining ~= "" do
+        local word, rest = string.match(remaining, "^(%S+) (.*)$")
+        if not word or not string.find(description, word, 1, true) then return nil end
+        remaining = rest
+    end
+    return 5
+end
 
 ---@param player IsoPlayer
 ---@param state table
@@ -33,6 +63,7 @@ end
 ---@param right table
 ---@return boolean
 function Presentation.cheapestFirst(left, right)
+    if left.rank and right.rank and left.rank ~= right.rank then return left.rank < right.rank end
     if left.sortPrice ~= right.sortPrice then return left.sortPrice < right.sortPrice end
     if left.name ~= right.name then
         local forward = string.sort(left.name, right.name)
@@ -49,6 +80,7 @@ end
 ---@param filter number
 ---@return table
 function Presentation.rows(definitions, owned, state, query, filter)
+    query = Presentation.normalize(query)
     local groups = { catalog = {}, positive = {}, negative = {} }
     local offers = {}
     for index = 1, #state.offers do
@@ -87,21 +119,21 @@ function Presentation.rows(definitions, owned, state, query, filter)
                 row.status = "owned"
                 if cost < 0 then
                     row.group = "negative"
-                    row.status = "removal_deferred"
+                    if not offer then
+                        row.status = "unsupported"
+                    else
+                        row.status = offer.status
+                    end
                 end
             elseif (isClient() or isServer()) and definition:isDisabledInMultiplayer() then
                 row.status = "multiplayer"
             end
-            local include = row.group ~= "catalog"
-            if not include then
-                include = (query == "" or string.find(string.lower(row.name), query, 1, true) ~= nil
-                    or string.find(id, query, 1, true) ~= nil)
-                    and (filter == 1 or (filter == 2 and row.status == "available")
-                        or (filter == 3 and row.status ~= "available"))
-            end
+            row.rank = Presentation.relevance(row, query)
+            local include = row.group ~= "catalog" or (row.rank ~= nil
+                and (filter == 1 or (filter == 2 and row.status == "available")
+                    or (filter == 3 and row.status ~= "available")))
             if include then
-                row.tooltip = row.name .. "\n" .. row.description .. "\n\n"
-                    .. getText("UI_OMHTS_Status_" .. row.status)
+                row.tooltip = row.name .. "\n" .. row.description
                 groups[row.group][#groups[row.group] + 1] = row
             end
         end

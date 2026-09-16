@@ -22,10 +22,12 @@ $classpath = "$jar;$output"
 & $java -cp $classpath KahluaSyntaxCheck $lua | Tee-Object -FilePath (Join-Path $output 'syntax.log')
 if ($LASTEXITCODE -ne 0) { throw 'Kahlua syntax check failed.' }
 $stages = @(
+    "_=$GamePath\stdlib.lua",
     "_=$tests\phase1_setup.lua",
     "OMHTS_Bootstrap=$lua\shared\OMHTS_Bootstrap.lua",
-    "OMHTS_State=$lua\server\OMHTS_State.lua",
     "OMHTS_Catalog=$lua\shared\OMHTS_Catalog.lua",
+    "OMHTS_Effects=$lua\shared\OMHTS_Effects.lua",
+    "OMHTS_State=$lua\server\OMHTS_State.lua",
     "OMHTS_Creation=$lua\server\OMHTS_Creation.lua",
     "OMHTS_Shop=$lua\server\OMHTS_Shop.lua",
     "_=$tests\phase1_state.lua",

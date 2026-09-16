@@ -12,7 +12,7 @@ function isClient() return testSide == "client" end
 function isServer() return testSide == "server" end
 function getTimestampMs() return testClock end
 function fixtureList(values)
-    return { size = function() return #values end, get = function(self, index) return values[index + 1] end,
+    return { values = values, size = function() return #values end, get = function(self, index) return values[index + 1] end,
         isEmpty = function() return #values == 0 end }
 end
 CharacterTrait = {}

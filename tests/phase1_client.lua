@@ -22,6 +22,7 @@ check(#testPackets == 1 and testPackets[1].command == "requestState", "client re
 testClock = testClock + 5001
 Events.OnTick.fire()
 check(#testPackets == 2, "lost initial response retried")
+testSavedSnapshot.nonce = testPackets[#testPackets].args.nonce
 shop.acceptState(testSavedSnapshot)
 testClock = testClock + 5001
 Events.OnTick.fire()

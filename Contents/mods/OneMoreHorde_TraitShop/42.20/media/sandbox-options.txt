@@ -8,3 +8,19 @@ option OMHTraitShop.PositiveCostMultiplier {
     page = OMHTraitShop,
     translation = OMHTraitShop_PositiveCostMultiplier,
 }
+
+option OMHTraitShop.NegativeCostMultiplier {
+    type = double,
+    min = 0.1,
+    max = 100.0,
+    default = 2.0,
+    page = OMHTraitShop,
+    translation = OMHTraitShop_NegativeCostMultiplier,
+}
+
+option OMHTraitShop.AllowNegativeRemoval {
+    type = boolean,
+    default = false,
+    page = OMHTraitShop,
+    translation = OMHTraitShop_AllowNegativeRemoval,
+}

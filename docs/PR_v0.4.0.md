@@ -1,0 +1,5 @@
+The shop's single-trait checkout and ten-trait allowlist made normal trait packs impractical. v0.4.0 introduces a server-validated mixed cart, optional negative removal and common handling for declared skill, XP-boost, recipe and granted-trait effects. Removal defaults off and uses a default 2x multiplier with no surcharge. Known body-progression and grant-cleanup exclusions remain explicit.
+
+The UI is now a movable/resizable OMH panel with Ctrl/Shift selection, a receipt, Purchase/Reset/Close, name-and-description search, consistent red/green/gold colors, centered two-line Trait Level and a numeric 0 / 100 XP bar. Schema 3 migrates existing receipts and records recoverable effect targets. Per-character client handshakes protect replacement lives from delayed effect snapshots.
+
+Validation and limitations are recorded in docs/PATCH_v0.4.0.md and its evidence file. The game Kahlua checks, native dedicated save/restart probes and offline release-tooling tests are separate from pending player networking and rendered UI acceptance. XP earning, prestige creation grants and official-score integration are not part of this patch. No remote publishing is included.
