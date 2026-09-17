@@ -7,3 +7,7 @@ Use native RGBA setters on button-owned tables after updating availability. No s
 The prior test double's setEnable changed only a boolean and missed this native behavior. The runner now loads the installed ISButton.lua and uses its actual setEnable and RGBA setters with fixture UI primitives. The new repeated-refresh assertion fails on v0.4.2 before the fix, then passes after it. Coverage includes twelve valid refreshes, exact balance, insufficient funds, restored green after disabling, and Reset/Close isolation. This does not claim a rendered game test.
 
 Results: [PATCH_v0.4.3_EVIDENCE.txt](PATCH_v0.4.3_EVIDENCE.txt). Owner check: [four steps](TEST_PHASE_2.md), using the existing funded character. Dedicated player acceptance remains next; no automatic profile install, remote mirror or Workshop upload.
+
+## Owner acceptance - 2026-09-17
+
+The owner reported **Passed** for the v0.4.3 four-step button recheck. Record this as owner-reported in-game acceptance, separate from automated checks. The dedicated player session remains pending.

@@ -58,3 +58,7 @@ Use the smallest meaningful check: rule-level checks and singleplayer first; one
 Current UI follow-up: [v0.4.2](PATCH_v0.4.2.md) fixes scroll-offset row clipping and updates the footer/XP tooltip. Run the [current solo recheck](TEST_PHASE_2.md), then proceed to the dedicated player session. Dedicated acceptance is still pending.
 
 Current follow-up: [v0.4.3](PATCH_v0.4.3.md) fixes native button color mutation. Its four-step button recheck precedes the dedicated player session.
+
+## Owner acceptance - 2026-09-17
+
+The owner reported **Passed** for the v0.4.3 four-step button recheck. Record this as owner-reported in-game acceptance, separate from automated checks. The dedicated player session remains pending.

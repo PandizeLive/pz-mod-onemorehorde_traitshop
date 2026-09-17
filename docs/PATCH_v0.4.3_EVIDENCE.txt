@@ -24,3 +24,5 @@ No network calls or real user-profile changes.
 
 No live renderer or real player multiplayer session was run. No transaction rules or server code
 changed. Four-step owner button recheck and dedicated player acceptance remain pending.
+
+2026-09-17 owner acceptance update: user reported Passed for the four-step v0.4.3 button recheck. Dedicated player acceptance remains pending.
