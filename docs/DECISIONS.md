@@ -21,7 +21,7 @@ Recorded September 14, 2026 from the OMH: Trait Shop conversation. New owner ins
 15. Use sequential Checkpoints 1-14 across the six phases, not dotted phase/checkpoint numbering. The owner authorized Checkpoint 1 implementation.
 16. Checkpoint 1 selected `OneMoreHorde_TraitShop` and v0.1.0 for the independent package. Metadata minimum is 42.20.0; dedicated startup and singleplayer world entry alongside Horde Night/Cure Defense verified on 42.20.4. Standalone singleplayer verification remains pending.
 17. Use a separate private GitHub repository, `PandizeLive/pz-mod-onemorehorde_traitshop`, as selected by the owner. Adapt the core OMH.cmd workflow for this addon, retaining independent packages, backups, tags, credentials/logs and Workshop identity. Repository creation is authorized; source mirroring and Steam publication remain owner-run menu actions.
-18. Install locally through OMH.cmd and launch Project Zomboid normally through Steam. The owner requested removal of the isolated singleplayer launch option and helper; game tests use the normal launch workflow.
+18. Install locally through OMH_TraitShop.cmd and launch Project Zomboid normally through Steam. The owner requested removal of the isolated singleplayer launch option and helper; game tests use the normal launch workflow.
 19. The owner authorized completion of all Phase 1 after the persistence recommendations were presented. Apply save/server-scoped prestige, reset partial XP with Tokens/levels on death, and combine retained plus newly earned prestige for the next creation bonus. No cross-world transfer.
 20. Phase 1 implementation uses the authenticated server username plus native player slot for multiplayer records, and the local player slot within each singleplayer save. Split-screen slots remain separate; changing server login identity starts a separate record. This matches the native dedicated player-profile scope without rounding 64-bit Steam IDs through Lua numbers.
 21. Provide complete player test instructions, prerequisites, expected results and the final reporting point up front; do not drip-feed known steps across extra turns.
@@ -69,3 +69,12 @@ Recorded September 14, 2026 from the OMH: Trait Shop conversation. New owner ins
 ## Implementation boundary
 
 The owner authorized all Phases 1 and 2 in the [roadmap](ROADMAP.md), plus [release tooling](RELEASE_TOOLING.md) and a private repository. This includes state, lifecycle handling, the shop, purchases and unused-point starting Tokens. The owner additionally approved the v0.4.0 UI/cart, broad compatibility and negative removal update. Reward earning, prestige creation-screen grants, core patches and publication remain outside this implementation. No third-party gameplay implementation is bundled. Remaining prestige conversion details and the official preset still need resolution before their dependent phases.
+
+## v0.4.1 owner-approved UI refinement
+
+- Fix resize anchoring feedback; preserve window position while resizing and drag only from the header.
+- Match full leaderboard branding: Small red One More Horde, Large leaderboard-gold Trait Shop. This supersedes the green subtitle above; level/XP gold remains #E7B428.
+- Plain clicks toggle cart entries in any source list or receipt. Shift adds eligible ranges; Ctrl is no longer required for multiple choices.
+- Ctrl+A adds eligible visible choices in the active purchase/removal list and respects search/filter. Search retains normal text selection. Bulk choices can exceed the wallet or conflict with each other; receipt validation blocks checkout.
+- Queued valid negative removals immediately update positive availability and filters. Reversing the removal restores conflicts; final server validation is unchanged.
+- Rename the sole launcher to OMH_TraitShop.cmd. Link it in every complete 4-8-step owner test.

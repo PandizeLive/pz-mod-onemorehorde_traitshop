@@ -6,11 +6,11 @@ Prepared September 14, 2026. The owner selected a separate private repository: [
 
 A separate repository keeps the addon's standalone releases, Workshop identity and change history independent of Horde Night. Both projects can share the local GitHub CLI and SteamCMD installation. Coordinated gameplay changes still need matching work in Horde Night; this repository choice does not implement that integration.
 
-The current package is **v0.3.1, the Phase 2 shop UI revision**, with the owner-supplied icons. Current behavior and acceptance are recorded in [UI_PATCH_v0.3.1.md](UI_PATCH_v0.3.1.md).
+The current package is **v0.4.1, the Phase 2 resize and selection revision**, with the owner-supplied icons. Current behavior and acceptance are recorded in [PATCH_v0.4.1.md](PATCH_v0.4.1.md).
 
 ## One launcher
 
-Run the root [OMH.cmd](../OMH.cmd). The stable wrapper calls `tools/OMH-Release.ps1`; versions come from the packaged `mod.info` files.
+Run the root [OMH_TraitShop.cmd](../OMH_TraitShop.cmd). The stable wrapper calls `tools/OMH-Release.ps1`; versions come from the packaged `mod.info` files.
 
 | Option | Action |
 |---|---|
@@ -26,15 +26,15 @@ Install with option 1, then launch Project Zomboid normally through Steam. The o
 Useful command-line forms from this directory:
 
 ```powershell
-.\OMH.cmd -Action Info
-.\OMH.cmd -Action Check
-.\OMH.cmd -Action Mirror -ValidateOnly
-.\OMH.cmd -Action Publish -ValidateOnly
+.\OMH_TraitShop.cmd -Action Info
+.\OMH_TraitShop.cmd -Action Check
+.\OMH_TraitShop.cmd -Action Mirror -ValidateOnly
+.\OMH_TraitShop.cmd -Action Publish -ValidateOnly
 ```
 
 ## Tagged content and local installation
 
-The release tag is `v<modversion>` (currently `v0.3.1`). Work from a named development branch. The tag must be an ancestor of HEAD, and all `Contents` files must match it. Untracked files, including ignored build debris, are rejected. Tooling/documentation commits may follow the tag when packaged content is unchanged. Never move an existing release tag; use a new version/tag for changed packages.
+The release tag is `v<modversion>` (currently `v0.4.1`). Work from a named development branch. The tag must be an ancestor of HEAD, and all `Contents` files must match it. Untracked files, including ignored build debris, are rejected. Tooling/documentation commits may follow the tag when packaged content is unchanged. Never move an existing release tag; use a new version/tag for changed packages.
 
 Only `Contents/mods/OneMoreHorde_TraitShop` is installed. Default destinations are:
 
@@ -55,13 +55,13 @@ After merging a PR, start the next development branch from updated `main`. For p
 
 ## Steam Workshop identity and upload
 
-`workshop.txt` has `id=0` until the owner creates the first Trait Shop item through option 3. The first upload requests private visibility and includes an accurate development title/description with `DISCLAIMER: This mod was made in tandem with ChatGPT`. It does not upload a cover. The owner must review final presentation and visibility before public release.
+`workshop.txt` has `id=0` until the owner creates the first Trait Shop item through option 3. The first upload requests private visibility and includes an accurate development title/description with `DISCLAIMER: This mod was made in tandem with ChatGPT`. The first upload uses the owner-supplied root preview.gif as its animated cover; preview.png is the still fallback and the package uses that still as poster.png. Later uploads preserve the existing cover. The owner must review final presentation and visibility before public release.
 
 The publisher requires tagged content, committed release files and a verified GitHub mirror, then asks for `CREATE` or `PUBLISH`. It uses the shared `.tools/steamcmd/steamcmd.exe`. Steam credentials are encrypted using Windows credential export under `%LOCALAPPDATA%\OMH\TraitShopPublisher\steam-credential.xml`, separately from the core publisher. Steam Guard input is hidden. Upload manifests, recovery markers and masked logs live in that same Trait Shop publisher directory, outside Git. A running Steam client is closed for upload and restarted afterward; a running game blocks publication.
 
 On successful first upload, the script reads the Steam-assigned ID from the returned VDF and writes it into `workshop.txt`. **Commit and mirror this identity change before the next upload.** If creation is interrupted, `creation-pending.json` prevents blindly creating a duplicate. The next attempt can recover a returned ID; otherwise inspect the retained VDF/log and your Workshop items before resolving the marker. Do not reset a known item ID to zero to retry an update.
 
-Updates omit title, description, cover and visibility so the existing Workshop presentation is preserved. `WORKSHOP_CHANGELOG.txt` becomes a single-line BBCode change note. Both metadata and VDF generation reject Horde Night's Workshop ID `3777891317`.
+Updates omit title, description, previewfile and visibility so the existing Workshop presentation is preserved. `WORKSHOP_CHANGELOG.txt` becomes a single-line BBCode change note. Both metadata and VDF generation reject Horde Night's Workshop ID `3777891317`.
 
 Steam's documented create/update behavior uses an unset/zero published ID for creation, returns the new ID in the VDF, and only updates fields supplied in subsequent uploads. See [Steamworks Workshop implementation](https://partner.steamgames.com/doc/features/workshop/implementation). The separate private repository was created without pushing source using the [GitHub CLI repository-creation command](https://cli.github.com/manual/gh_repo_create).
 

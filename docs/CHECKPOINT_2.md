@@ -45,7 +45,7 @@ The PZ modding, Lua and multiplayer skills were applied alongside decompiled sou
 
 **Owner tests recorded September 14-15:** v0.2.0 entered a B42.20.4 singleplayer world, initialized schema 1 and created slot 0 / life 1 / revision 1. After normal world save/exit, the same character reloaded and resumed life 1 / revision 1; the client accepted life 1 again. Death then settled life 1 exactly once in the reviewed log, and the replacement initialized slot 0 / life 2 / revision 3; the client accepted life 2. No Trait Shop runtime error was found. Horde Night and Cure Defense were also loaded. Initial state initialization, same-character world reload and death/replacement pass with those addons; this live test has zero balances. Replacement reload, standalone isolation and multiplayer player tests remain pending. See [singleplayer evidence](CHECKPOINT_2_SINGLEPLAYER_EVIDENCE.txt).
 
-Close the game, install v0.2.0 using **OMH.cmd -> 1**, and launch through Steam normally. No shop button is expected and balances begin at zero; reward earning belongs to Phase 3.
+Close the game, install v0.2.0 using **OMH_TraitShop.cmd -> 1**, and launch through Steam normally. No shop button is expected and balances begin at zero; reward earning belongs to Phase 3.
 
 1. With only Trait Shop enabled, enter a new Sandbox world. Quit normally and reload that same character. Expect `authority ready`, `state created` on first entry, then `state resumed` with the same life ID and `client state ready`. This also covers Checkpoint 1's standalone SP gate.
 2. Die and create a replacement in the same save. Expect one `death settled` for the retired life, then a different life ID. Reload the replacement to verify its ID stays stable.

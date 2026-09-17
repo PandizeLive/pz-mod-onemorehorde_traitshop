@@ -38,6 +38,7 @@ $stages = @(
     "_=$tests\phase2_client.lua",
     "_=$translationFixture",
     "_=$tests\phase2_ui_setup.lua",
+    "ISUI/ISResizeWidget=$GamePath\media\lua\client\ISUI\ISResizeWidget.lua",
     "OMHTS_Presentation=$lua\client\OMHTS_Presentation.lua",
     "_=$tests\phase2_catalog.lua",
     "OMHTS_ShopWindow=$lua\client\OMHTS_ShopWindow.lua",

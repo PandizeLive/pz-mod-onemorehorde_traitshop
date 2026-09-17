@@ -18,7 +18,7 @@ function Get-OmhGitExecutable {
     )) {
         if (Test-Path -LiteralPath $candidate -PathType Leaf) { return $candidate }
     }
-    throw 'Git is required. Install Git for Windows and reopen OMH.cmd.'
+    throw 'Git is required. Install Git for Windows and reopen OMH_TraitShop.cmd.'
 }
 
 function Invoke-OmhReleaseGit {

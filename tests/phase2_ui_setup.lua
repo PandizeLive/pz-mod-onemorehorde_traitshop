@@ -1,5 +1,6 @@
 testStage = "UI lifecycle and hover geometry"
-UIFont = { Small = 1, Medium = 2 }
+UIFont = { Small = 1, Medium = 2, Large = 3 }
+Keyboard = { KEY_A = 30 }
 testFontHeight = 18
 testScreenWidth = 1280
 testScreenHeight = 720
@@ -12,7 +13,7 @@ function getCore()
         getScreenHeight = function() return testScreenHeight end }
 end
 function getTextManager()
-    return { getFontHeight = function() return testFontHeight end,
+    return { getFontHeight = function(self, font) return testFontHeight + (font - 1) * 4 end,
         MeasureStringX = function(self, font, text) return #text * testFontHeight * 0.45 end }
 end
 function string.sort(a, b) return a > b end
@@ -41,7 +42,10 @@ function Panel:new(x, y, width, height, title, target, callback)
         target = target, callback = callback, children = {}, items = {}, selected = 1,
         visible = true, scroll = 0 }, self)
 end
-function Panel:initialise() end
+function Panel:initialise()
+    if self.visible == nil then self.visible = true end
+    if self.children == nil then self.children = {} end
+end
 function Panel:instantiate()
     if self.created then return end
     self.created = true
@@ -70,6 +74,15 @@ function Panel:isMouseOver()
 end
 function Panel:setX(value) self.x = value end
 function Panel:setY(value) self.y = value end
+function Panel:getX() return self.x end
+function Panel:getY() return self.y end
+function Panel:getMouseX() return testMouseX - self:getAbsoluteX() end
+function Panel:getMouseY() return testMouseY - self:getAbsoluteY() end
+function Panel:setCapture(value) self.capture = value end
+function Panel:setWantKeyEvents(value) self.wantKeyEvents = value end
+function Panel:isFocused() return self.focused == true end
+function Panel:unfocus() self.focused = false end
+function Panel:onMouseDown() self.moving = true end
 function Panel:getAbsoluteX()
     if self.parent then return self.parent:getAbsoluteX() + self.x end
     return self.x
@@ -103,12 +116,18 @@ function Panel:getInternalText() return self.title end
 function Panel:setText(value) self.title = value end
 function Panel:drawRect(x, y, w, h) check(w >= 0 and h >= 0, "UI rectangle has nonnegative dimensions") end
 function Panel:drawTextureScaled() end
-function Panel:drawText(text, x, y) testDraws[#testDraws + 1] = { text = text, x = x, y = y } end
+function Panel:drawText(text, x, y, r, g, b, a, font)
+    testDraws[#testDraws + 1] = { text = text, x = x, y = y, r = r, g = g, b = b, font = font }
+end
 Panel.drawTextRight = Panel.drawText
 Panel.drawTextCentre = Panel.drawText
 Panel.drawRectBorder = Panel.drawRect
 ISCollapsableWindow = Panel:derive("ISCollapsableWindow")
 ISScrollingListBox = Panel:derive("ISScrollingListBox")
+function ISScrollingListBox:onMouseDown(x, y)
+    local item = self.items[math.floor(y / self.itemheight) + 1]
+    if item then self.onmousedown(self.target, item.item) end
+end
 ISRichTextPanel = Panel:derive("ISRichTextPanel")
 ISPanel = Panel
 ISButton = Panel:derive("ISButton")

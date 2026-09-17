@@ -2,7 +2,7 @@
 
 This is the active phase/checkpoint roadmap. It organizes the approved product direction; creating the roadmap does not authorize implementation or publication.
 
-**Current status:** Phases 1 and 2 are implemented with the v0.4.0 cart/UI/compatibility update. The owner brought common negative removal (work from Checkpoints 13-14) forward into this patch. Live UI and multiplayer acceptance remain pending. See [patch report](PATCH_v0.4.0.md) and the [seven-step test](TEST_PHASE_2.md). Checkpoints 5-12 remain future work; sequential checkpoint numbers are unchanged.
+**Current status:** Phases 1 and 2 are implemented with the v0.4.0 cart/UI/compatibility update. The owner brought common negative removal (work from Checkpoints 13-14) forward into this patch. The owner completed the v0.4.0 solo test and reported resize/selection issues; v0.4.1 addresses those findings. Live UI recheck and multiplayer acceptance remain pending. See [patch report](PATCH_v0.4.1.md) and the [seven-step test](TEST_PHASE_2.md). Checkpoints 5-12 remain future work; sequential checkpoint numbers are unchanged.
 
 The intended full release still includes progression, prestige, Horde Night rewards and official scoring. Common negative removal now arrives early, disabled by default; its official policy remains undecided.
 ## Checkpoint workflow
@@ -22,11 +22,11 @@ The intended full release still includes progression, prestige, Horde Night rewa
 | Phase | Outcome | Checkpoints | Status |
 |---|---|---|---|
 | 1. Foundation | Loadable standalone package and reliable character/account state | 1-2 | Implemented; solo sequence reported passed, live multiplayer pending |
-| 2. Positive trait shop | Usable health-hover entry and safe positive-trait purchases | 3-4 | v0.3.1 UI revision implemented; short UI/live multiplayer acceptance pending |
+| 2. Positive trait shop | Usable health-hover entry and safe positive-trait purchases | 3-4 | v0.4.1 UI fixes implemented; short UI recheck/live multiplayer acceptance pending |
 | 3. Progression and prestige | XP rewards, Trait Levels, death resets, and next-character bonuses | 5-7 | Pending |
 | 4. Horde Night integration | Horde XP, official lock, persistent eligibility, and score display | 8-10 | Pending |
 | 5. Initial release | Verified standalone and OMH builds, documentation, release package | 11-12 | Pending |
-| 6. Negative-trait removal | Optional default-off removal with verified effect cleanup | 13-14 | Deferred until after initial release |
+| 6. Negative-trait removal | Optional default-off removal with verified effect cleanup | 13-14 | Common removal implemented in v0.4.0; custom exceptions and official policy remain |
 
 ## Phase 1 - Foundation
 
@@ -36,7 +36,7 @@ The intended full release still includes progression, prestige, Horde Night rewa
 
 **Selected during implementation:** `OneMoreHorde_TraitShop`, version 0.1.0, `42.20/` layout with metadata minimum 42.20.0; actual installed build 42.20.4. Separate private repository `PandizeLive/pz-mod-onemorehorde_traitshop`; Workshop identity remains unassigned. Do not copy Horde Night's release identity or bundle third-party code unchanged.
 
-**Supporting tooling:** the owner separately authorized a Trait Shop-specific OMH.cmd and private repository. Installer, mirror and publisher preparation is recorded in [RELEASE_TOOLING.md](RELEASE_TOOLING.md). This does not complete later gameplay checkpoints or the initial-release acceptance checks.
+**Supporting tooling:** the owner separately authorized a Trait Shop-specific OMH_TraitShop.cmd and private repository. Installer, mirror and publisher preparation is recorded in [RELEASE_TOOLING.md](RELEASE_TOOLING.md). This does not complete later gameplay checkpoints or the initial-release acceptance checks.
 
 **Pass when:** the minimal package loads without Horde Night in singleplayer and dedicated multiplayer; relevant logs are clean; the source-backed feasibility notes establish paths for creation bonuses, remaining-point conversion, UI, and horde facts. A discovered API limitation is a decision/patch issue, not a passed checkpoint.
 

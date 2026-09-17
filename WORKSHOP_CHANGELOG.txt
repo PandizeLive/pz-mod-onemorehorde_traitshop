@@ -1,12 +1,10 @@
-v0.4.0
+v0.4.1
 
-Trait Shop cart and compatibility update
-- Added one receipt and Purchase button for trait additions and optional negative removals.
-- Added Ctrl/Shift selection, Reset and Close; search names and descriptions by relevance.
-- Replaced the pinned window with a movable, resizable OMH panel and consistent red/green/gold styling.
-- Centered Trait Level and changed XP text to 0 / 100; XP earning remains future work.
-- Enabled ordinary native/modded traits through common skill, XP-boost, recipe and child-trait handling.
-- Added default-off negative removal and Negative Cost Multiplier (default 2, no surcharge).
-- Added Smoker withdrawal cleanup, schema migration, recoverable effects and current-character synchronization guards.
-- Kept body-progression exclusions and documented custom-mod compatibility limits.
-- Prestige creation bonuses and Horde Night official-score integration remain future work.
+Trait Shop resize and selection fixes
+- Fixed resize-handle anchoring feedback and limited window dragging to the header.
+- Matched the full leaderboard title fonts and red/gold branding.
+- Added plain-click cart toggles, retained Shift ranges and added list-scoped Ctrl+A.
+- Preserved search text selection and search/filter scope for bulk selection.
+- Made queued negative removals immediately update positive conflict shading and filters.
+- Renamed the local launcher to OMH_TraitShop.cmd and updated all release-tool references.
+- Added the owner poster art and prepared the animated first-upload Workshop preview.

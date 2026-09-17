@@ -114,7 +114,7 @@ try {
     Write-Host 'Launch normally through Steam with your existing -debug option. Local staging takes priority over subscribed copies.'
     Write-Host 'Steam subscriptions and launch options were not changed. No Workshop upload or GitHub mirror was performed.'
     Write-Host 'At the main menu, ask Codex to verify the loaded version before gameplay testing.'
-    Write-Host 'Use OMH.cmd for mirroring and publication after testing.'
+    Write-Host 'Use OMH_TraitShop.cmd for mirroring and publication after testing.'
 } catch {
     Write-Host "ERROR: $($_.Exception.Message)" -ForegroundColor Red
     exit 1

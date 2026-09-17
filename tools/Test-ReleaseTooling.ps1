@@ -51,7 +51,7 @@ function Get-TreeHashes {
     })) -join "`n"
 }
 
-foreach ($entry in @('Contents', 'tools', 'docs', 'OMH.cmd', 'workshop.txt', 'WORKSHOP_CHANGELOG.txt', '.gitignore')) {
+foreach ($entry in @('Contents', 'tools', 'docs', 'OMH_TraitShop.cmd', 'preview.gif', 'preview.png', 'workshop.txt', 'WORKSHOP_CHANGELOG.txt', '.gitignore')) {
     Copy-Item -LiteralPath (Join-Path $repository $entry) -Destination $fixture -Recurse
 }
 Invoke-FixtureGit @('init', '-q', '-b', 'codex/release-fixture') | Out-Null
@@ -166,11 +166,15 @@ foreach ($definition in $ast.EndBlock.Statements | Where-Object { $_ -is [Manage
     Invoke-Expression $definition.Extent.Text
 }
 $workshopAppId = '108600'
+$previewPath = Join-Path $fixture 'preview.gif'
+$initial = New-WorkshopVdf 'C:\fixture\Contents' 'First upload' '0' 'Description' $previewPath
+Assert-Test ($initial -match '"previewfile"' -and $initial.Contains('preview.gif')) 'First upload uses owner animated preview'
+Assert-Rejected { New-WorkshopVdf 'C:\fixture' 'First upload' '0' 'Description' (Join-Path $fixture 'missing.gif') } 'Missing first-upload preview is rejected'
 $update = New-WorkshopVdf 'C:\fixture\Contents' 'Update' '1234567890' 'Must not overwrite'
 Assert-Test ($update -notmatch '"(title|description|visibility|previewfile)"' -and $update -match '"publishedfileid" "1234567890"') 'Existing-item uploads preserve description, title, cover and visibility'
 Assert-Rejected { New-WorkshopVdf 'C:\fixture' 'Update' '3777891317' '' } 'Horde Night Workshop ID is blocked'
-Assert-Rejected { New-WorkshopVdf 'C:\fixture' "line`nbreak" '0' 'Description' } 'Manifest rejects control characters'
-Assert-Rejected { New-WorkshopVdf 'C:\fixture' 'quote"' '0' 'Description' } 'Manifest rejects double quotes'
+Assert-Rejected { New-WorkshopVdf 'C:\fixture' "line`nbreak" '0' 'Description' $previewPath } 'Manifest rejects control characters'
+Assert-Rejected { New-WorkshopVdf 'C:\fixture' 'quote"' '0' 'Description' $previewPath } 'Manifest rejects double quotes'
 $workshopMetadataPath = Join-Path $fixture 'workshop.txt'
 $returnedVdf = Join-Path $testRoot 'returned.vdf'
 Set-Content -LiteralPath $returnedVdf -Value $update

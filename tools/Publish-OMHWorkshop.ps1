@@ -17,7 +17,7 @@ $steamCmdPath = Find-OmhSharedPath $repoRoot '.tools\steamcmd\steamcmd.exe'
 $workshopAppId = '108600'
 
 function New-WorkshopVdf {
-    param([string]$ContentFolder, [string]$ChangeNote, [string]$ItemId, [string]$Description)
+    param([string]$ContentFolder, [string]$ChangeNote, [string]$ItemId, [string]$Description, [string]$PreviewFile)
     if ($ItemId -eq '3777891317' -or $ItemId -notmatch '^\d+$') { throw 'Invalid Trait Shop Workshop target.' }
     $fields = [ordered]@{
         appid = $workshopAppId
@@ -26,6 +26,9 @@ function New-WorkshopVdf {
         changenote = $ChangeNote
     }
     if ($ItemId -eq '0') {
+        if (-not $PreviewFile -or -not (Test-Path -LiteralPath $PreviewFile -PathType Leaf)) { throw 'The first Workshop upload requires preview.gif.' }
+        if ((Get-Item -LiteralPath $PreviewFile).Length -ge 1MB) { throw 'Workshop preview must be smaller than 1 MB.' }
+        $fields.previewfile = [IO.Path]::GetFullPath($PreviewFile)
         $fields.title = 'OMH: Trait Shop'
         $fields.description = $Description
         $fields.visibility = '2'
@@ -60,7 +63,7 @@ try {
     if ($workshopId -eq '0' -and -not $description.Contains('DISCLAIMER: This mod was made in tandem with ChatGPT')) {
         throw 'The first Workshop description must include the required disclaimer.'
     }
-    $manifest = New-WorkshopVdf $contentFolder $changeLog.Steam $workshopId $description
+    $manifest = New-WorkshopVdf $contentFolder $changeLog.Steam $workshopId $description (Join-Path $repoRoot 'preview.gif')
     Write-Host "OMH: TRAIT SHOP publisher - v$($release.Version) - Workshop ID $workshopId"
     Write-Host $changeLog.Source
     Write-Host $manifest
@@ -76,7 +79,7 @@ try {
         throw "An earlier creation attempt needs review. Do not create another item. Inspect $pendingPath and the preserved VDF/logs, then commit the recovered workshop.txt ID."
     }
     if (-not $steamCmdPath) { throw 'SteamCMD not found. Install it under the shared .tools/steamcmd folder.' }
-    $criticalPaths = @('Contents', 'tools', 'OMH.cmd', 'workshop.txt', 'WORKSHOP_CHANGELOG.txt')
+    $criticalPaths = @('Contents', 'tools', 'OMH_TraitShop.cmd', 'preview.gif', 'preview.png', 'workshop.txt', 'WORKSHOP_CHANGELOG.txt')
     if (Invoke-OmhReleaseGit $release (@('status', '--porcelain', '--untracked-files=all', '--') + $criticalPaths)) {
         throw 'Commit release content, identity, changelog and tooling before publishing.'
     }

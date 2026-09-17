@@ -5,6 +5,33 @@ local Presentation = {}
 Presentation.GOLD = { r = 231 / 255, g = 180 / 255, b = 40 / 255, a = 1 }
 Presentation.GREEN = { r = 114 / 255, g = 184 / 255, b = 109 / 255, a = 1 }
 Presentation.RED = { r = 217 / 255, g = 64 / 255, b = 64 / 255, a = 1 }
+Presentation.TITLE_GOLD = { r = 0.95, g = 0.75, b = 0.2, a = 1 }
+Presentation.TITLE_RED = { r = 0.85, g = 0.25, b = 0.25, a = 1 }
+
+---@nodiscard
+---@param row table
+---@param rows table
+---@param cart table
+---@param tokens number
+---@return string
+function Presentation.previewStatus(row, rows, cart, tokens)
+    if row.status ~= "available" and row.status ~= "funds" and row.status ~= "conflict" then return row.status end
+    if row.group == "catalog" then
+        for id, other in pairs(rows) do
+            local removing = other.group == "negative" and cart[id]
+                and (other.status == "available" or other.status == "funds")
+            local adding = other.group == "catalog" and cart[id]
+                and (other.status == "available" or other.status == "funds" or other.status == "conflict")
+            if id ~= row.id and ((other.owned and not removing) or adding)
+                and (row.definition:isMutuallyExclusive(other.definition)
+                    or other.definition:isMutuallyExclusive(row.definition)) then
+                return "conflict"
+            end
+        end
+    end
+    if row.price and row.price > tokens then return "funds" end
+    return "available"
+end
 
 ---@nodiscard
 ---@param text string

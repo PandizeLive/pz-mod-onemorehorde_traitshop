@@ -37,9 +37,9 @@ local function drawTrait(self, y, item, alt)
     elseif alt then
         self:drawRect(1, y, self.width - 2, height, 0.035, 1, 1, 1)
     end
-    if not row.owned and row.status ~= "available" then
+    if not row.owned and row.previewStatus ~= "available" then
         color = { r = 0.5, g = 0.5, b = 0.5 }
-    elseif row.group == "negative" and row.status ~= "available" then
+    elseif row.group == "negative" and row.previewStatus ~= "available" then
         color = { r = 0.5, g = 0.5, b = 0.5 }
     end
     local texture = row.definition:getTexture()
@@ -108,6 +108,18 @@ local function place(self, x, y, width, height)
     self:setHeight(height)
 end
 
+---@param self ISScrollingListBox
+---@param x number
+---@param y number
+---@return boolean|nil
+local function listMouseDown(self, x, y)
+    self.parent.activeList = self
+    self.parent.search:unfocus()
+    self.parent:bringToTop()
+    ISScrollingListBox.onMouseDown(self, x, y)
+    return true
+end
+
 ---@param self OMHTS_ShopWindow
 ---@param group string
 ---@return ISScrollingListBox
@@ -120,6 +132,7 @@ local function addList(self, group)
     list.doDrawItem = drawTrait
     list.drawBorder = true
     list.useStencilForChildren = true
+    list.onMouseDown = listMouseDown
     list.borderColor = { r = 0.4, g = 0.4, b = 0.4, a = 0.55 }
     list.backgroundColor = { r = 0.025, g = 0.025, b = 0.025, a = 0.9 }
     if group == "receipt" then
@@ -137,7 +150,8 @@ function OMHTS_ShopWindow:layout()
     local width = self.width - 24
     local half = math.floor((width - 16) / 2)
     local right = 12 + half + 16
-    self.levelY = self.mediumHeight * 2 + 20
+    self.subtitleY = 5 + fh
+    self.levelY = self.subtitleY + self.largeHeight + 12
     local statsWidth = math.floor(width * 0.31)
     place(self.tokens, 12, self.levelY, statsWidth, fh + self.mediumHeight + 8)
     place(self.prestige, self.width - 12 - statsWidth, self.levelY, statsWidth, fh + self.mediumHeight + 8)
@@ -199,10 +213,15 @@ function OMHTS_ShopWindow:createChildren()
     self.closeButton = addButton(self, getText("UI_OMHTS_Close"), self.close)
     self.buy:setEnable(false)
     self.resizeWidget = ISResizeWidget:new(0, 0, 12, 12, self)
+    self.resizeWidget.anchorLeft = true
+    self.resizeWidget.anchorRight = false
+    self.resizeWidget.anchorTop = true
+    self.resizeWidget.anchorBottom = false
     self.resizeWidget:initialise()
     self.resizeWidget.resizeFunction = OMHTS_ShopWindow.Resize
     self:addChild(self.resizeWidget)
     self:layout()
+    self:setWantKeyEvents(true)
 end
 
 ---@param width number
@@ -212,15 +231,45 @@ function OMHTS_ShopWindow:Resize(width, height)
     self:setWidth(math.max(self.minimumWidth, math.min(width, getCore():getScreenWidth() - self.x)))
     self:setHeight(math.max(self.minimumHeight, math.min(height, getCore():getScreenHeight() - self.y)))
     self:layout()
-    self.rowsKey = nil
-    self.nextRefresh = 0
+end
+
+---@param x number
+---@param y number
+---@return boolean|nil
+function OMHTS_ShopWindow:onMouseDown(x, y)
+    self.activeList = nil
+    if y < self.levelY and not self.resizeWidget.resizing then
+        ISPanel.onMouseDown(self, x, y)
+    end
+    return true
+end
+
+---@nodiscard
+---@param key number
+---@return boolean
+function OMHTS_ShopWindow:isKeyConsumed(key)
+    return key == Keyboard.KEY_A and isCtrlKeyDown() and self:getIsVisible()
+        and not self.search:isFocused() and (self.activeList == self.list or self.activeList == self.negative)
+end
+
+---@param key number
+---@return nil
+function OMHTS_ShopWindow:onKeyPress(key)
+    if not self:isKeyConsumed(key) or TraitShop.purchasePending(self.playerNum) then return end
+    for index = 1, #self.activeList.items do
+        local row = self.activeList.items[index].item
+        if row.previewStatus == "available" or row.previewStatus == "funds" then
+            self.cart[row.id] = true
+        end
+    end
+    self.notice = nil
+    self:updateCart()
 end
 
 ---@param row table
 ---@return nil
 function OMHTS_ShopWindow:onSelect(row)
     if TraitShop.purchasePending(self.playerNum) then return end
-    self.focusedId = row.id
     self.notice = nil
     if row.group == "positive" then
         self:updateCart()
@@ -230,6 +279,7 @@ function OMHTS_ShopWindow:onSelect(row)
     if row.group == "negative" then
         list = self.negative
     end
+    self.activeList = list
     local selectedIndex
     local anchorIndex
     for index = 1, #list.items do
@@ -240,17 +290,12 @@ function OMHTS_ShopWindow:onSelect(row)
             anchorIndex = index
         end
     end
-    if not isCtrlKeyDown() then
-        for id in pairs(self.cart) do
-            local item = self.allRows[id]
-            if item and item.group == row.group then
-                self.cart[id] = nil
-            end
-        end
-    end
     if isShiftKeyDown() and anchorIndex and selectedIndex then
         for index = math.min(anchorIndex, selectedIndex), math.max(anchorIndex, selectedIndex) do
-            self.cart[list.items[index].item.id] = true
+            local item = list.items[index].item
+            if item.previewStatus == "available" or item.previewStatus == "funds" then
+                self.cart[item.id] = true
+            end
         end
     else
         if self.cart[row.id] then
@@ -354,6 +399,44 @@ function OMHTS_ShopWindow:updateCart()
     self.buy:setEnable(self.cartValid)
     self.reset:setEnable(not TraitShop.purchasePending(self.playerNum))
     self.receipt:setYScroll(math.max(math.min(0, self.receipt.height - #rows * self.receipt.itemheight), math.min(0, scroll)))
+    self:refreshLists()
+end
+
+---@return nil
+function OMHTS_ShopWindow:refreshLists()
+    if not self.state then return end
+    local selected = {}
+    for id in pairs(self.cart) do
+        selected[#selected + 1] = id
+    end
+    table.sort(selected)
+    local key = self.rowsKey .. "|" .. table.concat(selected, "|")
+    if self.visibleKey == key then return end
+    local query = Presentation.normalize(string.sub(self.search:getInternalText(), 1, 128))
+    local groups = { catalog = {}, positive = {}, negative = {} }
+    for _, row in pairs(self.allRows) do
+        row.previewStatus = Presentation.previewStatus(row, self.allRows, self.cart, self.state.tokens)
+        row.rank = Presentation.relevance(row, query)
+        if row.group ~= "catalog" or (row.rank ~= nil and (self.filterMode == 1
+            or (self.filterMode == 2 and row.previewStatus == "available")
+            or (self.filterMode == 3 and row.previewStatus ~= "available"))) then
+            local rows = groups[row.group]
+            rows[#rows + 1] = row
+        end
+    end
+    for index = 1, #self.lists do
+        local list = self.lists[index]
+        local scroll = list:getYScroll()
+        local rows = groups[list.group]
+        table.sort(rows, Presentation.cheapestFirst)
+        list:clear()
+        for rowIndex = 1, #rows do
+            local row = rows[rowIndex]
+            list:addItem(row.name, row).tooltip = row.tooltip
+        end
+        list:setYScroll(math.max(math.min(0, list.height - #rows * list.itemheight), math.min(0, scroll)))
+    end
+    self.visibleKey = key
 end
 
 ---@return nil
@@ -396,7 +479,6 @@ function OMHTS_ShopWindow:refresh()
     end
     local key = table.concat(parts, "|")
     if key ~= self.rowsKey then
-        local groups = Presentation.rows(self.definitions, owned, state, query, self.filterMode)
         local all = Presentation.rows(self.definitions, owned, state, "", 1)
         self.allRows = {}
         for _, rows in pairs(all) do
@@ -404,19 +486,8 @@ function OMHTS_ShopWindow:refresh()
                 self.allRows[rows[index].id] = rows[index]
             end
         end
-        for index = 1, #self.lists do
-            local list = self.lists[index]
-            local scroll = list:getYScroll()
-            list:clear()
-            local rows = groups[list.group]
-            for rowIndex = 1, #rows do
-                local row = rows[rowIndex]
-                local item = list:addItem(row.name, row)
-                item.tooltip = row.tooltip
-            end
-            list:setYScroll(math.max(math.min(0, list.height - #rows * list.itemheight), math.min(0, scroll)))
-        end
         self.rowsKey = key
+        self.visibleKey = nil
     end
     self:updateCart()
 end
@@ -443,9 +514,11 @@ function OMHTS_ShopWindow:prerender()
         level = tostring(self.state.level)
         balance = tostring(self.state.tokens - self.cartTotal)
     end
-    self:drawTextCentre(getText("UI_OMHTS_Brand"), self.width / 2, 8, RED.r, RED.g, RED.b, 1, UIFont.Medium)
-    self:drawTextCentre(getText("UI_OMHTS_Subtitle"), self.width / 2, 10 + self.mediumHeight,
-        GREEN.r, GREEN.g, GREEN.b, 1, UIFont.Medium)
+    local titleRed = Presentation.TITLE_RED
+    local titleGold = Presentation.TITLE_GOLD
+    self:drawTextCentre(getText("UI_OMHTS_Brand"), self.width / 2, 5, titleRed.r, titleRed.g, titleRed.b, 1, UIFont.Small)
+    self:drawTextCentre(getText("UI_OMHTS_Subtitle"), self.width / 2, self.subtitleY,
+        titleGold.r, titleGold.g, titleGold.b, 1, UIFont.Large)
     self:drawTextCentre(getText("UI_OMHTS_Level"), self.width / 2, self.levelY, 0.91, 0.91, 0.91, 1, UIFont.Small)
     self:drawTextCentre(level, self.width / 2, self.levelY + self.fontHeight + 4, GOLD.r, GOLD.g, GOLD.b, 1, UIFont.Medium)
     self:drawText(getText("UI_OMHTS_Catalog", tostring(#self.list.items)), 12, self.headingY, 0.91, 0.91, 0.91, 1, UIFont.Small)
@@ -480,6 +553,11 @@ function OMHTS_ShopWindow:close()
     self.anchors = {}
     self.notice = nil
     self.submitted = false
+    self.activeList = nil
+    self.search:unfocus()
+    self.resizeWidget.resizing = false
+    self.resizeWidget:setCapture(false)
+    self.moving = false
     self:setVisible(false)
     self:removeFromUIManager()
 end
@@ -501,6 +579,7 @@ function OMHTS_ShopWindow:new(player)
     window.minimumHeight = math.min(math.max(540, fh * 23 + 100), screenHeight - 40)
     window.fontHeight = fh
     window.mediumHeight = getTextManager():getFontHeight(UIFont.Medium)
+    window.largeHeight = getTextManager():getFontHeight(UIFont.Large)
     window.nextRefresh = 0
     window.nextRequest = 0
     window.filterMode = 1

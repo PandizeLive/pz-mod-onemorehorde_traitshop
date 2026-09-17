@@ -70,7 +70,7 @@ The installed game is at `C:/Program Files (x86)/Steam/steamapps/common/ProjectZ
 
 The **v0.1.1** package replaced the mod-list icon. The current **v0.2.0** package adds Phase 1 persistent state; the v0.1.0 startup evidence above remains historical. The isolated launch menu option/helper was removed at the owner's request. Follow [Checkpoint 2's normal Steam tests](CHECKPOINT_2.md) to cover the remaining standalone gate and new persistence together.
 
-Install through [OMH.cmd](../OMH.cmd), **1 - Install locally**, while the game is closed, then launch Project Zomboid normally through Steam. Check the new mod-list icon. For the remaining standalone check, enable only Trait Shop for a **new singleplayer Sandbox game**, enter the world, then quit normally. No shop window or button should exist in this checkpoint.
+Install through [OMH_TraitShop.cmd](../OMH_TraitShop.cmd), **1 - Install locally**, while the game is closed, then launch Project Zomboid normally through Steam. Check the new mod-list icon. For the remaining standalone check, enable only Trait Shop for a **new singleplayer Sandbox game**, enter the world, then quit normally. No shop window or button should exist in this checkpoint.
 
 The log to review is `%USERPROFILE%/Zomboid/console.txt`. Expected markers:
 
