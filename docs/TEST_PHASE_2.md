@@ -1,9 +1,8 @@
-# v0.4.2 - five-step solo recheck
+# v0.4.3 - four-step button recheck
 
-1. Close the game. Run [OMH_TraitShop.cmd](../OMH_TraitShop.cmd) -> **1**, then launch through Steam and load your existing Trait Shop test character.
-2. Open the shop at its initial size. Scroll the positive list from top to bottom: later entries should remain visible, with no unexplained blank area. Repeat after shrinking and enlarging the window.
-3. Select several traits to fill the receipt, then scroll it to the last entry. Rows remain visible; clicking an entry still removes it. Reset clears the cart without changing your character.
-4. Check Reset at lower-left and red Close then Purchase at lower-right. Select an affordable available trait: Purchase turns green; Reset returns it to disabled grey. Hover XP: it lists no amounts and says no sources are available in this build.
-5. Close and reopen the shop: cart is empty and scrolling still works. Quit normally and report **Passed**, or the failing step. The next session is the dedicated player test.
+1. Close the game. Run [OMH_TraitShop.cmd](../OMH_TraitShop.cmd) -> **1**, then launch through Steam and load your existing test character.
+2. Open the shop and select an affordable available trait. Purchase stays green after several seconds and when hovering on/off it.
+3. Build a valid cart matching your Token balance exactly: Purchase remains green. Add another trait to exceed the balance: Purchase becomes disabled and neutral. Remove that extra trait: green returns.
+4. Reset, then select an affordable trait again: green returns and Close retains its red border. Close the shop, quit normally and report **Passed** or the failing step. No actual purchase is required.
 
-No purchase or new character is required for this UI recheck. If the current character cannot afford any trait, report that part as untested; do not generate currency. Dedicated setup and its complete 4-8-step sequence will be handled together after the solo check.
+Use the existing funded test character shown in the report. If its balance cannot form an exact-price cart, report that check as untested rather than changing currency. After this recheck, proceed to the dedicated player session.

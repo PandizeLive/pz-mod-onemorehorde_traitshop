@@ -40,7 +40,7 @@ end
 function Panel:new(x, y, width, height, title, target, callback)
     return setmetatable({ x = x, y = y, width = width, height = height, title = title,
         target = target, callback = callback, children = {}, items = {}, selected = 1,
-        visible = true, scroll = 0 }, self)
+        visible = true, scroll = 0, textureColor = {r=1,g=1,b=1,a=1} }, self)
 end
 function Panel:initialise()
     if self.visible == nil then self.visible = true end
@@ -131,6 +131,7 @@ end
 ISRichTextPanel = Panel:derive("ISRichTextPanel")
 ISPanel = Panel
 ISButton = Panel:derive("ISButton")
+testFixtureButton = ISButton
 ISTextEntryBox = Panel:derive("ISTextEntryBox")
 function ISTextEntryBox:new(text, x, y, width, height)
     return Panel.new(self, x, y, width, height, text)

@@ -2,7 +2,7 @@
 
 This is the active phase/checkpoint roadmap. It organizes the approved product direction; creating the roadmap does not authorize implementation or publication.
 
-**Current status:** Phases 1 and 2 are implemented with the v0.4.0 cart/UI/compatibility update. The owner brought common negative removal (work from Checkpoints 13-14) forward into this patch. The owner completed the v0.4.0 solo test and reported resize/selection issues; v0.4.1 addresses those findings. v0.4.2 fixes a subsequent scroll-offset rendering defect and refines the footer. Live UI recheck and multiplayer acceptance remain pending. See [patch report](PATCH_v0.4.2.md) and the [five-step test](TEST_PHASE_2.md). Checkpoints 5-12 remain future work; sequential checkpoint numbers are unchanged.
+**Current status:** Phases 1 and 2 are implemented with the v0.4.0 cart/UI/compatibility update. The owner brought common negative removal (work from Checkpoints 13-14) forward into this patch. The owner completed the v0.4.0 solo test and reported resize/selection issues; v0.4.1 addresses those findings. v0.4.2 fixes a subsequent scroll-offset rendering defect and refines the footer. Live UI recheck and multiplayer acceptance remain pending. See [patch report](PATCH_v0.4.2.md) and the [four-step test](TEST_PHASE_2.md). Checkpoints 5-12 remain future work; sequential checkpoint numbers are unchanged.
 
 The intended full release still includes progression, prestige, Horde Night rewards and official scoring. Common negative removal now arrives early, disabled by default; its official policy remains undecided.
 ## Checkpoint workflow
@@ -170,4 +170,6 @@ The intended full release still includes progression, prestige, Horde Night rewa
 
 No open Phase 6 decision blocks the initial release. No unimplemented checkpoint should be marked complete solely because its design is documented.
 
-Current UI follow-up: [v0.4.2](PATCH_v0.4.2.md) fixes scroll-offset row clipping and updates the footer/XP tooltip. Run the [five-step solo recheck](TEST_PHASE_2.md), then proceed to the dedicated player session. Dedicated acceptance is still pending.
+Current UI follow-up: [v0.4.2](PATCH_v0.4.2.md) fixes scroll-offset row clipping and updates the footer/XP tooltip. Run the [current solo recheck](TEST_PHASE_2.md), then proceed to the dedicated player session. Dedicated acceptance is still pending.
+
+Current follow-up: [v0.4.3](PATCH_v0.4.3.md) fixes native button color mutation. Its four-step button recheck precedes the dedicated player session.

@@ -44,6 +44,26 @@ window:onSelect(window.allRows["base:allthumbs"])
 check(window.cartCount == 2 and window.cartValid and window.cartTotal == 6, "negative selection preserves positive cart and resolves conflict")
 check(window.buy.enable and window.buy.backgroundColor.g == 0.45 and window.buy.backgroundColorMouseOver.g == 0.7,
     "valid Purchase uses Horde Night confirm green")
+for refresh = 1, 12 do
+    window:updateCart()
+    check(window.buy.enable and window.buy.backgroundColor.r == 0.08 and window.buy.backgroundColor.g == 0.45
+        and window.buy.borderColor.g == 0.95, "native setEnable preserves green across valid refresh " .. refresh)
+end
+local wallet = window.state.tokens
+window.state.tokens = window.cartTotal
+window:updateCart()
+check(window.cartValid and window.buy.enable and window.buy.backgroundColor.g == 0.45,
+    "exact-balance cart stays enabled green")
+window.state.tokens = window.cartTotal - 1
+window:updateCart()
+check(not window.cartValid and not window.buy.enable and window.buy.backgroundColor.g == 0.07,
+    "insufficient balance becomes disabled neutral")
+window.state.tokens = wallet
+window:updateCart()
+check(window.buy.enable and window.buy.backgroundColor.g == 0.45, "valid cart restores green after native disable")
+window.reset:setEnable(false)
+check(window.closeButton.borderColor.g == 0.35, "disabling Reset cannot mutate Close border")
+window.reset:setEnable(true)
 check(window.allRows["base:dextrous"].previewStatus == "available", "queued removal immediately clears conflict shading")
 window:onSelect(window.allRows["base:allthumbs"])
 check(window.allRows["base:dextrous"].previewStatus == "conflict" and not window.cartValid,
@@ -211,7 +231,7 @@ sidebar:prerender()
 check(button:getIsVisible(), "visible TPS bridge keeps shop reachable")
 sidebar:removeFromUIManager()
 Events.OnDisconnect.fire()
-testOutput = tostring(testChecks) .. " Phase 2 / v0.4.2 assertions passed."
+testOutput = tostring(testChecks) .. " Phase 2 / v0.4.3 assertions passed."
 
 testFontHeight = 28
 testScreenWidth = 1024
@@ -262,4 +282,4 @@ for groupIndex = 1, #rowGroups do
         end
     end
 end
-testOutput = tostring(testChecks) .. " Phase 2 / v0.4.2 assertions passed."
+testOutput = tostring(testChecks) .. " Phase 2 / v0.4.3 assertions passed."

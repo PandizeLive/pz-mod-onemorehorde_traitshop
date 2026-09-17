@@ -1,8 +1,6 @@
-v0.4.2
+v0.4.3
 
-Trait Shop scrolling and footer fixes
-- Fixed row clipping that hid later traits and receipt entries when scrolling, at any window size.
-- Anchored Reset lower-left and Close followed by Purchase lower-right.
-- Matched Horde Night Difficulty menu colors: red Close, black/red Reset and green enabled Purchase.
-- Kept unavailable Purchase neutral and disabled.
-- Simplified the XP tooltip to source availability without reward amounts; XP earning remains future work.
+Trait Shop Purchase color fix
+- Fixed native button enable refreshes overwriting the green Purchase palette.
+- Valid carts, including exact-balance carts, remain green; invalid carts remain disabled and neutral.
+- Kept Reset and Close border colors independent.

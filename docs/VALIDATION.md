@@ -1,6 +1,6 @@
 # Future validation checklist
 
-This is developer coverage tracking, not an owner-facing test script. See [PHASE_2.md](PHASE_2.md) for the foundation and [PATCH_v0.4.0.md](PATCH_v0.4.0.md) for the cart/removal revision. The owner completed that solo test and reported UI changes; [PATCH_v0.4.1.md](PATCH_v0.4.1.md) covers the resize/selection fixes and pending rendered recheck. The owner reported the v0.3.0 solo lifecycle/purchase sequence passed; the reviewed log includes Horde Night, so standalone loading is not independently established by that log. [TEST_PHASE_2.md](TEST_PHASE_2.md) is the current five-step patch test. Dedicated/hosted reconnect/restart, price-rounding, existing-save migration and broader UI/addon compatibility acceptance remain pending; prepare separate 4-8-step instructions when those sessions are selected. Reward earning and prestige creation-screen flows below remain future work.
+This is developer coverage tracking, not an owner-facing test script. See [PHASE_2.md](PHASE_2.md) for the foundation and [PATCH_v0.4.0.md](PATCH_v0.4.0.md) for the cart/removal revision. The owner completed that solo test and reported UI changes; [PATCH_v0.4.1.md](PATCH_v0.4.1.md) covers the resize/selection fixes and pending rendered recheck. The owner reported the v0.3.0 solo lifecycle/purchase sequence passed; the reviewed log includes Horde Night, so standalone loading is not independently established by that log. [TEST_PHASE_2.md](TEST_PHASE_2.md) is the current four-step patch test. Dedicated/hosted reconnect/restart, price-rounding, existing-save migration and broader UI/addon compatibility acceptance remain pending; prepare separate 4-8-step instructions when those sessions are selected. Reward earning and prestige creation-screen flows below remain future work.
 
 ## Documentation pass
 
@@ -55,4 +55,6 @@ This is developer coverage tracking, not an owner-facing test script. See [PHASE
 
 Use the smallest meaningful check: rule-level checks and singleplayer first; one-player dedicated for authority, creation grants, persistence and reconnect; two players only for event membership, casualties, unique-player rewards, and cross-player isolation. Hosted multiplayer should cover any host-specific lifecycle differences. Review relevant logs before declaring a build ready.
 
-Current UI follow-up: [v0.4.2](PATCH_v0.4.2.md) fixes scroll-offset row clipping and updates the footer/XP tooltip. Run the [five-step solo recheck](TEST_PHASE_2.md), then proceed to the dedicated player session. Dedicated acceptance is still pending.
+Current UI follow-up: [v0.4.2](PATCH_v0.4.2.md) fixes scroll-offset row clipping and updates the footer/XP tooltip. Run the [current solo recheck](TEST_PHASE_2.md), then proceed to the dedicated player session. Dedicated acceptance is still pending.
+
+Current follow-up: [v0.4.3](PATCH_v0.4.3.md) fixes native button color mutation. Its four-step button recheck precedes the dedicated player session.

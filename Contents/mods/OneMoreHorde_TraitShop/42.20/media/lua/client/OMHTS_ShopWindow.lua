@@ -12,11 +12,6 @@ local Presentation = require("OMHTS_Presentation")
 local GOLD = Presentation.GOLD
 local GREEN = Presentation.GREEN
 local RED = Presentation.RED
-local BUY_BACKGROUND = { r = 0.08, g = 0.45, b = 0.12, a = 1 }
-local BUY_HOVER = { r = 0.12, g = 0.7, b = 0.18, a = 1 }
-local BUY_BORDER = { r = 0.35, g = 0.95, b = 0.4, a = 1 }
-local DISABLED_BACKGROUND = { r = 0.07, g = 0.07, b = 0.07, a = 1 }
-local DISABLED_BORDER = { r = 0.4, g = 0.4, b = 0.4, a = 0.6 }
 local windows = {}
 
 ---@class OMHTS_ShopWindow: ISPanel
@@ -226,7 +221,7 @@ function OMHTS_ShopWindow:createChildren()
     self.closeButton.borderColor = { r = 0.95, g = 0.35, b = 0.35, a = 1 }
     self.reset.backgroundColor = { r = 0, g = 0, b = 0, a = 1 }
     self.reset.backgroundColorMouseOver = { r = 0.12, g = 0.02, b = 0.02, a = 1 }
-    self.reset.borderColor = self.closeButton.borderColor
+    self.reset.borderColor = { r = 0.95, g = 0.35, b = 0.35, a = 1 }
     self.reset.textColor = { r = 0.95, g = 0.2, b = 0.2, a = 1 }
     self.buy:setEnable(false)
     self.resizeWidget = ISResizeWidget:new(0, 0, 12, 12, self)
@@ -415,13 +410,13 @@ function OMHTS_ShopWindow:updateCart()
         and not TraitShop.purchasePending(self.playerNum)
     self.buy:setEnable(self.cartValid)
     if self.cartValid then
-        self.buy.backgroundColor = BUY_BACKGROUND
-        self.buy.backgroundColorMouseOver = BUY_HOVER
-        self.buy.borderColor = BUY_BORDER
+        self.buy:setBackgroundRGBA(0.08, 0.45, 0.12, 1)
+        self.buy:setBackgroundColorMouseOverRGBA(0.12, 0.7, 0.18, 1)
+        self.buy:setBorderRGBA(0.35, 0.95, 0.4, 1)
     else
-        self.buy.backgroundColor = DISABLED_BACKGROUND
-        self.buy.backgroundColorMouseOver = DISABLED_BACKGROUND
-        self.buy.borderColor = DISABLED_BORDER
+        self.buy:setBackgroundRGBA(0.07, 0.07, 0.07, 1)
+        self.buy:setBackgroundColorMouseOverRGBA(0.07, 0.07, 0.07, 1)
+        self.buy:setBorderRGBA(0.4, 0.4, 0.4, 0.6)
     end
     self.reset:setEnable(not TraitShop.purchasePending(self.playerNum))
     self.receipt:setYScroll(math.max(math.min(0, self.receipt.height - #rows * self.receipt.itemheight), math.min(0, scroll)))
