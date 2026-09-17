@@ -21,6 +21,18 @@ check(brand and brand.font == UIFont.Small and brand.r == 0.85
     and subtitle and subtitle.font == UIFont.Large and subtitle.r == 0.95 and subtitle.g == 0.75,
     "header matches full leaderboard fonts and colors")
 check(window.progress.title == "0 / 100", "XP label uses numeric requirement and no percent formatter")
+check(window.progress.tooltip == "XP sources\nNone available in this build." and not string.find(window.progress.tooltip, "%d"),
+    "XP tooltip has no amounts or invented enabled sources before reward implementation")
+check(window.reset.x == 12 and window.closeButton.x > window.reset.x + window.reset.width
+    and window.buy.x == window.width - 12 - window.buy.width
+    and window.closeButton.x + window.closeButton.width + 8 == window.buy.x
+    and window.reset.y == window.buy.y and window.closeButton.y == window.buy.y,
+    "Reset anchors lower-left and Close then Purchase form compact lower-right group")
+check(window.closeButton.backgroundColor.r == 0.55 and window.closeButton.backgroundColor.g == 0.08
+    and window.reset.backgroundColor.r == 0 and window.reset.textColor.r == 0.95
+    and window.reset.borderColor.r == 0.95, "Close and Reset use Horde Night difficulty colors")
+check(not window.buy.enable and window.buy.backgroundColor.r == window.buy.backgroundColor.g,
+    "empty cart Purchase stays disabled and neutral")
 check(window.tokens.textColor == window.prestige.textColor, "currencies have equal visual weight")
 check(window.description == nil and window.remove == nil and window.buy.title == "Purchase", "one checkout and no duplicate description footer")
 check(window.buy.tooltip == nil and window.reset.tooltip == nil and window.closeButton.tooltip == nil, "actions have no tooltips")
@@ -30,10 +42,13 @@ window:onSelect(dex)
 check(window.cartCount == 1 and not window.cartValid and window.cartReason == "conflict", "conflicting addition visibly blocks checkout")
 window:onSelect(window.allRows["base:allthumbs"])
 check(window.cartCount == 2 and window.cartValid and window.cartTotal == 6, "negative selection preserves positive cart and resolves conflict")
+check(window.buy.enable and window.buy.backgroundColor.g == 0.45 and window.buy.backgroundColorMouseOver.g == 0.7,
+    "valid Purchase uses Horde Night confirm green")
 check(window.allRows["base:dextrous"].previewStatus == "available", "queued removal immediately clears conflict shading")
 window:onSelect(window.allRows["base:allthumbs"])
 check(window.allRows["base:dextrous"].previewStatus == "conflict" and not window.cartValid,
     "toggling removal off restores conflict")
+check(not window.buy.enable and window.buy.backgroundColor.g == 0.07, "invalidated cart removes enabled green styling")
 window:onSelect(window.allRows["base:allthumbs"])
 window:onSelect(reader)
 check(window.cartCount == 3 and window.cartTotal == 8, "plain click accumulates traits")
@@ -121,6 +136,8 @@ check(window.list.height > 0 and window.positive.height > 0 and window.negative.
     and window.list:getBottom() < window.receipt.y and window.noticeY + window.fontHeight < window.buy.y,
     "minimum dimensions keep panels receipt notices and buttons separated")
 local width, height = window.width, window.height
+check(window.reset.x == 12 and window.buy.x + window.buy.width == window.width - 12
+    and window.closeButton.x > window.reset.x + window.reset.width, "minimum width preserves both footer groups")
 local startX, startY = window.x, window.y
 local grip = window.resizeWidget
 testMouseX = grip:getAbsoluteX() + 6
@@ -194,7 +211,7 @@ sidebar:prerender()
 check(button:getIsVisible(), "visible TPS bridge keeps shop reachable")
 sidebar:removeFromUIManager()
 Events.OnDisconnect.fire()
-testOutput = tostring(testChecks) .. " Phase 2 / v0.4.1 assertions passed."
+testOutput = tostring(testChecks) .. " Phase 2 / v0.4.2 assertions passed."
 
 testFontHeight = 28
 testScreenWidth = 1024
@@ -205,4 +222,44 @@ large:instantiate()
 check(large.list.height >= 100 and large.negative.height >= 80 and large.noticeY + large.fontHeight < large.buy.y,
     "large font three-panel layout remains usable at 1024 by 768")
 large:close()
-testOutput = tostring(testChecks) .. " Phase 2 / v0.4.1 assertions passed."
+
+testFontHeight = window.fontHeight
+local probe = ISScrollingListBox:new(0, 0, 250, 160)
+probe.parent = window
+probe.itemheight = 28
+probe.doDrawItem = window.list.doDrawItem
+local rowGroups = { "catalog", "positive", "negative", "receipt" }
+local heights = { 420, 112, 56 }
+for groupIndex = 1, #rowGroups do
+    probe.group = rowGroups[groupIndex]
+    for sizeIndex = 1, #heights do
+        probe.height = heights[sizeIndex]
+        local offsets = { 0, -560, probe.height - 49 * probe.itemheight }
+        for offsetIndex = 1, #offsets do
+            probe:setYScroll(offsets[offsetIndex])
+            testDraws = {}
+            local expected = {}
+            local y = 0
+            for index = 1, 49 do
+                local row = { id = "test:row" .. index, name = "Row " .. index,
+                    group = "catalog", owned = false, previewStatus = "available", price = 1,
+                    definition = reader.definition }
+                if probe.group == "positive" or probe.group == "negative" then
+                    row.group = probe.group
+                    row.owned = true
+                end
+                local label = row.name
+                if probe.group == "receipt" then label = getText("UI_OMHTS_ReceiptAdd", label) end
+                local screenY = y + probe:getYScroll()
+                if screenY + probe.itemheight > 0 and screenY < probe.height then expected[label] = true end
+                y = probe:doDrawItem(y, { item = row }, false)
+            end
+            for index = 1, #testDraws do expected[testDraws[index].text] = nil end
+            local missing = false
+            for _ in pairs(expected) do missing = true end
+            check(not missing and y == 49 * probe.itemheight,
+                "all viewport rows render at scroll offset " .. offsetIndex .. " size " .. sizeIndex .. " group " .. probe.group)
+        end
+    end
+end
+testOutput = tostring(testChecks) .. " Phase 2 / v0.4.2 assertions passed."

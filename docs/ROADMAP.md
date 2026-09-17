@@ -2,7 +2,7 @@
 
 This is the active phase/checkpoint roadmap. It organizes the approved product direction; creating the roadmap does not authorize implementation or publication.
 
-**Current status:** Phases 1 and 2 are implemented with the v0.4.0 cart/UI/compatibility update. The owner brought common negative removal (work from Checkpoints 13-14) forward into this patch. The owner completed the v0.4.0 solo test and reported resize/selection issues; v0.4.1 addresses those findings. Live UI recheck and multiplayer acceptance remain pending. See [patch report](PATCH_v0.4.1.md) and the [seven-step test](TEST_PHASE_2.md). Checkpoints 5-12 remain future work; sequential checkpoint numbers are unchanged.
+**Current status:** Phases 1 and 2 are implemented with the v0.4.0 cart/UI/compatibility update. The owner brought common negative removal (work from Checkpoints 13-14) forward into this patch. The owner completed the v0.4.0 solo test and reported resize/selection issues; v0.4.1 addresses those findings. v0.4.2 fixes a subsequent scroll-offset rendering defect and refines the footer. Live UI recheck and multiplayer acceptance remain pending. See [patch report](PATCH_v0.4.2.md) and the [five-step test](TEST_PHASE_2.md). Checkpoints 5-12 remain future work; sequential checkpoint numbers are unchanged.
 
 The intended full release still includes progression, prestige, Horde Night rewards and official scoring. Common negative removal now arrives early, disabled by default; its official policy remains undecided.
 ## Checkpoint workflow
@@ -22,7 +22,7 @@ The intended full release still includes progression, prestige, Horde Night rewa
 | Phase | Outcome | Checkpoints | Status |
 |---|---|---|---|
 | 1. Foundation | Loadable standalone package and reliable character/account state | 1-2 | Implemented; solo sequence reported passed, live multiplayer pending |
-| 2. Positive trait shop | Usable health-hover entry and safe positive-trait purchases | 3-4 | v0.4.1 UI fixes implemented; short UI recheck/live multiplayer acceptance pending |
+| 2. Positive trait shop | Usable health-hover entry and safe positive-trait purchases | 3-4 | v0.4.2 scrolling/footer fixes implemented; solo recheck and dedicated player session pending |
 | 3. Progression and prestige | XP rewards, Trait Levels, death resets, and next-character bonuses | 5-7 | Pending |
 | 4. Horde Night integration | Horde XP, official lock, persistent eligibility, and score display | 8-10 | Pending |
 | 5. Initial release | Verified standalone and OMH builds, documentation, release package | 11-12 | Pending |
@@ -169,3 +169,5 @@ The intended full release still includes progression, prestige, Horde Night rewa
 | 13-14 | Official removal policy and any custom trait adapters; multiplier 2/no surcharge is settled |
 
 No open Phase 6 decision blocks the initial release. No unimplemented checkpoint should be marked complete solely because its design is documented.
+
+Current UI follow-up: [v0.4.2](PATCH_v0.4.2.md) fixes scroll-offset row clipping and updates the footer/XP tooltip. Run the [five-step solo recheck](TEST_PHASE_2.md), then proceed to the dedicated player session. Dedicated acceptance is still pending.

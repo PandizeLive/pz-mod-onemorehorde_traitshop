@@ -1,10 +1,8 @@
-v0.4.1
+v0.4.2
 
-Trait Shop resize and selection fixes
-- Fixed resize-handle anchoring feedback and limited window dragging to the header.
-- Matched the full leaderboard title fonts and red/gold branding.
-- Added plain-click cart toggles, retained Shift ranges and added list-scoped Ctrl+A.
-- Preserved search text selection and search/filter scope for bulk selection.
-- Made queued negative removals immediately update positive conflict shading and filters.
-- Renamed the local launcher to OMH_TraitShop.cmd and updated all release-tool references.
-- Added the owner poster art and prepared the animated first-upload Workshop preview.
+Trait Shop scrolling and footer fixes
+- Fixed row clipping that hid later traits and receipt entries when scrolling, at any window size.
+- Anchored Reset lower-left and Close followed by Purchase lower-right.
+- Matched Horde Night Difficulty menu colors: red Close, black/red Reset and green enabled Purchase.
+- Kept unavailable Purchase neutral and disabled.
+- Simplified the XP tooltip to source availability without reward amounts; XP earning remains future work.

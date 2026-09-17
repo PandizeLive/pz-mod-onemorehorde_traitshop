@@ -78,3 +78,10 @@ The owner authorized all Phases 1 and 2 in the [roadmap](ROADMAP.md), plus [rele
 - Ctrl+A adds eligible visible choices in the active purchase/removal list and respects search/filter. Search retains normal text selection. Bulk choices can exceed the wallet or conflict with each other; receipt validation blocks checkout.
 - Queued valid negative removals immediately update positive availability and filters. Reversing the removal restores conflicts; final server validation is unchanged.
 - Rename the sole launcher to OMH_TraitShop.cmd. Link it in every complete 4-8-step owner test.
+
+## v0.4.2 owner-approved UI patch
+
+- Reset belongs lower-left, with Close then Purchase grouped lower-right. Use Horde Night Difficulty menu colors, but do not copy its upper-right Reset placement. Purchase is green only when checkout is valid.
+- Treat the reported missing rows as a scrolling/rendering defect, without presuming resizing causes it. Source investigation confirmed the shared row renderer omitted the scroll offset from its visibility test; fix every trait list and receipt.
+- XP tooltip lists source names only, filtered by active mode and positive reward values once Phase 3 implements rewards. Current builds have no XP sources and must say so rather than advertise unimplemented earning methods.
+- Finish the UI patch and short solo recheck before the dedicated player test; no dedicated acceptance is implied by automated game-VM checks.

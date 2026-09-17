@@ -32,7 +32,7 @@
   "UI_OMHTS_Result_loading": "Starting Tokens are still being initialized.",
   "UI_OMHTS_Prestige": "Prestige: %1",
   "UI_OMHTS_Buy": "Purchase",
-  "UI_OMHTS_XPDeferred": "100 XP is required for Trait Level 1.\nXP rewards arrive in the progression update.",
+  "UI_OMHTS_XPNoSources": "XP sources\nNone available in this build.",
   "UI_OMHTS_PrestigeTip": "Retained from previous lives: %1\nEarned from Trait Levels this life: %2\n\nThe total is your bonus for your next character. Tokens do not generate prestige.",
   "UI_OMHTS_TokenTip": "Unused creation points converted: %1\nSpent on purchases and removals: %2\nCurrent balance: %3",
   "UI_OMHTS_TokenSourcesDeferred": "XP Token rewards and prestige creation bonuses are not available in this build. No prestige was included in your starting Tokens.",

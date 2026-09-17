@@ -1,5 +1,5 @@
 version=1
 id=0
 title=OMH: Trait Shop
-description=Private development build for OMH: Trait Shop. Version 0.4.1 fixes cart-shop resizing, adds click-to-toggle and list-scoped select-all, previews conflict resolution, and matches leaderboard branding. Broad native/modded support and optional negative removal are included. Unused creation points become starting Tokens. XP rewards, prestige creation bonuses and Horde Night scoring integration are not implemented yet.
+description=Private development build for OMH: Trait Shop. Version 0.4.2 fixes scrolled trait and receipt rendering, matches Horde Night action colors, and places Reset lower-left with Close and Purchase lower-right. It includes the resizable cart, click-to-toggle selection and owner poster art. Broad native/modded support and optional negative removal are included. Unused creation points become starting Tokens. XP rewards, prestige creation bonuses and Horde Night scoring integration are not implemented yet.
 description=DISCLAIMER: This mod was made in tandem with ChatGPT
