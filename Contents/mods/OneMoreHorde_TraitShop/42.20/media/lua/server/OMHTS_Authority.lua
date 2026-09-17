@@ -12,6 +12,20 @@ local rejected = {}
 local nextScan = 0
 local STORE_KEY = "OMHTraitShop_State_v1"
 
+---@nodiscard
+---@param player IsoPlayer
+---@return string|nil
+local function creationKey(player)
+    local descriptor = player:getDescriptor()
+    if not descriptor or not State.isCounter(descriptor:getID()) then return nil end
+    if isServer() then
+        local username = player:getUsername()
+        if type(username) ~= "string" or #username == 0 or #username > 128 then return nil end
+        return "user:" .. #username .. ":" .. username .. ":" .. descriptor:getID()
+    end
+    return "local:" .. player:getPlayerNum() .. ":" .. descriptor:getID()
+end
+
 ---@param player IsoPlayer
 ---@return string|nil
 local function accountKey(player)
@@ -51,21 +65,54 @@ local function bind(player)
     local key = accountKey(player)
     local descriptor = player:getDescriptor()
     if not key or not descriptor or rejected[key] then return nil end
-    local record, result = State.attach(store, key, descriptor:getID(), player:getHoursSurvived())
+    local birthKey = creationKey(player)
+    local capturedPoints
+    if birthKey then
+        capturedPoints = store.creations[birthKey]
+    end
+    local hours = player:getHoursSurvived()
+    local record, result = State.attach(store, key, descriptor:getID(), hours, capturedPoints ~= nil)
     if not record then
         rejected[key] = true
         print("[OMH Trait Shop] state unavailable: " .. result .. "; saved data preserved")
         return nil
     end
-    Creation.settle(player, record)
+    Creation.settle(player, record, capturedPoints)
+    if birthKey then
+        store.creations[birthKey] = nil
+    end
     Shop.reconcile(player, record, true)
     current = { record = record, lifeId = record.life.id, lastRequest = -10000,
         lastPurchase = -10000, lastBusy = -10000 }
     bindings[player] = current
     print("[OMH Trait Shop] state " .. result .. "; slot=" .. player:getPlayerNum()
-        .. "; life=" .. record.life.id .. "; revision=" .. record.revision)
+        .. "; life=" .. record.life.id .. "; revision=" .. record.revision
+        .. "; hours=" .. tostring(hours) .. "; creation=" .. record.life.creation.status
+        .. "; startingTokens=" .. record.life.creation.tokens)
     sendSnapshot(player, current)
     return current
+end
+
+---@param player IsoPlayer
+---@param square IsoGridSquare|nil
+---@return nil
+local function onNewGame(player, square)
+    if not store or not player or not instanceof(player, "IsoPlayer") or player:isDead() then return end
+    local key = creationKey(player)
+    if not key or store.creations[key] ~= nil then return end
+    local account = accountKey(player)
+    local record = store.accounts[account]
+    if record and not State.isRecord(record) then return end
+    if record and record.life.status == "alive"
+        and record.life.characterId == player:getDescriptor():getID()
+        and record.life.creation.status ~= "legacy" then return end
+    local points = Creation.remainingPoints(player)
+    if points == nil then
+        points = -1
+    end
+    store.creations[key] = points
+    print("[OMH Trait Shop] creation captured; character=" .. player:getDescriptor():getID()
+        .. "; points=" .. points)
 end
 
 ---@return nil
@@ -228,7 +275,20 @@ function Authority.updateState(player, lifeId, revision, changes)
     return true
 end
 
+---@param player IsoPlayer
+---@param lifeId number
+---@param revision number
+---@param amount number
+---@return boolean
+function Authority.awardXP(player, lifeId, revision, amount)
+    local binding = bind(player)
+    if not binding or not State.awardXP(binding.record, lifeId, revision, amount) then return false end
+    sendSnapshot(player, binding)
+    return true
+end
+
 Events.OnInitGlobalModData.Add(initialize)
+Events.OnNewGame.Add(onNewGame)
 Events.OnCreatePlayer.Add(onCreatePlayer)
 Events.OnCharacterDeath.Add(observeDeath)
 Events.OnTick.Add(onTick)

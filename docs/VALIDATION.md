@@ -1,5 +1,7 @@
 # Future validation checklist
 
+**Current checkpoint:** v0.5.0 implements Checkpoint 5. See [evidence](CHECKPOINT_5_EVIDENCE.txt) and [six-step dedicated follow-up](TEST_CHECKPOINT_5.md). Owner-reported v0.4.3 dedicated purchases passed; real reconnect/restart and the new middle panel remain unverified. The historical checklist below includes planned reward/scoring work, not claims of current functionality.
+
 This is developer coverage tracking, not an owner-facing test script. See [PHASE_2.md](PHASE_2.md) for the foundation and [PATCH_v0.4.0.md](PATCH_v0.4.0.md) for the cart/removal revision. The owner completed that solo test and reported UI changes; [PATCH_v0.4.1.md](PATCH_v0.4.1.md) covers the resize/selection fixes and pending rendered recheck. The owner reported the v0.3.0 solo lifecycle/purchase sequence passed; the reviewed log includes Horde Night, so standalone loading is not independently established by that log. [TEST_PHASE_2.md](TEST_PHASE_2.md) is the current four-step patch test. Dedicated/hosted reconnect/restart, price-rounding, existing-save migration and broader UI/addon compatibility acceptance remain pending; prepare separate 4-8-step instructions when those sessions are selected. Reward earning and prestige creation-screen flows below remain future work.
 
 ## Documentation pass

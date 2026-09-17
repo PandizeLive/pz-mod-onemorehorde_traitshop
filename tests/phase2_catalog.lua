@@ -1,6 +1,14 @@
 testStage = "description search and presentation"
 local Catalog = require("OMHTS_Catalog")
 local P = require("OMHTS_Presentation")
+traitFixture("OVERWEIGHT", "base:overweight", 0).free = true
+traitFixture("UNDERWEIGHT", "base:underweight", 0).free = true
+traitFixture("BURGLAR", "base:burglar", 0).free = true
+local ownedZero = {["base:overweight"]=true,["base:underweight"]=true,["base:burglar"]=true}
+local grouped = P.rows(CharacterTraitDefinition.getTraits(),ownedZero,testPhase2Snapshot,"",1)
+check(#grouped.other == 3 and #grouped.positive == 0 and #grouped.negative == 0,
+    "zero-cost weight and profession traits have their own group")
+check(grouped.other[1].tooltip ~= nil, "Other Traits retain descriptions")
 local speed = traitFixture("SPEED", "base:speeddemon", 1)
 function speed:getLabel() return "Speed Demon" end
 function speed:getDescription() return "Drives very fast." end

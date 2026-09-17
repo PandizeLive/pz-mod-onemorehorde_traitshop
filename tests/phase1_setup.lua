@@ -57,7 +57,7 @@ function event()
     }
 end
 Events = {}
-local names = { "OnInitGlobalModData", "OnCreatePlayer", "OnCharacterDeath", "OnTick", "OnSave", "OnClientCommand", "OnDisconnect", "OnGameStart", "OnServerCommand" }
+local names = { "OnInitGlobalModData", "OnNewGame", "OnCreatePlayer", "OnCharacterDeath", "OnTick", "OnSave", "OnClientCommand", "OnDisconnect", "OnGameStart", "OnServerCommand" }
 for index = 1, #names do Events[names[index]] = event() end
 ModData = {}
 function ModData.getOrCreate(key)

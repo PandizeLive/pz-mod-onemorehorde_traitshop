@@ -1,6 +1,7 @@
 if isClient() then return end
 
 local Effects = require("OMHTS_Effects")
+local Progression = require("OMHTS_Progression")
 local State = {}
 State.SCHEMA = 3
 State.LIMIT = 1000000000
@@ -64,8 +65,17 @@ function State.initialize(store)
         end
         store.schema = State.SCHEMA
     end
-    return store.schema == State.SCHEMA and State.isCounter(store.nextLife)
-        and type(store.accounts) == "table"
+    if store.schema ~= State.SCHEMA or not State.isCounter(store.nextLife)
+        or type(store.accounts) ~= "table" then return false end
+    if store.creations == nil then
+        store.creations = {}
+    end
+    if type(store.creations) ~= "table" then return false end
+    for key, points in pairs(store.creations) do
+        if type(key) ~= "string" or #key > 160
+            or (points ~= -1 and not State.isCounter(points)) then return false end
+    end
+    return true
 end
 
 ---@param record any
@@ -136,9 +146,10 @@ end
 ---@param account string
 ---@param characterId number
 ---@param hours number
+---@param fresh boolean|nil
 ---@return table|nil
 ---@return string
-function State.attach(store, account, characterId, hours)
+function State.attach(store, account, characterId, hours, fresh)
     if not State.isCounter(characterId) or not State.isXP(hours) then return nil, "invalid_character" end
     local record = store.accounts[account]
     if record and not State.isRecord(record) then return nil, "invalid_record" end
@@ -175,11 +186,35 @@ function State.attach(store, account, characterId, hours)
         removals = {},
         effects = { traits = {}, recipes = {}, perks = {} },
     }
-    if hours == 0 then
+    if hours == 0 or fresh == true then
         record.life.creation.status = "pending"
     end
     record.revision = record.revision + 1
     return record, "created"
+end
+
+---@param record table
+---@param lifeId number
+---@param revision number
+---@param amount number
+---@return boolean
+function State.awardXP(record, lifeId, revision, amount)
+    if not State.isRecord(record) or record.life.status ~= "alive"
+        or record.life.id ~= lifeId or record.revision ~= revision
+        or revision >= State.LIMIT or not State.isXP(amount) or amount <= 0
+        or record.life.xp >= Progression.requiredXP(record.life.level) then return false end
+    local life = record.life
+    local level, xp = Progression.advance(life.level, life.xp, amount)
+    local tokens = life.tokens + level - life.level
+    local prestige = record.prestige.earned + math.floor(level / 5) - math.floor(life.level / 5)
+    if not State.isCounter(level) or not State.isXP(xp) or not State.isCounter(tokens)
+        or not State.isCounter(prestige + record.prestige.retained + record.prestige.pending) then return false end
+    life.tokens = tokens
+    life.level = level
+    life.xp = xp
+    record.prestige.earned = prestige
+    record.revision = revision + 1
+    return true
 end
 
 ---@param record table

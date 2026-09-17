@@ -27,12 +27,15 @@ $stages = @(
     "OMHTS_Bootstrap=$lua\shared\OMHTS_Bootstrap.lua",
     "OMHTS_Catalog=$lua\shared\OMHTS_Catalog.lua",
     "OMHTS_Effects=$lua\shared\OMHTS_Effects.lua",
+    "OMHTS_Progression=$lua\shared\OMHTS_Progression.lua",
     "OMHTS_State=$lua\server\OMHTS_State.lua",
     "OMHTS_Creation=$lua\server\OMHTS_Creation.lua",
     "OMHTS_Shop=$lua\server\OMHTS_Shop.lua",
     "_=$tests\phase1_state.lua",
+    "_=$tests\checkpoint5_progression.lua",
     "OMHTS_Authority=$lua\server\OMHTS_Authority.lua",
     "_=$tests\phase1_authority.lua",
+    "_=$tests\checkpoint5_authority.lua",
     "_=$lua\client\OMHTS_ClientState.lua",
     "_=$tests\phase1_client.lua"
 )

@@ -35,7 +35,7 @@ Recorded September 14, 2026 from the OMH: Trait Shop conversation. New owner ins
 
 29. v0.4.0 replaces the preceding UI design with a resizable, unpinned OMH panel; centered red/green branding; gold #E7B428 two-line level; equal Token/Prestige controls; and numeric XP progress. Trait descriptions appear only in tooltips. Positive/negative rows are green/red, unavailable rows grey, selections gold-outlined.
 30. One Purchase button checks out a receipt containing additions and removals. Ctrl/Shift multiselection, Reset and Close are approved. Search includes descriptions after name matches, with price sorting inside relevance groups.
-31. Level 1 requires 100 XP; the display begins at `0 / 100`. Later thresholds and earning rates are undecided.
+31. Level 1 requires 100 XP; the display begins at `0 / 100`. Checkpoint 5 later approves gentle acceleration: round `100 + 35n + (65/19)n²` to the nearest 50 (half-up), where n is current level. Level 20 costs exactly 2,000. Earning rates remain undecided.
 32. Negative removal is brought forward into this patch, default-off. Negative Cost Multiplier defaults to 2, prices round up, and the owner explicitly rejected the +2 surcharge.
 33. Broad default eligibility replaces the ten-trait allowlist. Common standard effects are processed together; a small reasoned exclusion set covers body progression and known unsupported cases. This does not promise execution of arbitrary mod initialization scripts.
 
@@ -85,3 +85,10 @@ The owner authorized all Phases 1 and 2 in the [roadmap](ROADMAP.md), plus [rele
 - Treat the reported missing rows as a scrolling/rendering defect, without presuming resizing causes it. Source investigation confirmed the shared row renderer omitted the scroll offset from its visibility test; fix every trait list and receipt.
 - XP tooltip lists source names only, filtered by active mode and positive reward values once Phase 3 implements rewards. Current builds have no XP sources and must say so rather than advertise unimplemented earning methods.
 - Finish the UI patch and short solo recheck before the dedicated player test; no dedicated acceptance is implied by automated game-VM checks.
+
+## v0.5.0 / Checkpoint 5 owner approval
+
+- Complete the progression conversion foundation with the approved curve; keep actual reward sources in Checkpoint 6 and prestige creation bonuses in Checkpoint 7.
+- Put owned zero-cost traits in **Other Traits**, a read-only middle panel between owned positive and negative lists, retaining description tooltips. This includes profession abilities and weight conditions.
+- Carry the first-character starting-Token investigation into this checkpoint. The owner reports fast-forward was paused on connection, which is context rather than proof of cause. Capture creation points using the authoritative native new-game event to avoid relying only on zero survived time at later attachment; preserve existing-character exclusion.
+- Record the owner's successful dedicated purchases separately from still-unverified live reconnect/restart acceptance. Keep the next owner test to six complete steps.

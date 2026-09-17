@@ -4,7 +4,7 @@ local actor = testPlayers[1]
 testSide = "singleplayer"
 testTables = {}
 Events.OnInitGlobalModData.fire()
-actor.traits = {["base:allthumbs"]=true}
+actor.traits = {["base:allthumbs"]=true,["base:overweight"]=true,["base:burglar"]=true}
 testOptions["OMHTraitShop.AllowNegativeRemoval"] = true
 shop.requestState(0,actor)
 shop.toggleWindow(actor)
@@ -21,6 +21,28 @@ check(brand and brand.font == UIFont.Small and brand.r == 0.85
     and subtitle and subtitle.font == UIFont.Large and subtitle.r == 0.95 and subtitle.g == 0.75,
     "header matches full leaderboard fonts and colors")
 check(window.progress.title == "0 / 100", "XP label uses numeric requirement and no percent formatter")
+check(#window.other.items == 2 and #window.positive.items == 0, "owned zero-cost traits occupy neutral middle panel")
+window:onSelect(window.other.items[1].item)
+check(window.cartCount == 0, "Other Traits click cannot add to cart")
+window.other:onMouseDown(2,2)
+testCtrl = true
+window:onKeyPress(Keyboard.KEY_A)
+check(window.cartCount == 0 and not window:isKeyConsumed(Keyboard.KEY_A), "Other Traits ignore select-all")
+testCtrl = false
+local originalGetState = shop.getState
+shop.getState = function(slot)
+    local snapshot = originalGetState(slot)
+    snapshot.level = 19
+    snapshot.xp = 1000
+    snapshot.pendingPrestige = 2
+    return snapshot
+end
+window:refresh()
+check(window.progress.title == "1000 / 2000" and window.progress.requiredXP == 2000,
+    "XP requirement follows level twenty curve")
+check(window.prestige.title == "Prestige: 2", "unclaimed prestige remains visible after death")
+shop.getState = originalGetState
+window:refresh()
 check(window.progress.tooltip == "XP sources\nNone available in this build." and not string.find(window.progress.tooltip, "%d"),
     "XP tooltip has no amounts or invented enabled sources before reward implementation")
 check(window.reset.x == 12 and window.closeButton.x > window.reset.x + window.reset.width
@@ -152,7 +174,9 @@ window:refresh()
 check(window.cartCount == 0 and actor:hasTrait("base:dextrous") and not actor:hasTrait("base:allthumbs")
     and window.state.tokens == before - 6, "single Purchase applies mixed cart and clears receipt")
 window:Resize(window.minimumWidth,window.minimumHeight)
-check(window.list.height > 0 and window.positive.height > 0 and window.negative.height > 0
+check(window.list.height > 0 and window.positive.height >= window.positive.itemheight
+    and window.other.height >= window.other.itemheight and window.negative.height >= window.negative.itemheight
+    and window.positive:getBottom() < window.otherHeadingY and window.other:getBottom() < window.negativeHeadingY
     and window.list:getBottom() < window.receipt.y and window.noticeY + window.fontHeight < window.buy.y,
     "minimum dimensions keep panels receipt notices and buttons separated")
 local width, height = window.width, window.height
@@ -231,7 +255,7 @@ sidebar:prerender()
 check(button:getIsVisible(), "visible TPS bridge keeps shop reachable")
 sidebar:removeFromUIManager()
 Events.OnDisconnect.fire()
-testOutput = tostring(testChecks) .. " Phase 2 / v0.4.3 assertions passed."
+testOutput = tostring(testChecks) .. " Phase 2 / v0.5.0 assertions passed."
 
 testFontHeight = 28
 testScreenWidth = 1024
@@ -239,8 +263,10 @@ testScreenHeight = 768
 local large = OMHTS_ShopWindow:new(actor)
 large:initialise()
 large:instantiate()
-check(large.list.height >= 100 and large.negative.height >= 80 and large.noticeY + large.fontHeight < large.buy.y,
-    "large font three-panel layout remains usable at 1024 by 768")
+check(large.list.height >= 100 and large.negative.height >= large.negative.itemheight
+    and large.other.height >= large.other.itemheight and large.positive.height >= large.positive.itemheight
+    and large.noticeY + large.fontHeight < large.buy.y,
+    "large font layout retains at least a full row in each owned list at 1024 by 768")
 large:close()
 
 testFontHeight = window.fontHeight
@@ -248,7 +274,7 @@ local probe = ISScrollingListBox:new(0, 0, 250, 160)
 probe.parent = window
 probe.itemheight = 28
 probe.doDrawItem = window.list.doDrawItem
-local rowGroups = { "catalog", "positive", "negative", "receipt" }
+local rowGroups = { "catalog", "positive", "other", "negative", "receipt" }
 local heights = { 420, 112, 56 }
 for groupIndex = 1, #rowGroups do
     probe.group = rowGroups[groupIndex]
@@ -264,7 +290,7 @@ for groupIndex = 1, #rowGroups do
                 local row = { id = "test:row" .. index, name = "Row " .. index,
                     group = "catalog", owned = false, previewStatus = "available", price = 1,
                     definition = reader.definition }
-                if probe.group == "positive" or probe.group == "negative" then
+                if probe.group == "positive" or probe.group == "negative" or probe.group == "other" then
                     row.group = probe.group
                     row.owned = true
                 end
@@ -282,4 +308,4 @@ for groupIndex = 1, #rowGroups do
         end
     end
 end
-testOutput = tostring(testChecks) .. " Phase 2 / v0.4.3 assertions passed."
+testOutput = tostring(testChecks) .. " Phase 2 / v0.5.0 assertions passed."

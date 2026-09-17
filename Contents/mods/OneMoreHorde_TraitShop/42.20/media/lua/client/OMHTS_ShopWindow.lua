@@ -9,6 +9,7 @@ require("OMHTS_ClientState")
 local TraitShop = require("OMHTS_Bootstrap")
 local Catalog = require("OMHTS_Catalog")
 local Presentation = require("OMHTS_Presentation")
+local Progression = require("OMHTS_Progression")
 local GOLD = Presentation.GOLD
 local GREEN = Presentation.GREEN
 local RED = Presentation.RED
@@ -30,6 +31,8 @@ local function drawTrait(self, y, item, alt)
     local color = GREEN
     if row.group == "negative" then
         color = RED
+    elseif row.group == "other" then
+        color = Presentation.NEUTRAL
     end
     local selected = self.parent.cart[row.id] == true
     if selected and self.group ~= "receipt" then
@@ -58,12 +61,12 @@ local function drawTrait(self, y, item, alt)
         name = getText(key, name)
     end
     local space = 62
-    if row.group ~= "positive" or self.group == "receipt" then
+    if row.group == "catalog" or row.group == "negative" or self.group == "receipt" then
         space = 115
     end
     self:drawText(Presentation.fitName(name, self.width - space), 38, textY,
         color.r, color.g, color.b, 1, UIFont.Small)
-    if row.group ~= "positive" then
+    if row.group == "catalog" or row.group == "negative" then
         local price = getText("UI_OMHTS_NoPrice")
         if row.price then
             price = tostring(row.price)
@@ -77,7 +80,7 @@ end
 ---@return nil
 local function drawProgress(self)
     ISButton.prerender(self)
-    self:drawRect(1, 1, (self.width - 2) * math.max(0, math.min(1, self.xp / 100)),
+    self:drawRect(1, 1, (self.width - 2) * math.max(0, math.min(1, self.xp / self.requiredXP)),
         self.height - 2, 0.85, GOLD.r, GOLD.g, GOLD.b)
 end
 
@@ -166,9 +169,13 @@ function OMHTS_ShopWindow:layout()
     local receiptHeight = self.receipt.itemheight * 2
     local bottom = self.height - receiptHeight - fh * 3 - actionHeight - 48
     place(self.list, 12, self.search:getBottom() + 6, half, bottom - self.search:getBottom() - 6)
-    local positiveHeight = math.floor((bottom - searchY - fh - 16) / 2)
+    local listSpace = bottom - searchY - (fh + 14) * 2
+    local otherHeight = math.min(self.other.itemheight * 2, math.floor(listSpace / 3))
+    local positiveHeight = math.floor((listSpace - otherHeight) / 2)
     place(self.positive, right, searchY, half, positiveHeight)
-    self.negativeHeadingY = self.positive:getBottom() + 8
+    self.otherHeadingY = self.positive:getBottom() + 8
+    place(self.other, right, self.otherHeadingY + fh + 6, half, otherHeight)
+    self.negativeHeadingY = self.other:getBottom() + 8
     local negativeY = self.negativeHeadingY + fh + 6
     place(self.negative, right, negativeY, half, bottom - negativeY)
     self.receiptY = bottom + 8
@@ -197,6 +204,7 @@ function OMHTS_ShopWindow:createChildren()
     self.prestige.textColor = GOLD
     self.progress = addButton(self, "0 / 100", nil)
     self.progress.xp = 0
+    self.progress.requiredXP = Progression.requiredXP(0)
     self.progress.prerender = drawProgress
     self.progress.textColor = { r = 1, g = 1, b = 1, a = 1 }
     self.progress:setTooltip(getText("UI_OMHTS_XPNoSources"))
@@ -210,9 +218,10 @@ function OMHTS_ShopWindow:createChildren()
     self.filter = addButton(self, getText("UI_OMHTS_Filter_1"), self.onFilter)
     self.list = addList(self, "catalog")
     self.positive = addList(self, "positive")
+    self.other = addList(self, "other")
     self.negative = addList(self, "negative")
     self.receipt = addList(self, "receipt")
-    self.lists = { self.list, self.positive, self.negative }
+    self.lists = { self.list, self.positive, self.other, self.negative }
     self.buy = addButton(self, getText("UI_OMHTS_Buy"), self.onBuy)
     self.reset = addButton(self, getText("UI_OMHTS_Reset"), self.onReset)
     self.closeButton = addButton(self, getText("UI_OMHTS_Close"), self.close)
@@ -283,7 +292,7 @@ end
 function OMHTS_ShopWindow:onSelect(row)
     if TraitShop.purchasePending(self.playerNum) then return end
     self.notice = nil
-    if row.group == "positive" then
+    if row.group == "positive" or row.group == "other" then
         self:updateCart()
         return
     end
@@ -434,7 +443,7 @@ function OMHTS_ShopWindow:refreshLists()
     local key = self.rowsKey .. "|" .. table.concat(selected, "|")
     if self.visibleKey == key then return end
     local query = Presentation.normalize(string.sub(self.search:getInternalText(), 1, 128))
-    local groups = { catalog = {}, positive = {}, negative = {} }
+    local groups = { catalog = {}, positive = {}, other = {}, negative = {} }
     for _, row in pairs(self.allRows) do
         row.previewStatus = Presentation.previewStatus(row, self.allRows, self.cart, self.state.tokens)
         row.rank = Presentation.relevance(row, query)
@@ -484,13 +493,14 @@ function OMHTS_ShopWindow:refresh()
         end
     end
     self.tokens:setTitle(getText("UI_OMHTS_Tokens", tostring(state.tokens)))
-    self.prestige:setTitle(getText("UI_OMHTS_Prestige", tostring(state.retainedPrestige + state.earnedPrestige)))
-    self.prestige:setTooltip(getText("UI_OMHTS_PrestigeTip", tostring(state.retainedPrestige), tostring(state.earnedPrestige)))
+    self.prestige:setTitle(getText("UI_OMHTS_Prestige", tostring(state.retainedPrestige + state.earnedPrestige + state.pendingPrestige)))
+    self.prestige:setTooltip(getText("UI_OMHTS_PrestigeTip", tostring(state.retainedPrestige + state.pendingPrestige), tostring(state.earnedPrestige)))
     self.tokens:setTooltip(getText("UI_OMHTS_TokenTip", tostring(state.startingTokens), tostring(state.spentTokens),
-        tostring(state.tokens)) .. "\n\n" .. getText("UI_OMHTS_Creation_" .. state.creationStatus, tostring(state.startingTokens))
+        tostring(state.tokens), tostring(state.level)) .. "\n\n" .. getText("UI_OMHTS_Creation_" .. state.creationStatus, tostring(state.startingTokens))
         .. "\n\n" .. getText("UI_OMHTS_TokenSourcesDeferred"))
     self.progress.xp = state.xp
-    self.progress:setTitle(tostring(math.floor(state.xp)) .. " / 100")
+    self.progress.requiredXP = Progression.requiredXP(state.level)
+    self.progress:setTitle(tostring(math.floor(state.xp)) .. " / " .. tostring(self.progress.requiredXP))
     local owned, ownershipKey = Presentation.ownership(self.player, state)
     local query = Presentation.normalize(string.sub(self.search:getInternalText(), 1, 128))
     local parts = { tostring(state.lifeId), tostring(state.revision), ownershipKey, query, tostring(self.filterMode) }
@@ -545,6 +555,8 @@ function OMHTS_ShopWindow:prerender()
     self:drawText(getText("UI_OMHTS_Catalog", tostring(#self.list.items)), 12, self.headingY, 0.91, 0.91, 0.91, 1, UIFont.Small)
     self:drawText(getText("UI_OMHTS_Positive", tostring(#self.positive.items)), self.positive.x, self.headingY,
         GREEN.r, GREEN.g, GREEN.b, 1, UIFont.Small)
+    self:drawText(getText("UI_OMHTS_Other", tostring(#self.other.items)), self.other.x, self.otherHeadingY,
+        Presentation.NEUTRAL.r, Presentation.NEUTRAL.g, Presentation.NEUTRAL.b, 1, UIFont.Small)
     self:drawText(getText("UI_OMHTS_Negative", tostring(#self.negative.items)), self.negative.x, self.negativeHeadingY,
         RED.r, RED.g, RED.b, 1, UIFont.Small)
     self:drawText(getText("UI_OMHTS_Receipt", tostring(self.cartCount)), 12, self.receiptY, 0.91, 0.91, 0.91, 1, UIFont.Small)

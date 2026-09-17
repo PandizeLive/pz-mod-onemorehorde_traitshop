@@ -5,6 +5,7 @@ local Presentation = {}
 Presentation.GOLD = { r = 231 / 255, g = 180 / 255, b = 40 / 255, a = 1 }
 Presentation.GREEN = { r = 114 / 255, g = 184 / 255, b = 109 / 255, a = 1 }
 Presentation.RED = { r = 217 / 255, g = 64 / 255, b = 64 / 255, a = 1 }
+Presentation.NEUTRAL = { r = 0.8, g = 0.8, b = 0.8, a = 1 }
 Presentation.TITLE_GOLD = { r = 0.95, g = 0.75, b = 0.2, a = 1 }
 Presentation.TITLE_RED = { r = 0.85, g = 0.25, b = 0.25, a = 1 }
 
@@ -108,7 +109,7 @@ end
 ---@return table
 function Presentation.rows(definitions, owned, state, query, filter)
     query = Presentation.normalize(query)
-    local groups = { catalog = {}, positive = {}, negative = {} }
+    local groups = { catalog = {}, positive = {}, other = {}, negative = {} }
     local offers = {}
     for index = 1, #state.offers do
         offers[state.offers[index].id] = state.offers[index]
@@ -144,7 +145,9 @@ function Presentation.rows(definitions, owned, state, query, filter)
             if isOwned then
                 row.group = "positive"
                 row.status = "owned"
-                if cost < 0 then
+                if cost == 0 then
+                    row.group = "other"
+                elseif cost < 0 then
                     row.group = "negative"
                     if not offer then
                         row.status = "unsupported"
@@ -167,6 +170,7 @@ function Presentation.rows(definitions, owned, state, query, filter)
     end
     table.sort(groups.catalog, Presentation.cheapestFirst)
     table.sort(groups.positive, Presentation.cheapestFirst)
+    table.sort(groups.other, Presentation.cheapestFirst)
     table.sort(groups.negative, Presentation.cheapestFirst)
     return groups
 end

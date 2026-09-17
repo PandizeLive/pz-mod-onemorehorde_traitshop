@@ -14,7 +14,7 @@ Prepared September 14, 2026. The owner selected a separate private repository: [
 
 A separate repository keeps the addon's standalone releases, Workshop identity and change history independent of Horde Night. Both projects can share the local GitHub CLI and SteamCMD installation. Coordinated gameplay changes still need matching work in Horde Night; this repository choice does not implement that integration.
 
-The current package is **v0.4.3, the Phase 2 Purchase color revision**, with the owner-supplied icons. Current behavior and acceptance are recorded in [PATCH_v0.4.3.md](PATCH_v0.4.3.md).
+The current package is **v0.5.0, Checkpoint 5**, with the owner-supplied icons. Current behavior and acceptance are recorded in [CHECKPOINT_5.md](CHECKPOINT_5.md). The owner created **Workshop item 3803035618**, Unlisted, through the native uploader; the staged metadata was read back and that ID is now recorded in the repository. Update this existing item for v0.5.0. No v0.5.0 publication is implied by preparation.
 
 ## One launcher
 
@@ -42,7 +42,7 @@ Useful command-line forms from this directory:
 
 ## Tagged content and local installation
 
-The release tag is `v<modversion>` (currently `v0.4.3`). Work from a named development branch. The tag must be an ancestor of HEAD, and all `Contents` files must match it. Untracked files, including ignored build debris, are rejected. Tooling/documentation commits may follow the tag when packaged content is unchanged. Never move an existing release tag; use a new version/tag for changed packages.
+The release tag is `v<modversion>` (currently `v0.5.0`). Work from a named development branch. The tag must be an ancestor of HEAD, and all `Contents` files must match it. Untracked files, including ignored build debris, are rejected. Tooling/documentation commits may follow the tag when packaged content is unchanged. Never move an existing release tag; use a new version/tag for changed packages.
 
 Only `Contents/mods/OneMoreHorde_TraitShop` is installed. Default destinations are:
 
@@ -63,7 +63,7 @@ After merging a PR, start the next development branch from updated `main`. For p
 
 ## Steam Workshop identity and upload
 
-`workshop.txt` has `id=0` until the owner creates the first Trait Shop item through option 3. The first upload requests private visibility and includes an accurate development title/description with `DISCLAIMER: This mod was made in tandem with ChatGPT`. The first upload uses the owner-supplied root preview.gif as its animated cover; preview.png is the still fallback and the package uses that still as poster.png. Later uploads preserve the existing cover. The owner must review final presentation and visibility before public release.
+`workshop.txt` now has `id=3803035618`, recovered from the owner's first in-game upload. Normal publishing must update this existing item. Native first upload used its required PNG, while root preview.gif remains available for a separately approved cover change. Keep `DISCLAIMER: This mod was made in tandem with ChatGPT`. Later SteamCMD updates preserve existing presentation and visibility. The owner must review final presentation and visibility before public release.
 
 The publisher requires tagged content, committed release files and a verified GitHub mirror, then asks for `CREATE` or `PUBLISH`. It uses the shared `.tools/steamcmd/steamcmd.exe`. Steam credentials are encrypted using Windows credential export under `%LOCALAPPDATA%\OMH\TraitShopPublisher\steam-credential.xml`, separately from the core publisher. Steam Guard input is hidden. Upload manifests, recovery markers and masked logs live in that same Trait Shop publisher directory, outside Git. A running Steam client is closed for upload and restarted afterward; a running game blocks publication.
 

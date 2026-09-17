@@ -1,6 +1,12 @@
-v0.4.3
+v0.5.0
 
-Trait Shop Purchase color fix
-- Fixed native button enable refreshes overwriting the green Purchase palette.
-- Valid carts, including exact-balance carts, remain green; invalid carts remain disabled and neutral.
-- Kept Reset and Close border colors independent.
+Checkpoint 5
+- Added a read-only Other Traits panel between your positive and negative traits. Zero-cost traits, including profession abilities and weight conditions, appear here with description tooltips.
+- Added the XP conversion foundation: one Token per earned Trait Level and one Prestige Point every five levels.
+- Added gradual XP requirements, starting at 100 and reaching 2,000 for Level 20, rounded to the nearest 50.
+- Updated the XP bar to show progress against the next level's requirement.
+- Starting Tokens now capture unused points at character creation, protecting new characters against delayed first-join initialization.
+- Added persistence and duplicate-award checks for progression and new-character grants.
+
+Still in development
+- XP earning sources, prestige character-creation bonuses, and Horde Night scoring integration. This update does not award XP for kills or survival yet.

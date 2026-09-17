@@ -2,13 +2,15 @@
 
 Standalone trait progression and purchasing addon for Project Zomboid Build 42, with optional OMH: Horde Night integration.
 
-**Status: Phases 1 and 2 implemented; v0.4.3 Purchase color fix.** The movable, resizable three-panel shop has a single cart for positive purchases and optional negative removals, plain-click toggles, Shift ranges and list-scoped Ctrl+A, receipts, and name/description search. Native and modded traits use common declared-effect handling instead of a ten-trait allowlist. Body-progression traits and specific incompatible cases remain excluded. Removal is disabled by default and costs twice the absolute trait value, with no surcharge. The XP display starts at `0 / 100`; XP earning, prestige creation bonuses and Horde Night scoring remain future work. Live multiplayer and rendered UI acceptance remain pending; no Workshop item exists yet.
+**Status: v0.5.0 implements Checkpoint 5.** The movable, resizable shop has a shared purchase/removal cart, selection shortcuts and name/description search. Owned zero-cost traits now occupy a read-only Other Traits panel. Server-side XP conversion awards one Token per level and one Prestige Point every five levels, using a gradual curve from 100 XP for Level 1 to 2,000 for Level 20. New-character starting points are captured at creation to avoid delayed-join initialization loss. **XP earning sources, prestige creation bonuses and Horde Night scoring remain future work.** The owner reported v0.4.3 dedicated purchases passed; live reconnect/restart and the new UI remain owner checks. Workshop test item: [3803035618](https://steamcommunity.com/sharedfiles/filedetails/?id=3803035618), uploaded by the owner as Unlisted; v0.5.0 still requires owner upload.
 
-Players earn XP, gain Trait Levels, and receive Tokens to purchase traits. Every five earned Trait Levels awards one Prestige Point for future character creation; Token count never determines prestige. Tokens and Trait Level reset on death. The next character receives the available prestige as bonus creation points and retains 30% as prestige after entering the world, rounded to the nearest whole point. Prestige is not an undiminished permanent lifetime total.
+The planned full progression loop lets players earn XP from kills, survival or hordes, gain Trait Levels, and receive Tokens to purchase traits. The conversion and death-reset foundation is implemented; XP sources are next. Every five earned levels awards one Prestige Point independently of Token count. Applying that prestige as creation points and retaining 30% after entry remain Checkpoint 7.
 
 ## Documentation
 
-- [Roadmap](docs/ROADMAP.md): six phases and sequential Checkpoints 1-14. Phases 1-2 are implemented; their remaining owner checks are combined. Progression/scoring remain future work; common removal was brought forward into v0.4.0.
+- [Checkpoint 5 report](docs/CHECKPOINT_5.md): curve, authority, creation investigation and native evidence.
+- [Current six-step test](docs/TEST_CHECKPOINT_5.md): Workshop update, Other Traits, delayed creation and dedicated persistence.
+- [Roadmap](docs/ROADMAP.md): six phases and sequential Checkpoints 1-14. Checkpoint 5 conversion is implemented; XP sources, creation bonuses and scoring follow. Common removal was brought forward into v0.4.0.
 - [Phase 2 report](docs/PHASE_2.md): shop, catalog, starting Tokens, purchase recovery, source evidence and verification limits.
 - [v0.4.3 patch](docs/PATCH_v0.4.3.md): stable Purchase colors under native button refreshes.
 - [v0.4.2 patch](docs/PATCH_v0.4.2.md): scroll-aware row rendering, action layout/colors and XP tooltip.
@@ -47,7 +49,7 @@ Trait Shop/
   .local/  (ignored test caches and logs)
 ```
 
-Mod ID: `OneMoreHorde_TraitShop`. Metadata minimum: 42.20.0; actual installed-game startup verification: 42.20.4. The package has no required Horde Night dependency. The independent private repository is [PandizeLive/pz-mod-onemorehorde_traitshop](https://github.com/PandizeLive/pz-mod-onemorehorde_traitshop). This project has its own history, release tags and Workshop identity; `id=0` means its Workshop item has not been created.
+Mod ID: `OneMoreHorde_TraitShop`. Metadata minimum: 42.20.0; actual installed-game startup verification: 42.20.4. The package has no required Horde Night dependency. The independent private repository is [PandizeLive/pz-mod-onemorehorde_traitshop](https://github.com/PandizeLive/pz-mod-onemorehorde_traitshop). Its Workshop ID is `3803035618`; update that existing item rather than creating another.
 
 Run [OMH_TraitShop.cmd](OMH_TraitShop.cmd) for local installation, GitHub mirroring, Workshop publication and read-only checks. Menu option 4 checks installation readiness; option 1 installs after the game is closed. Launch normally through Steam, then hover over the health icon to open Trait Shop. Newly created characters receive unused creation points as Tokens; existing characters receive no retroactive grant. Source mirroring and Workshop publication remain owner-run actions.
 

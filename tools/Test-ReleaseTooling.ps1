@@ -54,6 +54,9 @@ function Get-TreeHashes {
 foreach ($entry in @('Contents', 'tools', 'docs', 'OMH_TraitShop.cmd', 'preview.gif', 'preview.png', 'workshop.txt', 'WORKSHOP_CHANGELOG.txt', '.gitignore')) {
     Copy-Item -LiteralPath (Join-Path $repository $entry) -Destination $fixture -Recurse
 }
+$fixtureWorkshop = Join-Path $fixture 'workshop.txt'
+$fixtureWorkshopText = [IO.File]::ReadAllText($fixtureWorkshop) -replace '(?m)^id=\d+', 'id=0'
+[IO.File]::WriteAllText($fixtureWorkshop, $fixtureWorkshopText, [Text.UTF8Encoding]::new($false))
 Invoke-FixtureGit @('init', '-q', '-b', 'codex/release-fixture') | Out-Null
 Invoke-FixtureGit @('config', 'user.name', 'Release Fixture') | Out-Null
 Invoke-FixtureGit @('config', 'user.email', 'fixture@example.invalid') | Out-Null

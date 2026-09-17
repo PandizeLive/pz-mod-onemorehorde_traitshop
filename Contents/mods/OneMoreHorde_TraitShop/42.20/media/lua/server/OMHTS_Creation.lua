@@ -78,12 +78,16 @@ end
 
 ---@param player IsoPlayer
 ---@param record table
+---@param capturedPoints number|nil
 ---@return boolean
-function Creation.settle(player, record)
+function Creation.settle(player, record, capturedPoints)
     if record.life.creation.status ~= "pending" then return false end
     if record.revision >= State.LIMIT then return false end
-    local points = Creation.remainingPoints(player)
-    if points == nil or not State.isCounter(record.life.tokens + points) then
+    local points = capturedPoints
+    if points == nil then
+        points = Creation.remainingPoints(player)
+    end
+    if not State.isCounter(points) or not State.isCounter(record.life.tokens + points) then
         record.life.creation.status = "invalid"
     else
         record.life.tokens = record.life.tokens + points

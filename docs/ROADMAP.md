@@ -2,7 +2,7 @@
 
 This is the active phase/checkpoint roadmap. It organizes the approved product direction; creating the roadmap does not authorize implementation or publication.
 
-**Current status:** Phases 1 and 2 are implemented through v0.4.3. The owner reported the four-step button recheck passed on 2026-09-17. Dedicated player acceptance remains pending. Common negative removal was brought forward from Checkpoints 13-14; progression/scoring Checkpoints 5-12 remain future work. See [current patch](PATCH_v0.4.3.md) and [completed solo test](TEST_PHASE_2.md).
+**Current status:** v0.5.0 implements Checkpoint 5 and the approved Other Traits panel and creation-grant follow-up. See [Checkpoint 5](CHECKPOINT_5.md) for source evidence, validation and limitations, and [current owner test](TEST_CHECKPOINT_5.md). The owner reported v0.4.3 dedicated purchases on the replacement character passed. Live reconnect/restart acceptance remains pending. XP earning sources begin in Checkpoint 6; prestige creation bonuses and official scoring remain later checkpoints. Common negative removal was brought forward from Checkpoints 13-14.
 
 The intended full release still includes progression, prestige, Horde Night rewards and official scoring. Common negative removal now arrives early, disabled by default; its official policy remains undecided.
 ## Checkpoint workflow
@@ -22,8 +22,8 @@ The intended full release still includes progression, prestige, Horde Night rewa
 | Phase | Outcome | Checkpoints | Status |
 |---|---|---|---|
 | 1. Foundation | Loadable standalone package and reliable character/account state | 1-2 | Implemented; solo sequence reported passed, live multiplayer pending |
-| 2. Positive trait shop | Usable health-hover entry and safe positive-trait purchases | 3-4 | v0.4.3 implemented; owner button recheck passed 2026-09-17, dedicated player session pending |
-| 3. Progression and prestige | XP rewards, Trait Levels, death resets, and next-character bonuses | 5-7 | Pending |
+| 2. Positive trait shop | Usable health-hover entry and safe positive-trait purchases | 3-4 | v0.4.3 implemented; solo button and dedicated replacement-character purchases reported passed; remaining persistence checks and follow-ups carried forward |
+| 3. Progression and prestige | XP rewards, Trait Levels, death resets, and next-character bonuses | 5-7 | Checkpoint 5 implemented in v0.5.0; 6-7 pending |
 | 4. Horde Night integration | Horde XP, official lock, persistent eligibility, and score display | 8-10 | Pending |
 | 5. Initial release | Verified standalone and OMH builds, documentation, release package | 11-12 | Pending |
 | 6. Negative-trait removal | Optional default-off removal with verified effect cleanup | 13-14 | Common removal implemented in v0.4.0; custom exceptions and official policy remain |
@@ -78,7 +78,11 @@ The intended full release still includes progression, prestige, Horde Night rewa
 
 **Deliver:** XP thresholds, one Token per earned Trait Level, one newly earned Prestige Point every five Trait Levels, and death resets. Threshold calculations must handle a reward crossing multiple levels without duplicate milestones. Token grants/spending/refunds never create prestige.
 
-**Decisions needed:** XP requirements after Level 1 (100 XP confirmed). Partial XP, Trait Level and Token reset on death are confirmed and handled by the Phase 1 lifecycle.
+**Approved carry-forward (2026-09-17):** add a compact read-only **Other Traits** panel between owned positive and negative traits. Place owned zero-cost traits there, including profession abilities and weight conditions; retain description tooltips, exclude them from selection/cart actions, and verify the layout and scrolling at small window sizes. Investigate the first dedicated character's skipped starting-Token grant using actual first-join lifecycle evidence. The owner reports MultiplayerFastForwarding was paused on connection; this is context, not proof of cause. Current logs distinguish a skipped first-life settlement from the successful replacement grant but do not establish initial survived time. Fix a demonstrated lifecycle defect without allowing existing characters to claim reconstructed creation points. Include remaining dedicated reconnect/restart and one-time-grant checks in the checkpoint's concise owner test. Do not require another full test of unchanged purchases beforehand.
+
+**Dedicated test context:** replacement character displayed 19 Tokens and the owner confirmed purchases worked. Server settings had `AllowNegativeRemoval=false`; grey removal entries were expected under that setting. Live negative-removal acceptance remains unverified. Source/log findings are recorded in [diagnosis](../../../diagnostics/2026-09-17-traitshop/diagnosis.md).
+
+**Approved curve:** round `100 + 35n + (65/19)n²` to the nearest 50, half-up, where n is the current Trait Level. This tunes the approved gentle acceleration to exactly 2,000 for reaching Level 20, starting at 100 for Level 1. Compute from the unrounded formula each time. Partial XP, Trait Level and Token reset on death; prestige entitlement persists. See [implementation report](CHECKPOINT_5.md).
 
 **Pass when:** level transitions 4 -> 5 and 9 -> 10 grant exactly one Prestige Point each; multi-level gains grant the expected Tokens and milestones; reload/replayed requests do not repeat awards; death resets the appropriate life fields while preserving the intended next-character prestige entitlement. Verify shared rules and dedicated persistence.
 
@@ -161,7 +165,7 @@ The intended full release still includes progression, prestige, Horde Night rewa
 | 1 | Mod ID, supported build, repository setup |
 | 2 | Player/account identity and persistence scope - resolved for Phase 1 |
 | 4 | Positive multiplier/rounding/catalog; unused prestige-derived creation points |
-| 5 | XP thresholds/curve |
+| 5 | XP thresholds/curve - resolved: gentle acceleration, Level 20 = 2,000 |
 | 6 | Standalone default; non-horde reward values; uniqueness; survival timing; Hybrid overlap |
 | 7 | Remaining character-creation transport and transaction details |
 | 8 | Horde XP values; dependency changes with saved settings |
