@@ -1,5 +1,13 @@
 # Trait Shop release tooling
 
+## First upload through Project Zomboid (owner-selected 2026-09-17)
+
+The owner chose the in-game uploader for the first item. This route does not require the GitHub mirror or SteamCMD login prerequisite of the separate command-line publisher.
+
+Prepared `C:/Users/bandi/Zomboid/Workshop/OneMoreHorde_TraitShop` with all 21 v0.4.3 content files hash-matching the source, `workshop.txt` containing the title/description/disclaimer, blank new-item ID and explicit private visibility, and a 512x512 PNG preview derived from the owner's still. The original 400x400 PNG and GIF are unchanged. Build 42.20.4's native `SteamWorkshopItem.validateContents()` accepted the staged folder; metadata read back as OMH: Trait Shop, private, no existing ID.
+
+The in-game uploader specifically reads preview.png and accepts square 256 or 512 pixel images; the GIF remains available for a later SteamCMD preview update. Select this staged folder in the game's Workshop submission screen, create the item, review the metadata/visibility and publish. After upload, read the generated ID from the staged workshop.txt and record it in the repository's workshop.txt before using any other publisher. Never create a second item because the repository still says id=0.
+
 ## Status and repository choice
 
 Prepared September 14, 2026. The owner selected a separate private repository: [PandizeLive/pz-mod-onemorehorde_traitshop](https://github.com/PandizeLive/pz-mod-onemorehorde_traitshop). Creation and privacy were verified, and local `origin` points there. No branches were pushed during setup. No Steam Workshop item exists yet.
