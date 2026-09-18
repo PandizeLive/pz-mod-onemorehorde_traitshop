@@ -47,16 +47,14 @@ Recorded September 14, 2026 from the OMH: Trait Shop conversation. New owner ins
 | Official prestige provenance | What happens when custom-earned prestige enters a new character/run? | Persist provenance; do not silently treat it as official after changing settings. Decide whether to exclude that prestige from an official start or make the affected run unofficial. |
 | Official preset | XP rates/curve, prices, caps, eligible traits, prestige lifecycle and limits, future removal settings. | Must be explicit and versioned; 50% score alone cannot establish fairness. |
 | Official lock default | Default enabled with Horde Night? | Recommend yes. Unlocked but matching settings must remain eligible. |
-| Standalone default | Default reward mode without Horde Night. | Recommend Kills; no owner decision yet. |
-| Hybrid kills | Stack ordinary and horde-zombie XP? | Recommend no double payout. |
-| Unique Player | Account identity and how long uniqueness lasts. | Recommend account-based identity; scope still pending. |
-| Survival rewards | Day/night definition, elapsed-time requirements, sleep, offline and time-skip treatment. | Owner relaxed horde attendance only; do not assume that settles survival timing. |
 | Custom compatibility | Trait-specific scripts beyond declared effects. | Common effects are implemented in v0.4.0; add targeted adapters for demonstrated incompatibilities. |
 | Score detection | Enabled mod versus mere subscription; adding/removing during a run. | Recommend enabled runtime detection plus durable affected-run history. |
 | UI conveniences | Optional keybind beyond the implemented hover button and tooltip. | Add only if desired; live scale and competing-popup checks remain in the test plan. |
 | Workshop presentation | Final cover, description, visibility and readiness for public release. | Tooling creates a private development item on first owner-run publication; live updates preserve existing presentation. No Workshop ID is invented or borrowed. |
 
 ## Superseded proposals
+
+- Unique-player lifetime rewards are replaced by repeatable Player Kill rewards with enemy/faction eligibility and a default 2-in-game-day same-victim cooldown.
 
 - Prestige as 20% of unspent or total earned Token balance is replaced by the confirmed Trait Level milestone model.
 - Permanent undiminished prestige accumulation is rejected; a configurable 30% retention rule replaces it. Trait Level resets on death.
@@ -92,3 +90,19 @@ The owner authorized all Phases 1 and 2 in the [roadmap](ROADMAP.md), plus [rele
 - Put owned zero-cost traits in **Other Traits**, a read-only middle panel between owned positive and negative lists, retaining description tooltips. This includes profession abilities and weight conditions.
 - Carry the first-character starting-Token investigation into this checkpoint. The owner reports fast-forward was paused on connection, which is context rather than proof of cause. Capture creation points using the authoritative native new-game event to avoid relying only on zero survived time at later attachment; preserve existing-character exclusion.
 - Record the owner's successful dedicated purchases separately from still-unverified live reconnect/restart acceptance. Keep the next owner test to six complete steps.
+
+## Approved reward defaults after Checkpoint 5
+
+- Ordinary zombie kill: 2 XP.
+- Night survived: 25 XP. Day survived: 0 XP.
+- Horde zombie kill: 5 XP. Eligible horde completion: 100 XP.
+- Player Kill replaces Unique Player and defaults to 75 XP. Only enemies outside the killer's faction qualify. Default cooldown before the same victim can reward again: 2 in-game days.
+- Default to Hybrid standalone. The earlier default-to-Horde-Night rule when OMH: Horde Night is detected remains in effect.
+- These are design approvals, not implemented rewards or a complete official preset. Survival timing and Hybrid overlap recommendations remain open. Horde reward implementation remains Checkpoint 8.
+- Recommended exploit prevention: store cooldowns on the server by directional killer/victim account pair and preserve them across character deaths, reconnects and restarts. Same-faction kills should not pay even if friendly fire is allowed. Treatment of unaffiliated players and recent faction changes remains to be finalized; faction exclusion and cooldown alone cannot prevent colluding enemies from farming rewards.
+
+## Checkpoint 6 implementation approval and timing correction
+
+The owner approved Checkpoint 6 with the documented reward values and Hybrid default. Implementation choices: directional server-account cooldown pairs persist across death/reconnect/restart; players without a shared faction qualify; tagged horde kills are reserved rather than double-paid. Live two-player acceptance remains pending.
+
+The owner explicitly corrected both fixed day/night windows and use of Horde Night event hours. Survival now follows native seasonal dawn/dusk and the host's DayNightCycle, independently of OneMoreHorde.StartHour/EndHour. Complete connected periods qualify; sleep/fast-forward count, partial join/reconnect periods and endless day/night do not. These choices and limits are detailed in CHECKPOINT_6.md. No remote server settings or publication were changed by this implementation.

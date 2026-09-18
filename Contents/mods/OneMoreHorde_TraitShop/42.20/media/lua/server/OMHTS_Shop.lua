@@ -3,6 +3,7 @@ if isClient() then return end
 local State = require("OMHTS_State")
 local Catalog = require("OMHTS_Catalog")
 local Effects = require("OMHTS_Effects")
+local RewardsConfig = require("OMHTS_RewardsConfig")
 local Shop = {}
 
 ---@param player IsoPlayer
@@ -79,6 +80,21 @@ end
 ---@return table
 function Shop.snapshot(player, record)
     local snapshot = State.snapshot(record, player:getPlayerNum())
+    local rewards = RewardsConfig.read()
+    snapshot.rewardSources = {}
+    for index = 1, #RewardsConfig.keys do
+        local key = RewardsConfig.keys[index]
+        if RewardsConfig.amount(rewards, key) > 0 and (key ~= "PlayerKillXP" or isServer()) then
+            snapshot.rewardSources[#snapshot.rewardSources + 1] = key
+        end
+    end
+    snapshot.hordeRewards = "none"
+    if rewards.mode == 3 or rewards.mode == 4 then
+        snapshot.hordeRewards = "missing"
+        if rewards.horde then
+            snapshot.hordeRewards = "upcoming"
+        end
+    end
     snapshot.spentTokens = 0
     for _, price in pairs(record.life.purchases) do
         snapshot.spentTokens = snapshot.spentTokens + price

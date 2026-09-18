@@ -23,7 +23,7 @@ The intended full release still includes progression, prestige, Horde Night rewa
 |---|---|---|---|
 | 1. Foundation | Loadable standalone package and reliable character/account state | 1-2 | Implemented; solo sequence reported passed, live multiplayer pending |
 | 2. Positive trait shop | Usable health-hover entry and safe positive-trait purchases | 3-4 | v0.4.3 implemented; solo button and dedicated replacement-character purchases reported passed; remaining persistence checks and follow-ups carried forward |
-| 3. Progression and prestige | XP rewards, Trait Levels, death resets, and next-character bonuses | 5-7 | Checkpoint 5 implemented in v0.5.0; 6-7 pending |
+| 3. Progression and prestige | XP rewards, Trait Levels, death resets, and next-character bonuses | 5-7 | Checkpoints 5-6 implemented through v0.6.0; live reward acceptance and Checkpoint 7 pending |
 | 4. Horde Night integration | Horde XP, official lock, persistent eligibility, and score display | 8-10 | Pending |
 | 5. Initial release | Verified standalone and OMH builds, documentation, release package | 11-12 | Pending |
 | 6. Negative-trait removal | Optional default-off removal with verified effect cleanup | 13-14 | Common removal implemented in v0.4.0; custom exceptions and official policy remain |
@@ -88,11 +88,17 @@ The intended full release still includes progression, prestige, Horde Night rewa
 
 ### Checkpoint 6 - Standalone reward sources and mode settings
 
+**Latest handoff (2026-09-17):** owner reports v0.5.0 working on dedicated. [SFTP review](DEDICATED_v0.5.0.md) confirms server/client v0.5.0 and restoration of the existing settled life without a Trait Shop Lua failure. New-character and live progression paths were not exercised in this capture; retain their automated evidence and carry remaining focused live checks forward. Ready to resolve Checkpoint 6 decisions, not a claim that all of Phase 3 is complete.
+
 **Deliver:** Kills and Survival reward sources, the four-mode setting structure, and Hybrid visibility for all six XP categories. Without OMH, explain unavailable horde sources rather than manufacturing rewards. Introduce live reward sources after conversion rules are verified.
 
-**Decisions needed:** standalone default, Zombie and Unique Player XP rates, uniqueness identity/scope, Day/Night Survived rates and timing, and Hybrid kill overlap policy. Horde reward rates are finalized in Checkpoint 8.
+**Approved rewards:** Zombie 2 XP, Player Kill 75 XP, Night Survived 25 XP, Day Survived 0 XP. Player Kill replaces Unique Player: only enemies outside the killer's faction, with a default same-victim cooldown of 2 in-game days.
 
-**Pass when:** each enabled standalone source awards XP as specified; hidden/disabled sources cannot pay; repeat kills respect the agreed uniqueness scope. Verify survival timing across sleep/time skips and reconnects without duplicate bursts. Use two-player multiplayer for Unique Player attribution and separation of player rewards.
+**Approved mode default:** Hybrid standalone; Horde Night when OMH: Horde Night is detected, preserving the earlier dependency rule.
+
+**Implemented in v0.6.0:** authenticated server-account cooldown pairs; no shared faction (including factionless players) qualifies; full connected seasonal day/night periods; horde-tagged zombies are excluded from ordinary rewards to prevent overlap. The owner explicitly corrected the attempted link between survival timing and horde event hours. See [Checkpoint 6](CHECKPOINT_6.md) and [owner test](TEST_CHECKPOINT_6.md). Horde rates are approved for Checkpoint 8; live two-player acceptance is pending.
+
+**Pass when:** each enabled standalone source awards XP as specified; hidden/disabled sources cannot pay; player kills respect faction eligibility and the same-victim cooldown. Verify survival timing across sleep/time skips and reconnects without duplicate bursts. Use two-player multiplayer for kill attribution and separation of player rewards.
 
 ### Checkpoint 7 - Prestige creation bonus and retention
 
@@ -108,7 +114,9 @@ The intended full release still includes progression, prestige, Horde Night rewa
 
 **Deliver:** Horde Zombie and Horde Survived XP from authoritative OMH facts. Default new applicable settings to Horde Night when the dependency is detected. Use the narrow existing extension interface where adequate; implement a reviewed core extension only if source evidence requires it. Finish Hybrid routing for horde sources.
 
-**Decisions needed:** both horde XP values and any remaining Hybrid overlap decision; handling of saved settings when enabling/disabling the dependency.
+**Approved rewards:** Horde Zombie 5 XP; Horde Survived 100 XP.
+
+**Decisions needed:** any remaining Hybrid overlap decision; handling of saved settings when enabling/disabling the dependency.
 
 **Pass when:** connected members of their completed horde receive completion XP unless they are casualties; late-connected eligible members can qualify; unrelated players, disconnected players, and casualties do not. Reconnect/respawn cannot undo event casualty status. Two-player testing proves event/kill attribution and no cross-credit or replay awards. The addon still loads and works without OMH.
 
@@ -166,9 +174,9 @@ The intended full release still includes progression, prestige, Horde Night rewa
 | 2 | Player/account identity and persistence scope - resolved for Phase 1 |
 | 4 | Positive multiplier/rounding/catalog; unused prestige-derived creation points |
 | 5 | XP thresholds/curve - resolved: gentle acceleration, Level 20 = 2,000 |
-| 6 | Standalone default; non-horde reward values; uniqueness; survival timing; Hybrid overlap |
+| 6 | Implementation choices recorded in CHECKPOINT_6.md; owner feedback/live reward acceptance pending |
 | 7 | Remaining character-creation transport and transaction details |
-| 8 | Horde XP values; dependency changes with saved settings |
+| 8 | Dependency changes with saved settings; any remaining Hybrid overlap |
 | 9 | Official preset/lock default; detection; custom-earned prestige and retained-benefit policy |
 | 13-14 | Official removal policy and any custom trait adapters; multiplier 2/no surcharge is settled |
 

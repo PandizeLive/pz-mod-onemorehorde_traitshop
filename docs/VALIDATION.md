@@ -63,4 +63,6 @@ Current follow-up: [v0.4.3](PATCH_v0.4.3.md) fixes native button color mutation.
 
 ## Owner acceptance - 2026-09-17
 
+Latest: owner reports v0.5.0 working on dedicated; [SFTP review](DEDICATED_v0.5.0.md) confirms version and resumed settled state. Checkpoint 6 is now implemented as v0.6.0 with 472 behavioral checks, 17-file compilation, 32 release-tooling checks and three native dedicated save/restart cycles. [Evidence](CHECKPOINT_6_EVIDENCE.txt) distinguishes native/fixture coverage from pending [two-player acceptance](TEST_CHECKPOINT_6.md). Survival follows seasonal dawn/dusk, not horde-event hours.
+
 The owner reported **Passed** for the v0.4.3 four-step button recheck. Record this as owner-reported in-game acceptance, separate from automated checks. The dedicated player session remains pending.

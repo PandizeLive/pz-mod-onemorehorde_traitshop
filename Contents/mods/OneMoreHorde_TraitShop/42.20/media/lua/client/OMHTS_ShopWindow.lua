@@ -501,6 +501,17 @@ function OMHTS_ShopWindow:refresh()
     self.progress.xp = state.xp
     self.progress.requiredXP = Progression.requiredXP(state.level)
     self.progress:setTitle(tostring(math.floor(state.xp)) .. " / " .. tostring(self.progress.requiredXP))
+    local sources = {}
+    for index = 1, #state.rewardSources do
+        sources[#sources + 1] = getText("UI_OMHTS_XP_" .. state.rewardSources[index])
+    end
+    if #sources == 0 then
+        sources[1] = getText("UI_OMHTS_XPNoSources")
+    end
+    if state.hordeRewards ~= "none" then
+        sources[#sources + 1] = getText("UI_OMHTS_HordeRewards_" .. state.hordeRewards)
+    end
+    self.progress:setTooltip(table.concat(sources, "\n"))
     local owned, ownershipKey = Presentation.ownership(self.player, state)
     local query = Presentation.normalize(string.sub(self.search:getInternalText(), 1, 128))
     local parts = { tostring(state.lifeId), tostring(state.revision), ownershipKey, query, tostring(self.filterMode) }

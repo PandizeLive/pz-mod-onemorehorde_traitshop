@@ -1,12 +1,14 @@
-v0.5.0
+v0.6.0
 
-Checkpoint 5
-- Added a read-only Other Traits panel between your positive and negative traits. Zero-cost traits, including profession abilities and weight conditions, appear here with description tooltips.
-- Added the XP conversion foundation: one Token per earned Trait Level and one Prestige Point every five levels.
-- Added gradual XP requirements, starting at 100 and reaching 2,000 for Level 20, rounded to the nearest 50.
-- Updated the XP bar to show progress against the next level's requirement.
-- Starting Tokens now capture unused points at character creation, protecting new characters against delayed first-join initialization.
-- Added persistence and duplicate-award checks for progression and new-character grants.
+Checkpoint 6
+- Added XP for ordinary zombie kills, enemy player kills, and surviving complete days or nights.
+- Default rewards: 2 XP per zombie, 75 XP per eligible player kill, 25 XP per night survived, and 0 XP per day survived.
+- Player kills exclude faction members and use a persistent two-in-game-day cooldown before the same victim can reward XP again.
+- Added Kills, Survival, Horde Night, and Hybrid reward modes with matching sandbox controls.
+- Hybrid is the standalone default; Horde Night defaults when its dependency is active. Explicit saved settings are preserved.
+- Day and night survival follow seasonal dawn and dusk independently of horde scheduling. Sleep and fast-forward count; partial periods after joining or reconnecting do not.
+- The XP tooltip now lists active earning methods without reward amounts.
+- Added duplicate-award protection, bounded time-skip handling, and batched reward updates.
 
 Still in development
-- XP earning sources, prestige character-creation bonuses, and Horde Night scoring integration. This update does not award XP for kills or survival yet.
+- Horde rewards, prestige character-creation bonuses, and official scoring. Horde Night mode does not award XP in this build; use Hybrid, Kills, or Survival to test the new sources.

@@ -2,15 +2,18 @@
 
 Standalone trait progression and purchasing addon for Project Zomboid Build 42, with optional OMH: Horde Night integration.
 
-**Status: v0.5.0 implements Checkpoint 5.** The movable, resizable shop has a shared purchase/removal cart, selection shortcuts and name/description search. Owned zero-cost traits now occupy a read-only Other Traits panel. Server-side XP conversion awards one Token per level and one Prestige Point every five levels, using a gradual curve from 100 XP for Level 1 to 2,000 for Level 20. New-character starting points are captured at creation to avoid delayed-join initialization loss. **XP earning sources, prestige creation bonuses and Horde Night scoring remain future work.** The owner reported v0.4.3 dedicated purchases passed; live reconnect/restart and the new UI remain owner checks. Workshop test item: [3803035618](https://steamcommunity.com/sharedfiles/filedetails/?id=3803035618), uploaded by the owner as Unlisted; v0.5.0 still requires owner upload.
+**Status: v0.6.0 implements Checkpoint 6.** Earn Trait XP from ordinary zombie kills (2), eligible enemy player kills (75), and surviving complete nights (25); daytime defaults to 0. Hybrid is the standalone default. Player rewards enforce faction restrictions and a persistent two-game-day same-victim cooldown. Day/night follows the game's seasonal cycle, independently of horde scheduling. The shop retains its mixed cart, Other Traits panel, starting Tokens and server-owned progression.
 
-The planned full progression loop lets players earn XP from kills, survival or hordes, gain Trait Levels, and receive Tokens to purchase traits. The conversion and death-reset foundation is implemented; XP sources are next. Every five earned levels awards one Prestige Point independently of Token count. Applying that prestige as creation points and retaining 30% after entry remain Checkpoint 7.
+**Horde rewards, prestige creation bonuses and official scoring remain future work.** Horde Night mode currently has no active rewards; choose Hybrid, Kills or Survival to test the new sources. Workshop item [3803035618](https://steamcommunity.com/sharedfiles/filedetails/?id=3803035618) remains the existing Unlisted test item. The owner confirmed v0.5.0 working on dedicated; v0.6.0 still requires owner upload and live acceptance.
+
+Each earned level grants one Token; every five levels grants one Prestige Point. Applying prestige to the next character and retaining 30% remain Checkpoint 7.
 
 ## Documentation
 
 - [Checkpoint 5 report](docs/CHECKPOINT_5.md): curve, authority, creation investigation and native evidence.
-- [Current six-step test](docs/TEST_CHECKPOINT_5.md): Workshop update, Other Traits, delayed creation and dedicated persistence.
-- [Roadmap](docs/ROADMAP.md): six phases and sequential Checkpoints 1-14. Checkpoint 5 conversion is implemented; XP sources, creation bonuses and scoring follow. Common removal was brought forward into v0.4.0.
+- [Checkpoint 6 report](docs/CHECKPOINT_6.md): reward rules, seasonal survival, cooldowns and source evidence.
+- [Current dedicated test](docs/TEST_CHECKPOINT_6.md): mode controls, kill/survival rewards, PvP and persistence.
+- [Roadmap](docs/ROADMAP.md): six phases and sequential Checkpoints 1-14. Checkpoint 6 rewards are implemented; creation bonuses, horde rewards and scoring follow. Common removal was brought forward into v0.4.0.
 - [Phase 2 report](docs/PHASE_2.md): shop, catalog, starting Tokens, purchase recovery, source evidence and verification limits.
 - [v0.4.3 patch](docs/PATCH_v0.4.3.md): stable Purchase colors under native button refreshes.
 - [v0.4.2 patch](docs/PATCH_v0.4.2.md): scroll-aware row rendering, action layout/colors and XP tooltip.

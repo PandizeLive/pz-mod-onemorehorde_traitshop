@@ -4,9 +4,12 @@ local TraitShop = require("OMHTS_Bootstrap")
 local State = require("OMHTS_State")
 local Creation = require("OMHTS_Creation")
 local Shop = require("OMHTS_Shop")
+local Rewards = require("OMHTS_Rewards")
+local RewardsConfig = require("OMHTS_RewardsConfig")
 local Authority = {}
 TraitShop.Authority = Authority
 local store
+local rewardsReady = false
 local bindings = {}
 local rejected = {}
 local nextScan = 0
@@ -84,6 +87,7 @@ local function bind(player)
     Shop.reconcile(player, record, true)
     current = { record = record, lifeId = record.life.id, lastRequest = -10000,
         lastPurchase = -10000, lastBusy = -10000 }
+    current.survival = Rewards.session(getGameTime():getWorldAgeHours(), getGameTime():getTimeOfDay(), RewardsConfig.read())
     bindings[player] = current
     print("[OMH Trait Shop] state " .. result .. "; slot=" .. player:getPlayerNum()
         .. "; life=" .. record.life.id .. "; revision=" .. record.revision
@@ -121,12 +125,37 @@ local function initialize()
     rejected = {}
     nextScan = 0
     store = ModData.getOrCreate(STORE_KEY)
+    rewardsReady = false
     if not State.initialize(store) then
         store = nil
         print("[OMH Trait Shop] unsupported or invalid state schema; saved data preserved")
         return
     end
+    rewardsReady = Rewards.initialize(store)
+    if not rewardsReady then
+        print("[OMH Trait Shop] invalid reward state; rewards disabled; saved data preserved")
+    end
     print("[OMH Trait Shop] authority ready; schema=" .. State.SCHEMA)
+end
+
+---@param killer IsoGameCharacter|nil
+---@return table|nil
+local function rewardBinding(killer)
+    if not killer or not instanceof(killer, "IsoPlayer") or killer:isDead() then return nil end
+    if isServer() and not getOnlinePlayers():contains(killer) then return nil end
+    if not isServer() and getSpecificPlayer(killer:getPlayerNum()) ~= killer then return nil end
+    return bind(killer)
+end
+
+---@param zombie IsoZombie
+---@return nil
+local function onZombieDead(zombie)
+    if not rewardsReady or not Rewards.consumeZombie(zombie) then return end
+    local killer = zombie:getAttackedBy()
+    local binding = rewardBinding(killer)
+    if binding and Rewards.zombie(zombie, binding.record) then
+        binding.rewardDirty = true
+    end
 end
 
 ---@param player IsoPlayer
@@ -135,6 +164,13 @@ local function observeDeath(player)
     if not player or not instanceof(player, "IsoPlayer") then return end
     local binding = bindings[player]
     if not binding or binding.record.life.id ~= binding.lifeId then return end
+    if rewardsReady and player:isDead() and Rewards.consumePlayer(store, player, binding.lifeId) then
+        local killer = player:getAttackedBy()
+        local killerBinding = rewardBinding(killer)
+        if killerBinding and Rewards.player(store, killer, player, killerBinding.record) then
+            killerBinding.rewardDirty = true
+        end
+    end
     if State.settleDeath(binding.record, binding.lifeId) then
         print("[OMH Trait Shop] death settled; life=" .. binding.lifeId .. "; wallet reset")
         sendSnapshot(player, binding)
@@ -165,7 +201,19 @@ local function scanPlayers()
             else
                 local binding = bind(player)
                 if binding and binding.record.life.id == binding.lifeId then
+                    if rewardsReady then
+                        local changed
+                        binding.survival, changed = Rewards.survival(binding.record, binding.survival,
+                            getGameTime():getWorldAgeHours(), getGameTime():getTimeOfDay(), RewardsConfig.read())
+                        if changed then
+                            binding.rewardDirty = true
+                        end
+                    end
                     Shop.reconcile(player, binding.record, false)
+                    if binding.rewardDirty then
+                        binding.rewardDirty = nil
+                        sendSnapshot(player, binding)
+                    end
                     local hours = player:getHoursSurvived()
                     if State.isXP(hours) and hours > binding.record.life.hours then
                         binding.record.life.hours = hours
@@ -291,6 +339,8 @@ Events.OnInitGlobalModData.Add(initialize)
 Events.OnNewGame.Add(onNewGame)
 Events.OnCreatePlayer.Add(onCreatePlayer)
 Events.OnCharacterDeath.Add(observeDeath)
+Events.OnZombieDead.Add(onZombieDead)
+Events.OnZombieCreate.Add(Rewards.created)
 Events.OnTick.Add(onTick)
 Events.OnSave.Add(scanPlayers)
 Events.OnClientCommand.Add(onClientCommand)

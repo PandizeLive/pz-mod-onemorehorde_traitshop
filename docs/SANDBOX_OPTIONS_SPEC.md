@@ -1,17 +1,18 @@
 # Sandbox options specification
 
-Positive Cost Multiplier, Negative Cost Multiplier and Allow Negative Trait Removal are implemented in v0.4.0; other options remain specifications for later phases. XP defaults, caps, and the complete official preset remain undecided. The owner has specified the initial 0.50 score multiplier and 30% prestige retention default.
+Positive Cost Multiplier, Negative Cost Multiplier and Allow Negative Trait Removal are implemented in v0.4.0; reward modes and standalone sources are implemented in v0.6.0; prestige and horde integration remain later phases. Reward XP defaults below are approved. Caps and the complete official preset remain undecided. The owner has specified the initial 0.50 score multiplier and 30% prestige retention default.
 
 | Setting | Behavior / default | Status |
 |---|---|---|
 | Locked Official Mode | When enabled, force the official Trait Shop preset, including Horde Night rewards; prevent edits to governed values. | Owner-requested behavior; label and default pending. |
-| Reward Mode | Kills, Survival, Horde Night, Hybrid. Default Horde Night when OMH: Horde Night is active. | Confirmed; standalone default pending. |
-| Zombie XP | XP for a qualifying ordinary zombie kill. Visible in Kills and Hybrid. | Value pending. |
-| Unique Player XP | XP for a qualifying unique player kill. Visible in Kills and Hybrid. | Value and uniqueness scope pending. |
-| Day Survived XP | XP for a qualifying survived day. Visible in Survival and Hybrid. | Value and timing rules pending. |
-| Night Survived XP | XP for a qualifying survived night. Visible in Survival and Hybrid. | Value and timing rules pending. |
-| Horde Zombie XP | XP for a qualifying OMH horde-zombie kill. Visible in Horde Night and Hybrid. | Value pending. |
-| Horde Survived XP | XP upon the player's horde completion while connected and not a casualty. Visible in Horde Night and Hybrid. | Value pending; eligibility confirmed. |
+| Reward Mode | Kills, Survival, Horde Night, Hybrid. Default Hybrid standalone; default Horde Night when OMH: Horde Night is active. | Defaults approved; existing saved settings are not implicitly overwritten. |
+| Zombie XP | Default 2 XP per qualifying ordinary zombie kill. Visible in Kills and Hybrid. | Implemented in v0.6.0. |
+| Player Kill XP | Default 75 XP for an enemy player outside the killer's faction, subject to the same-victim cooldown. Visible in Kills and Hybrid. Replaces Unique Player XP. | Implemented in v0.6.0. |
+| Player Kill Cooldown | Default 2 in-game days before killing the same player can reward XP again. | Implemented with persistent directional server-account pairs; no shared faction includes factionless players. |
+| Day Survived XP | Default 0 XP for a qualifying survived day. | Implemented in v0.6.0 using native seasonal dawn/dusk; full connected periods only. |
+| Night Survived XP | Default 25 XP for a qualifying survived night. | Implemented in v0.6.0 using native seasonal dawn/dusk; full connected periods only. |
+| Horde Zombie XP | Default 5 XP per qualifying OMH horde-zombie kill. Visible in Horde Night and Hybrid. | Value approved; implementation Checkpoint 8. |
+| Horde Survived XP | Default 100 XP upon the player's horde completion while connected and not a casualty. Visible in Horde Night and Hybrid. | Value and eligibility approved; implementation Checkpoint 8. |
 | XP per Trait Level | Rounded to nearest 50: `100 + 35n + (65/19)n²`, where n is the current level. Level 1 costs 100 and Level 20 costs 2,000. Each earned level grants one Token. | Approved and implemented in Checkpoint 5; no new sandbox control. |
 | Prestige cadence | One Prestige Point every five earned Trait Levels, independent of Token count. | Confirmed; whether exposed as a custom setting pending. |
 | Prestige Retention Percentage | Retain 30% of the previous available prestige after the next character receives its full creation bonus and enters the world. Repeats once per life transition; round to nearest whole point with no minimum-one guarantee. | Separate setting, 30% default, and nearest-whole rounding confirmed; label working. |
@@ -31,3 +32,5 @@ Recommend defaulting the lock on when Horde Night is active, but this default is
 The exact official preset still needs values for XP, prices, progression, prestige, permitted traits, and later removal. Mode selection alone does not define the complete rules. Existing OMH fairness requirements continue to apply.
 
 Track effective settings changes before granting rewards or purchases so a temporary custom configuration cannot be used and then hidden by restoring the preset. Do not silently reset an existing custom server merely because dependencies are detected after loading a save; fresh-default versus saved-setting behavior needs validation.
+
+Day/night survival follows the native seasonal cycle, independently of OneMoreHorde.StartHour/EndHour. Sleep and fast-forward count; partial periods after joining/reconnecting/restarting do not. Endless day/night has no completed alternating periods. See CHECKPOINT_6.md for timing, saved-mode behavior and implementation limits.

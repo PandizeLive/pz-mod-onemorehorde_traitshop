@@ -32,10 +32,10 @@
   "UI_OMHTS_Result_loading": "Starting Tokens are still being initialized.",
   "UI_OMHTS_Prestige": "Prestige: %1",
   "UI_OMHTS_Buy": "Purchase",
-  "UI_OMHTS_XPNoSources": "XP sources\nNone available in this build.",
+  "UI_OMHTS_XPNoSources": "No active XP sources.",
   "UI_OMHTS_PrestigeTip": "Carried from previous lives: %1\nEarned from Trait Levels this life: %2\n\nTokens do not generate prestige. Applying prestige as character-creation points arrives in a later checkpoint.",
   "UI_OMHTS_TokenTip": "Unused creation points converted: %1\nTrait Levels earned: %4 Tokens\nSpent on purchases and removals: %2\nCurrent balance: %3",
-  "UI_OMHTS_TokenSourcesDeferred": "XP earning sources and prestige creation bonuses arrive in later checkpoints. No prestige was included in your starting Tokens.",
+  "UI_OMHTS_TokenSourcesDeferred": "Prestige creation bonuses arrive in a future update. No prestige was included in your starting Tokens.",
   "UI_OMHTS_Catalog": "Positive traits (%1)",
   "UI_OMHTS_Positive": "Your positive traits (%1)",
   "UI_OMHTS_Other": "Other traits (%1)",
@@ -73,5 +73,13 @@
   "UI_OMHTS_Result_excluded": "This trait is excluded by a compatibility integration. No Tokens were spent.",
   "UI_OMHTS_Result_removal_disabled": "Negative-trait removal is disabled in sandbox settings. No Tokens were spent.",
   "UI_OMHTS_Result_absent": "You no longer own this negative trait. No Tokens were spent.",
-  "UI_OMHTS_Result_multiplayer": "This trait is disabled in multiplayer No Tokens were spent."
+  "UI_OMHTS_Result_multiplayer": "This trait is disabled in multiplayer No Tokens were spent.",
+  "UI_OMHTS_XP_ZombieXP": "Zombie kills",
+  "UI_OMHTS_XP_PlayerKillXP": "Enemy player kills",
+  "UI_OMHTS_XP_DayXP": "Days survived",
+  "UI_OMHTS_XP_NightXP": "Nights survived",
+  "UI_OMHTS_XP_HordeZombieXP": "Horde zombie kills",
+  "UI_OMHTS_XP_HordeSurvivedXP": "Hordes survived",
+  "UI_OMHTS_HordeRewards_missing": "Horde rewards require OMH: Horde Night and the upcoming integration.",
+  "UI_OMHTS_HordeRewards_upcoming": "Horde rewards arrive in a future update."
 }

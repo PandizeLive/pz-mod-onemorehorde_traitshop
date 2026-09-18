@@ -43,8 +43,10 @@ check(window.progress.title == "1000 / 2000" and window.progress.requiredXP == 2
 check(window.prestige.title == "Prestige: 2", "unclaimed prestige remains visible after death")
 shop.getState = originalGetState
 window:refresh()
-check(window.progress.tooltip == "XP sources\nNone available in this build." and not string.find(window.progress.tooltip, "%d"),
-    "XP tooltip has no amounts or invented enabled sources before reward implementation")
+check(string.find(window.progress.tooltip, "Zombie kills", 1, true)
+    and string.find(window.progress.tooltip, "Nights survived", 1, true)
+    and not string.find(window.progress.tooltip, "Days survived", 1, true),
+    "XP tooltip shows active reward names and excludes zero-rate days")
 check(window.reset.x == 12 and window.closeButton.x > window.reset.x + window.reset.width
     and window.buy.x == window.width - 12 - window.buy.width
     and window.closeButton.x + window.closeButton.width + 8 == window.buy.x

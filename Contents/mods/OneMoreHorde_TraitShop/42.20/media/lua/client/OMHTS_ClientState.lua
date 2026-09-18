@@ -3,6 +3,7 @@ if isServer() then return end
 local TraitShop = require("OMHTS_Bootstrap")
 local Catalog = require("OMHTS_Catalog")
 local Effects = require("OMHTS_Effects")
+local RewardsConfig = require("OMHTS_RewardsConfig")
 local states = {}
 local awaiting = {}
 local purchases = {}
@@ -47,6 +48,19 @@ function TraitShop.acceptState(snapshot)
     if snapshot.creationStatus ~= "pending" and snapshot.creationStatus ~= "granted"
         and snapshot.creationStatus ~= "legacy" and snapshot.creationStatus ~= "invalid" then return end
     local copy = {}
+    if type(snapshot.rewardSources) ~= "table" or #snapshot.rewardSources > 6
+        or (snapshot.hordeRewards ~= "none" and snapshot.hordeRewards ~= "missing"
+            and snapshot.hordeRewards ~= "upcoming") then return end
+    copy.rewardSources = {}
+    local seenSources = {}
+    for index = 1, #snapshot.rewardSources do
+        local source = snapshot.rewardSources[index]
+        if type(source) ~= "string" or RewardsConfig.defaults[source] == nil
+            or source == "PlayerKillCooldownDays" or seenSources[source] then return end
+        copy.rewardSources[index] = source
+        seenSources[source] = true
+    end
+    copy.hordeRewards = snapshot.hordeRewards
     for index = 1, #counters do
         local key = counters[index]
         local value = snapshot[key]
@@ -112,11 +126,15 @@ function TraitShop.getState(playerNum)
     if not state then return nil end
     local copy = {}
     for key, value in pairs(state) do
-        if key ~= "offers" and key ~= "effects" then
+        if key ~= "offers" and key ~= "effects" and key ~= "rewardSources" then
             copy[key] = value
         end
     end
     copy.effects = Effects.copy(state.effects)
+    copy.rewardSources = {}
+    for index = 1, #state.rewardSources do
+        copy.rewardSources[index] = state.rewardSources[index]
+    end
     copy.offers = {}
     for index = 1, #state.offers do
         local offer = state.offers[index]
