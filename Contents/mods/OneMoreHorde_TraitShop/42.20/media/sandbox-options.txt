@@ -48,14 +48,6 @@ option OMHTraitShop.PlayerKillXP {
     page = OMHTraitShop,
     translation = OMHTraitShop_PlayerKillXP,
 }
-option OMHTraitShop.PlayerKillCooldownDays {
-    type = integer,
-    min = 0,
-    max = 365,
-    default = 2,
-    page = OMHTraitShop,
-    translation = OMHTraitShop_PlayerKillCooldownDays,
-}
 option OMHTraitShop.DayXP {
     type = integer,
     min = 0,
@@ -87,4 +79,13 @@ option OMHTraitShop.HordeSurvivedXP {
     default = 100,
     page = OMHTraitShop,
     translation = OMHTraitShop_HordeSurvivedXP,
+}
+
+option OMHTraitShop.PlayerKillCooldownDays {
+    type = integer,
+    min = 0,
+    max = 365,
+    default = 2,
+    page = OMHTraitShop,
+    translation = OMHTraitShop_PlayerKillCooldownDays,
 }

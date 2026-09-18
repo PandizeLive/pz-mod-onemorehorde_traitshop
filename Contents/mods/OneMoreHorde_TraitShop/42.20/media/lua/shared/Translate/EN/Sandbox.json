@@ -1,5 +1,8 @@
 {
   "Sandbox_OMHTraitShop": "OMH: Trait Shop",
+  "Sandbox_Title_OMHTraitShop_TraitCosts": "Trait Costs",
+  "Sandbox_Title_OMHTraitShop_XPRewards": "XP Rewards",
+  "Sandbox_Title_OMHTraitShop_PlayerKillRules": "Player Kill Rules",
   "Sandbox_OMHTraitShop_PositiveCostMultiplier": "Positive Cost Multiplier",
   "Sandbox_OMHTraitShop_PositiveCostMultiplier_tooltip": "Multiplies a positive trait's creation-point cost. Prices round up to whole Tokens. Default: 1.0.",
   "Sandbox_OMHTraitShop_NegativeCostMultiplier": "Negative Cost Multiplier",

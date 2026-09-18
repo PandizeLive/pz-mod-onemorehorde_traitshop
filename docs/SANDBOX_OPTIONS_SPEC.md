@@ -1,5 +1,7 @@
 # Sandbox options specification
 
+As of v0.6.3, settings are grouped under **Trait Costs** (multipliers and removal toggle), **XP Rewards** (mode and applicable rates), and **Player Kill Rules** (cooldown, shown in Kills/Hybrid). The latter section follows all XP rates. These headers appear in solo setup, host setup and the live admin menu. Prestige gets its own section when its settings are implemented.
+
 Positive Cost Multiplier, Negative Cost Multiplier and Allow Negative Trait Removal are implemented in v0.4.0; reward modes and standalone sources are implemented in v0.6.0; prestige and horde integration remain later phases. Reward XP defaults below are approved. Caps and the complete official preset remain undecided. The owner has specified the initial 0.50 score multiplier and 30% prestige retention default.
 
 | Setting | Behavior / default | Status |

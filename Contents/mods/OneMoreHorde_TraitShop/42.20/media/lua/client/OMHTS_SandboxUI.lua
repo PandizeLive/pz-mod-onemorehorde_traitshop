@@ -3,15 +3,23 @@ if isServer() then return end
 require("OptionScreens/SandboxOptions")
 require("ISUI/AdminPanel/ISServerSandboxOptionsUI")
 require("OptionScreens/ServerSettingsScreen")
+require("ISUI/ISLabel")
 local Config = require("OMHTS_RewardsConfig")
 local SandboxUI = {}
+local sections = {
+    ["OMHTraitShop.PositiveCostMultiplier"] = "OMHTraitShop_TraitCosts",
+    ["OMHTraitShop.RewardMode"] = "OMHTraitShop_XPRewards",
+    ["OMHTraitShop.PlayerKillCooldownDays"] = "OMHTraitShop_PlayerKillRules",
+}
 
 ---@param panel ISPanel
 ---@return nil
 function SandboxUI.layout(panel)
     local mode = panel.controls["OMHTraitShop.RewardMode"]
-    if not mode or panel.omhRewardMode == mode.selected then return end
+    if not mode or (panel.omhRewardMode == mode.selected and panel.omhSectionWidth == panel:getWidth()) then return end
+    local modeChanged = panel.omhRewardMode ~= mode.selected
     panel.omhRewardMode = mode.selected
+    panel.omhSectionWidth = panel:getWidth()
     local y = 11
     panel.joypadButtonsY = {}
     for index = 1, #panel.settingNames do
@@ -25,6 +33,15 @@ function SandboxUI.layout(panel)
         end
         label:setVisible(visible)
         control:setVisible(visible)
+        local title = panel.omhSectionTitles[name]
+        if title then
+            title:setVisible(visible)
+            if visible then
+                title:setX((panel:getWidth() - title:getWidth()) / 2)
+                title:setY(y + 20)
+                y = y + title:getHeight() + 22
+            end
+        end
         if visible then
             label:setY(y)
             control:setY(y)
@@ -34,7 +51,10 @@ function SandboxUI.layout(panel)
     end
     panel.joypadIndex = 1
     panel.joypadIndexY = 1
-    panel:setYScroll(0)
+    panel.joypadButtons = panel.joypadButtonsY[1]
+    if modeChanged then
+        panel:setYScroll(0)
+    end
     panel:setScrollHeight(y)
 end
 
@@ -44,6 +64,19 @@ function SandboxUI.attach(panel)
     if not panel or not panel.controls or not panel.controls["OMHTraitShop.RewardMode"]
         or panel.omhRewardLayout then return panel end
     panel.omhRewardLayout = true
+    panel.omhSectionTitles = {}
+    if not panel.titles then
+        panel.titles = {}
+    end
+    for name, section in pairs(sections) do
+        if panel.controls[name] then
+            local title = ISLabel:new(0, 0, getTextManager():getFontHeight(UIFont.Large) + 6,
+                getText("Sandbox_Title_" .. section), 1, 1, 1, 1, UIFont.Large)
+            panel:addChild(title)
+            panel.omhSectionTitles[name] = title
+            panel.titles[#panel.titles + 1] = title
+        end
+    end
     local original = panel.prerender
     ---@param self ISPanel
     ---@return nil
