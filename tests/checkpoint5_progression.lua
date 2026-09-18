@@ -63,3 +63,46 @@ store = nativeRoundTrip(store)
 legacy = State.attach(store,"legacy-milestone",61,0.2)
 check(legacy.prestige.earned == 1 and legacy.revision == migratedRevision,
     "saved milestone correction never repeats on reconnect")
+
+local options = SandboxVars.OMHTraitShop
+local configurable = State.attach(store, "configured-rewards", 63, 0)
+options.TokensPerLevel = 3
+options.PrestigeLevelInterval = 3
+check(State.awardXP(configurable, configurable.life.id, configurable.revision, 250), "configured batch commits")
+check(configurable.life.level == 2 and configurable.life.tokens == 6
+    and configurable.life.earnedLevelTokens == 6 and configurable.prestige.earned == 1,
+    "displayed Level 3 grants two three-Token rewards and one Prestige")
+store = nativeRoundTrip(store)
+configurable = State.attach(store, "configured-rewards", 63, 0.1)
+check(configurable.life.earnedLevelTokens == 6 and configurable.prestige.earned == 1,
+    "custom rewards persist without recomputing on reload")
+options.TokensPerLevel = 0
+options.PrestigeLevelInterval = 1
+check(State.awardXP(configurable, configurable.life.id, configurable.revision, 200), "zero Tokens allowed")
+check(configurable.life.tokens == 6 and configurable.life.earnedLevelTokens == 6
+    and configurable.prestige.earned == 2, "setting changes affect only future rewards without backfill")
+local oldRevision = configurable.revision
+options.PrestigeLevelInterval = 0
+check(not State.awardXP(configurable, configurable.life.id, oldRevision, 250)
+    and configurable.revision == oldRevision, "invalid interval rejected atomically")
+options.PrestigeLevelInterval = 5
+options.TokensPerLevel = 1.5
+check(not State.awardXP(configurable, configurable.life.id, oldRevision, 250), "fractional Tokens rejected")
+options.TokensPerLevel = 1
+local toggle = State.attach(store, "interval-toggle", 64, 0)
+check(State.awardXP(toggle, toggle.life.id, toggle.revision, 700), "default milestone grants once")
+for interval = 6, 12 do
+    options.PrestigeLevelInterval = interval
+    check(State.awardXP(toggle, toggle.life.id, toggle.revision, Progression.requiredXP(toggle.life.level)),
+        "harder interval still permits leveling")
+    check(toggle.prestige.earned == 1, "changing intervals cannot farm the first Prestige entitlement")
+end
+options.PrestigeLevelInterval = 5
+local oldSave = State.attach(store, "old-token-history", 65, 0)
+oldSave.life.level = 2
+oldSave.life.earnedLevelTokens = nil
+options.TokensPerLevel = 4
+check(State.awardXP(oldSave, oldSave.life.id, oldSave.revision, 200)
+    and oldSave.life.earnedLevelTokens == 6, "legacy Token history preserves two old one-Token levels")
+options.TokensPerLevel = nil
+options.PrestigeLevelInterval = nil

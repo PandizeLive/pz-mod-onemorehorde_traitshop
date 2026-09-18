@@ -1,13 +1,11 @@
-v0.6.3.1
+v0.6.4
 
-Level-up fixes
-- Prestige is now awarded at displayed Trait Levels 5, 10, 15 and subsequent multiples of five.
-- Existing living characters receive missing milestone Prestige once, without duplicating Tokens.
-- Level-up and Prestige sounds now explicitly play in 2D to the local player.
+Level Rewards
+- Added Tokens per Level (default 1) and Prestige Level Interval (default 5) in a new Level Rewards sandbox section.
+- Reward settings apply to future level-ups, preserving existing Tokens and Prestige.
+- Prevented repeated interval changes from awarding the same Prestige entitlement again.
+- Reward text and the Tokens tooltip now show actual Tokens earned with custom rewards.
 
-Release tools
-- Added a separate launcher option to update the Workshop preview to the supplied GIF.
-- Normal mod uploads preserve the cover, description and visibility.
-
-Still in development
-- Horde XP and next-character Prestige bonuses remain upcoming. Horde Night v0.6.13 supplies the separate settings/scoring integration.
+Compatibility
+- Update Horde Night to v0.6.13.1 for the matching official-settings policy.
+- Prestige character-creation bonuses and retention remain Checkpoint 7.

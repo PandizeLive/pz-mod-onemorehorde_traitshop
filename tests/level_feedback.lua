@@ -32,6 +32,7 @@ for index = 1, #sides do
     local snapshot = nativeRoundTrip(testSavedSnapshot)
     snapshot.status = "alive"
     snapshot.level = 0
+    snapshot.earnedLevelTokens = snapshot.level
     snapshot.earnedPrestige = 0
     snapshot.revision = 100
     snapshot.effects = { perks = {}, traits = {}, recipes = {} }
@@ -40,6 +41,7 @@ for index = 1, #sides do
         local nonce = testPackets[#testPackets].args.nonce
         shop.acceptState(snapshot)
         snapshot.level = 1
+        snapshot.earnedLevelTokens = 1
         snapshot.revision = 101
         snapshot.nonce = nonce
         shop.acceptState(snapshot)
@@ -50,6 +52,7 @@ for index = 1, #sides do
     check(#sounds == 0, "initial state is quiet: " .. testSide)
     snapshot.nonce = nil
     snapshot.level = snapshot.level + 1
+    snapshot.earnedLevelTokens = snapshot.level
     snapshot.revision = snapshot.revision + 1
     shop.acceptState(snapshot)
     check(#sounds == 1 and sounds[1] == "OMHTS_LevelUp", "normal level uses supplied sound: " .. testSide)
@@ -67,6 +70,7 @@ for index = 1, #sides do
     shop.acceptState(stale)
     check(#sounds == 1, "stale snapshot stays quiet")
     snapshot.level = 10
+    snapshot.earnedLevelTokens = snapshot.level
     snapshot.earnedPrestige = 2
     snapshot.revision = snapshot.revision + 1
     shop.acceptState(snapshot)
@@ -84,18 +88,21 @@ for index = 1, #sides do
     check(#sounds == 2, "wallet changes do not celebrate")
     actor.dead = true
     snapshot.level = 11
+    snapshot.earnedLevelTokens = snapshot.level
     snapshot.revision = snapshot.revision + 1
     shop.acceptState(snapshot)
     check(#sounds == 2, "dead local actor stays quiet")
     actor.dead = false
     snapshot.status = "dead"
     snapshot.level = 12
+    snapshot.earnedLevelTokens = snapshot.level
     snapshot.revision = snapshot.revision + 1
     shop.acceptState(snapshot)
     check(#sounds == 2, "dead authoritative state stays quiet")
     snapshot.status = "alive"
     snapshot.lifeId = snapshot.lifeId + 1
     snapshot.level = 20
+    snapshot.earnedLevelTokens = snapshot.level
     snapshot.revision = snapshot.revision + 1
     shop.acceptState(snapshot)
     check(#sounds == 2, "new life never celebrates prior progress")
@@ -104,6 +111,7 @@ for index = 1, #sides do
     check(#sounds == 2, "reconnect remains quiet")
     testPlayers = { player("Replacement", 0, 5678, 0) }
     snapshot.level = 21
+    snapshot.earnedLevelTokens = snapshot.level
     snapshot.revision = snapshot.revision + 1
     shop.acceptState(snapshot)
     check(#sounds == 2, "replacement actor cannot inherit celebration")
@@ -133,6 +141,20 @@ for displayedLevel = 2, 10 do
     check(sounds[#sounds] == expected and #sounds == displayedLevel - 1,
         "authority and sound agree at displayed Level " .. displayedLevel)
 end
+SandboxVars.OMHTraitShop.TokensPerLevel = 3
+check(State.awardXP(record, record.life.id, record.revision, Progression.requiredXP(record.life.level)),
+    "custom Token reward commits")
+record.life.tokens = 0
+acceptMilestone()
+check(halos[#halos].text == "UI_OMHTS_LevelUp[br/]UI_OMHTS_LevelUpTokens:3",
+    "feedback uses actual three-Token award even if wallet was spent before refresh")
+SandboxVars.OMHTraitShop.TokensPerLevel = 0
+check(State.awardXP(record, record.life.id, record.revision, Progression.requiredXP(record.life.level)),
+    "disabled Token reward permits XP progression")
+acceptMilestone()
+check(halos[#halos].text == "UI_OMHTS_LevelUp[br/]UI_OMHTS_LevelUpTokens:0",
+    "feedback never invents a Token when rewards are disabled")
+SandboxVars.OMHTraitShop.TokensPerLevel = nil
 getText = originalText
 Events.OnDisconnect.fire()
 testOutput = tostring(testChecks) .. " Phase 1 and level feedback assertions passed."

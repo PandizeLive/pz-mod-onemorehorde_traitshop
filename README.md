@@ -2,15 +2,16 @@
 
 Standalone trait progression and purchasing addon for Project Zomboid Build 42, with optional OMH: Horde Night integration.
 
-**Status: v0.6.3.1 corrects prestige milestones and 2D level-up audio, and adds a GIF-preview publisher action.** Earn Trait XP from ordinary zombie kills (2), eligible enemy player kills (75), and surviving complete nights (25); daytime defaults to 0. Hybrid is the standalone default. Player rewards enforce faction restrictions and a persistent two-game-day same-victim cooldown. Day/night follows the game's seasonal cycle, independently of horde scheduling. The shop retains its mixed cart, Other Traits panel, starting Tokens and server-owned progression.
+**Status: v0.6.4 adds configurable Tokens per Level and Prestige Level Interval under Level Rewards.** Earn Trait XP from ordinary zombie kills (2), eligible enemy player kills (75), and surviving complete nights (25); daytime defaults to 0. Hybrid is the standalone default. Player rewards enforce faction restrictions and a persistent two-game-day same-victim cooldown. Day/night follows the game's seasonal cycle, independently of horde scheduling. The shop retains its mixed cart, Other Traits panel, starting Tokens and server-owned progression.
 
-**Horde rewards and prestige creation bonuses remain future work.** Horde Night v0.6.13 adds settings approval and score reduction; the matching website validation update must be deployed separately. Horde Night mode currently has no active rewards; choose Hybrid, Kills or Survival to test the new sources. Workshop item [3803035618](https://steamcommunity.com/sharedfiles/filedetails/?id=3803035618) remains the existing Unlisted test item. The owner confirmed v0.5.0 working on dedicated; v0.6.3.1 requires owner upload and live acceptance.
+**Horde rewards and prestige creation bonuses remain future work.** Horde Night v0.6.13.1 adds settings approval and score reduction; the matching website validation update must be deployed separately. Horde Night mode currently has no active rewards; choose Hybrid, Kills or Survival to test the new sources. Workshop item [3803035618](https://steamcommunity.com/sharedfiles/filedetails/?id=3803035618) remains the existing Unlisted test item. The owner confirmed v0.5.0 working on dedicated; v0.6.4 requires owner upload and live acceptance.
 
-Characters start at Level 1, with 0 / 100 XP toward Level 2. Each earned level grants one Token; displayed Levels 5, 10, 15 and subsequent multiples of five grant one Prestige Point. Level-ups play the supplied normal or prestige sound and show gold overhead text. Applying prestige to the next character and retaining 30% remain Checkpoint 7.
+Characters start at Level 1, with 0 / 100 XP toward Level 2. By default, each earned level grants one Token and displayed Levels 5, 10, 15 and subsequent multiples of five grant one Prestige Point; both rewards are configurable. Level-ups play the supplied normal or prestige sound and show gold overhead text. Applying prestige to the next character and retaining 30% remain Checkpoint 7.
 
 ## Documentation
 
 - [Checkpoint 5 report](docs/CHECKPOINT_5.md): curve, authority, creation investigation and native evidence.
+- [v0.6.4 level rewards](docs/PATCH_v0.6.4.md): configurable rewards and four-step test.
 - [v0.6.3.1 fixes](docs/PATCH_v0.6.3.1.md): prestige, audio, GIF preview and integration test.
 - [Checkpoint 6 report](docs/CHECKPOINT_6.md): reward rules, seasonal survival, cooldowns and source evidence.
 - [Current dedicated test](docs/TEST_CHECKPOINT_6.md): mode controls, kill/survival rewards, PvP and persistence.

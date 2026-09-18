@@ -100,13 +100,15 @@ The intended full release still includes progression, prestige, Horde Night rewa
 
 **Pass when:** each enabled standalone source awards XP as specified; hidden/disabled sources cannot pay; player kills respect faction eligibility and the same-victim cooldown. Verify survival timing across sleep/time skips and reconnects without duplicate bursts. Use two-player multiplayer for kill attribution and separation of player rewards.
 
+**v0.6.4 addition:** Level Rewards exposes Tokens per Level (default 1) and Prestige Level Interval (default 5). Changes affect future level-ups only; interval changes cannot repeat Prestige entitlements. The owner reports the v0.6.3.1 fix working; console.txt confirms Level 5 earned one Prestige with its sound.
+
 ### Checkpoint 7 - Prestige creation bonus and retention
 
 **Deliver:** the full next-character prestige creation bonus, followed by the separate Prestige Retention Percentage setting (default 30%) after successful world entry. Round retention to the nearest whole point; use half-up at exact ties and no minimum-one guarantee. Persist one-time bonus/retention markers through creation cancellation, reconnect, restart, and death.
 
 **Decisions needed:** resolve remaining character-creation integration constraints from Checkpoint 1. Retained-plus-newly-earned prestige as the next bonus total and nearest-whole rounding are agreed; half-up tie handling is the documented convention.
 
-**Pass when:** 3 prestige gives +3 creation points then 1 retained point at Trait Level 0; without new earnings, consecutive lives demonstrate 3 -> 1 -> 0. Spending Tokens never changes this. Canceled creation and repeated load callbacks do not grant twice or decay twice. Verify the sequence in singleplayer and one-player dedicated, with two-player account isolation where needed.
+**Pass when:** 3 prestige gives +3 creation points then 1 retained point at starting Trait Level 1; without new earnings, consecutive lives demonstrate 3 -> 1 -> 0. Spending Tokens never changes this. Canceled creation and repeated load callbacks do not grant twice or decay twice. Verify the sequence in singleplayer and one-player dedicated, with two-player account isolation where needed.
 
 ## Phase 4 - Horde Night integration
 

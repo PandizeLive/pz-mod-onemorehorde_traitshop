@@ -28,5 +28,10 @@
   "Sandbox_OMHTraitShop_NightXP_tooltip": "XP for surviving a full connected night from seasonal dusk to dawn. Uses the game day/night cycle, not the Horde Night schedule. Sleep and fast-forward count. A partial period after joining or reconnecting does not qualify. Endless day/night has no completed periods. Zero disables this reward.",
   "Sandbox_OMHTraitShop_RewardMode_option1": "Kills",
   "Sandbox_OMHTraitShop_RewardMode": "Reward Mode",
-  "Sandbox_OMHTraitShop_HordeZombieXP": "Horde Zombie XP"
+  "Sandbox_OMHTraitShop_HordeZombieXP": "Horde Zombie XP",
+  "Sandbox_Title_OMHTraitShop_LevelRewards": "Level Rewards",
+  "Sandbox_OMHTraitShop_TokensPerLevel": "Tokens per Level",
+  "Sandbox_OMHTraitShop_TokensPerLevel_tooltip": "Tokens awarded for each future Trait Level gained. Default: 1. Zero disables level-up Tokens. Starting Tokens and past rewards are unchanged.",
+  "Sandbox_OMHTraitShop_PrestigeLevelInterval": "Prestige Level Interval",
+  "Sandbox_OMHTraitShop_PrestigeLevelInterval_tooltip": "Earn 1 Prestige Point at displayed Trait Levels that are multiples of this number. Default: 5 (Levels 5, 10, 15...). Starting Level 1 grants nothing. Changes affect future level-ups only; past rewards are unchanged."
 }

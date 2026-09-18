@@ -69,6 +69,13 @@ function TraitShop.acceptState(snapshot)
         copy[key] = value
     end
     if type(snapshot.xp) ~= "number" or not (snapshot.xp >= 0 and snapshot.xp <= 1000000000) then return end
+    local earnedLevelTokens = snapshot.earnedLevelTokens
+    if earnedLevelTokens == nil then
+        earnedLevelTokens = copy.level
+    end
+    if type(earnedLevelTokens) ~= "number" or earnedLevelTokens < 0 or earnedLevelTokens > 1000000000
+        or earnedLevelTokens ~= math.floor(earnedLevelTokens) then return end
+    copy.earnedLevelTokens = earnedLevelTokens
     if type(snapshot.spentTokens) ~= "number" or snapshot.spentTokens < 0
         or snapshot.spentTokens > 100000000000 or snapshot.spentTokens ~= math.floor(snapshot.spentTokens) then return end
     if not Effects.valid(snapshot.effects) then return end
@@ -119,7 +126,7 @@ function TraitShop.acceptState(snapshot)
         and previous and previous.status == "alive" and previous.lifeId == copy.lifeId
         and copy.revision > previous.revision and copy.level > previous.level then
         local sound = "OMHTS_LevelUp"
-        local tokens = copy.level - previous.level
+        local tokens = math.max(0, copy.earnedLevelTokens - previous.earnedLevelTokens)
         local tokenKey = "UI_OMHTS_LevelUpTokens"
         if tokens == 1 then
             tokenKey = "UI_OMHTS_LevelUpToken"

@@ -8,6 +8,7 @@ local Config = require("OMHTS_RewardsConfig")
 local SandboxUI = {}
 local sections = {
     ["OMHTraitShop.PositiveCostMultiplier"] = "OMHTraitShop_TraitCosts",
+    ["OMHTraitShop.TokensPerLevel"] = "OMHTraitShop_LevelRewards",
     ["OMHTraitShop.RewardMode"] = "OMHTraitShop_XPRewards",
     ["OMHTraitShop.PlayerKillCooldownDays"] = "OMHTraitShop_PlayerKillRules",
 }

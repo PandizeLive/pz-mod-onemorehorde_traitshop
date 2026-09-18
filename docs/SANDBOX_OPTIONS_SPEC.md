@@ -1,6 +1,6 @@
 # Sandbox options specification
 
-As of v0.6.3, settings are grouped under **Trait Costs** (multipliers and removal toggle), **XP Rewards** (mode and applicable rates), and **Player Kill Rules** (cooldown, shown in Kills/Hybrid). The latter section follows all XP rates. These headers appear in solo setup, host setup and the live admin menu. Prestige gets its own section when its settings are implemented.
+As of v0.6.3, settings are grouped under **Trait Costs** (multipliers and removal toggle), **Level Rewards** (Tokens per Level and Prestige Level Interval), **XP Rewards** (mode and applicable rates), and **Player Kill Rules** (cooldown, shown in Kills/Hybrid). The latter section follows all XP rates. These headers appear in solo setup, host setup and the live admin menu. Prestige gets its own section when its settings are implemented.
 
 Positive Cost Multiplier, Negative Cost Multiplier and Allow Negative Trait Removal are implemented in v0.4.0; reward modes and standalone sources are implemented in v0.6.0; prestige and horde integration remain later phases. Reward XP defaults below are approved. Caps and the complete official preset remain undecided. The owner has specified the initial 0.50 score multiplier and 30% prestige retention default.
 
@@ -36,3 +36,10 @@ The exact official preset still needs values for XP, prices, progression, presti
 Track effective settings changes before granting rewards or purchases so a temporary custom configuration cannot be used and then hidden by restoring the preset. Do not silently reset an existing custom server merely because dependencies are detected after loading a save; fresh-default versus saved-setting behavior needs validation.
 
 Day/night survival follows the native seasonal cycle, independently of OneMoreHorde.StartHour/EndHour. Sleep and fast-forward count; partial periods after joining/reconnecting/restarting do not. Endless day/night has no completed alternating periods. See CHECKPOINT_6.md for timing, saved-mode behavior and implementation limits.
+
+## v0.6.4 Level Rewards
+
+- Tokens per Level: integer 0–1000, default 1. Zero disables Token awards from leveling.
+- Prestige Level Interval: integer 1–1000, default 5. One Prestige at newly reached displayed-level multiples; starting Level 1 grants nothing.
+- Settings affect future XP awards only; no retroactive grants or deductions. Repeated interval changes cannot repeat already-earned Prestige entitlements.
+- Higher Token rewards or lower Prestige intervals flag Lessened in Horde Night 0.6.13.1; lower Token rewards or higher intervals flag Hardened and remain eligible.

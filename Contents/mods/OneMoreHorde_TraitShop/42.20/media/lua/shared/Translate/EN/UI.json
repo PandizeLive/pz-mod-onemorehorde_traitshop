@@ -38,7 +38,7 @@
   "UI_OMHTS_Buy": "Purchase",
   "UI_OMHTS_XPNoSources": "No active XP sources.",
   "UI_OMHTS_PrestigeTip": "Carried from previous lives: %1\nEarned from Trait Levels this life: %2\n\nTokens do not generate prestige. Applying prestige as character-creation points arrives in a later checkpoint.",
-  "UI_OMHTS_TokenTip": "Unused creation points converted: %1\nTrait Levels earned: %4 Tokens\nSpent on purchases and removals: %2\nCurrent balance: %3",
+  "UI_OMHTS_TokenTip": "Unused creation points converted: %1\nEarned from leveling: %4 Tokens\nSpent on purchases and removals: %2\nCurrent balance: %3",
   "UI_OMHTS_TokenSourcesDeferred": "Prestige creation bonuses arrive in a future update. No prestige was included in your starting Tokens.",
   "UI_OMHTS_Catalog": "Positive traits (%1)",
   "UI_OMHTS_Positive": "Your positive traits (%1)",

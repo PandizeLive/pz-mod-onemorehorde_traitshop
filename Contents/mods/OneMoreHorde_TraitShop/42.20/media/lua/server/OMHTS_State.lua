@@ -100,6 +100,7 @@ end
 function State.isRecord(record)
     if not State.isLegacyRecord(record) then return false end
     if record.life.prestigeRule ~= nil and record.life.prestigeRule ~= 2 then return false end
+    if record.life.earnedLevelTokens ~= nil and not State.isCounter(record.life.earnedLevelTokens) then return false end
     local creation = record.life.creation
     if type(creation) ~= "table" or not State.isCounter(creation.tokens)
         or type(record.life.purchases) ~= "table" or type(record.life.removals) ~= "table"
@@ -135,6 +136,7 @@ function State.settleDeath(record, lifeId)
     record.life.tokens = 0
     record.life.xp = 0
     record.life.level = 0
+    record.life.earnedLevelTokens = 0
     record.life.purchases = {}
     record.life.removals = {}
     record.life.effects = { traits = {}, recipes = {}, perks = {} }
@@ -191,6 +193,7 @@ function State.attach(store, account, characterId, hours, fresh)
         tokens = 0,
         xp = 0,
         level = 0,
+        earnedLevelTokens = 0,
         prestigeRule = 2,
         creation = { status = "legacy", tokens = 0 },
         purchases = {},
@@ -215,12 +218,25 @@ function State.awardXP(record, lifeId, revision, amount)
         or revision >= State.LIMIT or not State.isXP(amount) or amount <= 0
         or record.life.xp >= Progression.requiredXP(record.life.level) then return false end
     local life = record.life
+    local tokensPerLevel, prestigeInterval = Progression.rewards()
+    if tokensPerLevel == nil then return false end
     local level, xp = Progression.advance(life.level, life.xp, amount)
-    local tokens = life.tokens + level - life.level
-    local prestige = record.prestige.earned + math.floor((level + 1) / 5) - math.floor((life.level + 1) / 5)
+    local earnedLevelTokens = life.earnedLevelTokens
+    if earnedLevelTokens == nil then
+        earnedLevelTokens = life.level
+    end
+    local tokenReward = (level - life.level) * tokensPerLevel
+    local tokens = life.tokens + tokenReward
+    earnedLevelTokens = earnedLevelTokens + tokenReward
+    local milestoneCount = math.floor((level + 1) / prestigeInterval)
+    local newMilestones = milestoneCount - math.floor((life.level + 1) / prestigeInterval)
+    local prestigeReward = math.min(newMilestones, math.max(0, milestoneCount - record.prestige.earned))
+    local prestige = record.prestige.earned + prestigeReward
     if not State.isCounter(level) or not State.isXP(xp) or not State.isCounter(tokens)
+        or not State.isCounter(earnedLevelTokens)
         or not State.isCounter(prestige + record.prestige.retained + record.prestige.pending) then return false end
     life.tokens = tokens
+    life.earnedLevelTokens = earnedLevelTokens
     life.level = level
     life.xp = xp
     record.prestige.earned = prestige
@@ -262,6 +278,10 @@ end
 ---@param playerNum number
 ---@return table
 function State.snapshot(record, playerNum)
+    local earnedLevelTokens = record.life.earnedLevelTokens
+    if earnedLevelTokens == nil then
+        earnedLevelTokens = record.life.level
+    end
     return {
         schema = State.SCHEMA,
         playerNum = playerNum,
@@ -271,6 +291,7 @@ function State.snapshot(record, playerNum)
         tokens = record.life.tokens,
         xp = record.life.xp,
         level = record.life.level,
+        earnedLevelTokens = earnedLevelTokens,
         retainedPrestige = record.prestige.retained,
         earnedPrestige = record.prestige.earned,
         pendingPrestige = record.prestige.pending,
