@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [string]$GamePath = 'C:\Program Files (x86)\Steam\steamapps\common\ProjectZomboid',
-    [ValidateSet(1, 2, 3, 4)][int]$Phase = 1
+    [ValidateSet(1, 2, 3, 4, 7)][int]$Phase = 1
 )
 
 $ErrorActionPreference = 'Stop'

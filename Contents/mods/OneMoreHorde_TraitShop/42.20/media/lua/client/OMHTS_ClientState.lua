@@ -76,6 +76,14 @@ function TraitShop.acceptState(snapshot)
     if type(earnedLevelTokens) ~= "number" or earnedLevelTokens < 0 or earnedLevelTokens > 1000000000
         or earnedLevelTokens ~= math.floor(earnedLevelTokens) then return end
     copy.earnedLevelTokens = earnedLevelTokens
+    for _, key in pairs({ "creationPrestige", "prestigeTokens" }) do
+        local value = snapshot[key]
+        if value == nil then
+            value = 0
+        end
+        if type(value) ~= "number" or value < 0 or value > 1000000000 or value ~= math.floor(value) then return end
+        copy[key] = value
+    end
     if type(snapshot.spentTokens) ~= "number" or snapshot.spentTokens < 0
         or snapshot.spentTokens > 100000000000 or snapshot.spentTokens ~= math.floor(snapshot.spentTokens) then return end
     if not Effects.valid(snapshot.effects) then return end

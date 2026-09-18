@@ -42,6 +42,15 @@ option OMHTraitShop.PrestigeLevelInterval {
     translation = OMHTraitShop_PrestigeLevelInterval,
 }
 
+option OMHTraitShop.PrestigeRetentionPercentage {
+    type = integer,
+    min = 0,
+    max = 100,
+    default = 30,
+    page = OMHTraitShop,
+    translation = OMHTraitShop_PrestigeRetentionPercentage,
+}
+
 option OMHTraitShop.RewardMode {
     type = enum,
     numValues = 4,

@@ -14,7 +14,7 @@ Prepared September 14, 2026. The owner selected a separate private repository: [
 
 A separate repository keeps the addon's standalone releases, Workshop identity and change history independent of Horde Night. Both projects can share the local GitHub CLI and SteamCMD installation. Coordinated gameplay changes still need matching work in Horde Night; this repository choice does not implement that integration.
 
-The current package is **v0.6.4, Checkpoint 6 with level-up feedback**, with the owner-supplied icons. Current behavior and acceptance are recorded in [CHECKPOINT_6.md](CHECKPOINT_6.md). The owner created **Workshop item 3803035618**, Unlisted, through the native uploader; the staged metadata was read back and that ID is now recorded in the repository. The owner uploaded v0.5.0, verified in dedicated logs. Update this existing item for v0.6.4; no v0.6.4 publication is implied by preparation.
+The current package is **v0.7.0, Checkpoint 7 Prestige**, with the owner-supplied icons. Current behavior and acceptance are recorded in [CHECKPOINT_6.md](CHECKPOINT_6.md). The owner created **Workshop item 3803035618**, Unlisted, through the native uploader; the staged metadata was read back and that ID is now recorded in the repository. The owner uploaded v0.5.0, verified in dedicated logs. Update this existing item for v0.7.0; no v0.7.0 publication is implied by preparation.
 
 ## One launcher
 

@@ -1,7 +1,7 @@
 name=OMH: Trait Shop
 id=OneMoreHorde_TraitShop
-modversion=0.6.4
+modversion=0.7.0
 versionMin=42.20.0
 icon=icon.png
 poster=poster.png
-description=Purchase traits and optional negative-trait removals in a resizable cart shop. Unused creation points become starting Tokens for new characters. Persistent server-owned state; Earn XP from kills and surviving days/nights. Prestige creation bonuses and Horde Night rewards arrive in later builds.
+description=Purchase traits and optional negative-trait removals in a resizable cart shop. Unused creation points become starting Tokens for new characters. Persistent server-owned state; Earn XP from kills and surviving days/nights. Prestige grants next-character creation points with configurable retention. Horde Night XP rewards arrive in a later build.

@@ -106,7 +106,7 @@ The intended full release still includes progression, prestige, Horde Night rewa
 
 **Deliver:** the full next-character prestige creation bonus, followed by the separate Prestige Retention Percentage setting (default 30%) after successful world entry. Round retention to the nearest whole point; use half-up at exact ties and no minimum-one guarantee. Persist one-time bonus/retention markers through creation cancellation, reconnect, restart, and death.
 
-**Decisions needed:** resolve remaining character-creation integration constraints from Checkpoint 1. Retained-plus-newly-earned prestige as the next bonus total and nearest-whole rounding are agreed; half-up tie handling is the documented convention.
+**Implemented in v0.7.0:** creation preview, authoritative budget/settlement, retained Prestige, menu persistence, cancellation/replay protections and inherited-origin tracking. [Source evidence and limits](CHECKPOINT_7.md). Live creation UI and dedicated pre-spawn handshake still require acceptance; use the [short solo test](TEST_CHECKPOINT_7.md) first.
 
 **Pass when:** 3 prestige gives +3 creation points then 1 retained point at starting Trait Level 1; without new earnings, consecutive lives demonstrate 3 -> 1 -> 0. Spending Tokens never changes this. Canceled creation and repeated load callbacks do not grant twice or decay twice. Verify the sequence in singleplayer and one-player dedicated, with two-player account isolation where needed.
 

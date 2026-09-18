@@ -105,3 +105,14 @@ function player(name, slot, characterId, hours)
     function value:getAttackedBy() return self.killer end
     return value
 end
+
+testFiles = {}
+function getWorld() return {getGameMode=function() return "Sandbox" end,getWorld=function() return "Fixture" end} end
+function getFileWriter(path)
+    return {write=function(self,value) testFiles[path]=value end,close=function() end}
+end
+function getFileReader(path)
+    if not testFiles[path] then return nil end
+    return {readLine=function() return testFiles[path] end,close=function() end}
+end
+Events.OnReceiveGlobalModData = event()

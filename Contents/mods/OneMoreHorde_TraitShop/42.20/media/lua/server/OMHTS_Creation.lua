@@ -1,12 +1,14 @@
 if isClient() then return end
 
 local State = require("OMHTS_State")
+local Prestige = require("OMHTS_Prestige")
 local Creation = {}
 
 ---@nodiscard
 ---@param player IsoPlayer
+---@param bonus number|nil
 ---@return number|nil
-function Creation.remainingPoints(player)
+function Creation.remainingPoints(player, bonus)
     local profession = CharacterProfessionDefinition.getCharacterProfessionDefinition(
         player:getDescriptor():getCharacterProfession()
     )
@@ -72,6 +74,10 @@ function Creation.remainingPoints(player)
         offset = negatives - 1
     end
     points = points - offset
+    if bonus ~= nil then
+        if not State.isCounter(bonus) then return nil end
+        points = points + bonus
+    end
     if not State.isCounter(points) then return nil end
     return points
 end
@@ -83,9 +89,12 @@ end
 function Creation.settle(player, record, capturedPoints)
     if record.life.creation.status ~= "pending" then return false end
     if record.revision >= State.LIMIT then return false end
+    local bonus = record.prestige.pending
+    local retention = Prestige.retention()
+    if retention == nil then return false end
     local points = capturedPoints
     if points == nil then
-        points = Creation.remainingPoints(player)
+        points = Creation.remainingPoints(player, bonus)
     end
     if not State.isCounter(points) or not State.isCounter(record.life.tokens + points) then
         record.life.creation.status = "invalid"
@@ -93,6 +102,15 @@ function Creation.settle(player, record, capturedPoints)
         record.life.tokens = record.life.tokens + points
         record.life.creation.tokens = points
         record.life.creation.status = "granted"
+        record.life.creation.prestigeBonus = bonus
+        record.life.creation.prestigeTokens = math.min(points, bonus)
+        record.life.creation.retentionPercentage = retention
+        record.life.creation.prestigeUnofficial = bonus > 0 and record.prestige.unofficial ~= false
+        record.life.prestigeUnofficial = record.life.prestigeUnofficial ~= false
+            or record.life.creation.prestigeUnofficial
+        record.prestige.pending = 0
+        record.prestige.retained = math.floor(bonus * retention / 100 + 0.5)
+        record.prestige.unofficial = record.prestige.retained > 0 and record.prestige.unofficial ~= false
     end
     record.revision = record.revision + 1
     return true

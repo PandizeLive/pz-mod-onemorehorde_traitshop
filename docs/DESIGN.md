@@ -14,7 +14,7 @@ Status: owner requirements recorded September 14, 2026. Explicit recommendations
 
 Use **Tokens** for shop currency and **Prestige Points** for creation bonuses. Avoid calling both currencies Tokens.
 
-Each completed XP bar awards one Token. Every five earned levels awards one Prestige Point: displayed Levels 6, 11, 16, etc. The starting Level 1 grants neither currency. Newly earned prestige depends only on earned levels, never Token count, starting grants, spending, or refunds. Level 1 starts at 0 / 100 XP toward Level 2. The existing Checkpoint 5 curve is unchanged; the displayed level is the saved earned-level counter plus one. Existing characters retain all progress.
+Each completed XP bar awards one Token. By default, reaching displayed Levels 5, 10, 15, etc. awards one Prestige Point; Prestige Level Interval is configurable. The starting Level 1 grants neither currency. Newly earned prestige depends only on earned levels, never Token count, starting grants, spending, or refunds. Level 1 starts at 0 / 100 XP toward Level 2. The existing Checkpoint 5 curve is unchanged; the displayed level is the saved earned-level counter plus one. Existing characters retain all progress.
 
 Examples:
 
@@ -33,7 +33,7 @@ Owner example: die with 3 Prestige Points -> next character receives +3 creation
 
 Agreed rounding: nearest whole point, with no minimum-one guarantee. The documented exact-tie convention is half up for nonnegative values. At 30%, a no-new-earnings sequence is 3 -> 1 -> 0. Do not always round up: that would keep the final point forever and undermine decay.
 
-Confirmed with Phase 1 approval: available prestige at death equals retained prestige plus new points earned from this life's Trait Levels. Thus a character retaining 1 and earning 2 more would offer +3 creation points next time, then retain 30% of 3. This is not a separate lifetime prestige total. Retained prestige itself never grants levels or Tokens. Phase 1 reserves this amount as pending state; the creation-screen grant and retention step are implemented in the later prestige phase.
+Confirmed with Phase 1 approval: available prestige at death equals retained prestige plus new points earned from this life's Trait Levels. Thus a character retaining 1 and earning 2 more would offer +3 creation points next time, then retain 30% of 3. This is not a separate lifetime prestige total. Retained prestige itself never grants levels or Tokens. Checkpoint 7 applies the reserved amount to creation and settles retention after entry.
 
 ## Reward modes
 
@@ -60,7 +60,7 @@ A late-connected member can qualify under this rule. A casualty must not regain 
 
 The approved v0.4.2 window is a movable, resizable OMH panel, without pinning/collapsing. It retains geometry while reused during the session. Center the branding: One More Horde uses the full leaderboard Small font and red (0.85, 0.25, 0.25); Trait Shop uses its Large font and gold (0.95, 0.75, 0.2). Header spacing measures the actual font height. Center Trait Level and its separate number; the number and XP fill use gold #E7B428. The XP bar has white `current / required` text and starts at `0 / 100`. Earning still belongs to Phase 3. The XP tooltip will list only source names allowed by the active reward mode whose configured reward is above zero, without amounts. Until reward sources exist, it says that none are available in this build.
 
-Tokens and Prestige have equal weight. Prestige displays retained plus earned as one total; its tooltip shows those components. The Token tooltip explains unused creation points, spending and current balance, with an explicit statement that prestige/XP grants are not implemented yet. No fabricated prestige contribution is displayed.
+Tokens and Prestige have equal weight. Prestige displays retained plus earned as one total; its tooltip shows those components. The Token tooltip explains unused creation points, spending and current balance, including actual level rewards, the original Prestige creation bonus, and its unused portion.
 
 Use the owner's three boxes: unowned positives left, current positives/profession traits upper right, and current negatives lower right. Positive names are green, negatives red, unavailable choices grey. Selected cart rows have gold outlines and subtle green/red fill. Trait tooltips show the name and description only. There is no duplicate description footer or action-button tooltip.
 

@@ -6,6 +6,7 @@ local Creation = require("OMHTS_Creation")
 local Shop = require("OMHTS_Shop")
 local Rewards = require("OMHTS_Rewards")
 local RewardsConfig = require("OMHTS_RewardsConfig")
+local Prestige = require("OMHTS_Prestige")
 local Authority = {}
 TraitShop.Authority = Authority
 local store
@@ -47,6 +48,7 @@ end
 ---@param nonce number|nil
 ---@return nil
 local function sendSnapshot(player, binding, nonce)
+    Prestige.publish(accountKey(player), binding.record)
     local snapshot = Shop.snapshot(player, binding.record)
     snapshot.nonce = nonce
     if isServer() then
@@ -110,7 +112,11 @@ local function onNewGame(player, square)
     if record and record.life.status == "alive"
         and record.life.characterId == player:getDescriptor():getID()
         and record.life.creation.status ~= "legacy" then return end
-    local points = Creation.remainingPoints(player)
+    local bonus = 0
+    if record then
+        bonus = record.prestige.pending + record.prestige.retained + record.prestige.earned
+    end
+    local points = Creation.remainingPoints(player, bonus)
     if points == nil then
         points = -1
     end
@@ -134,6 +140,11 @@ local function initialize()
     rewardsReady = Rewards.initialize(store)
     if not rewardsReady then
         print("[OMH Trait Shop] invalid reward state; rewards disabled; saved data preserved")
+    end
+    for account, record in pairs(store.accounts) do
+        if State.isRecord(record) then
+            Prestige.publish(account, record)
+        end
     end
     print("[OMH Trait Shop] authority ready; schema=" .. State.SCHEMA)
 end
@@ -180,6 +191,7 @@ end
 ---@return nil
 local function scanPlayers()
     if not store then return end
+    local officialPrestige = Prestige.officialSettings()
     local seen = {}
     local players
     local count = getNumActivePlayers()
@@ -201,6 +213,9 @@ local function scanPlayers()
             else
                 local binding = bind(player)
                 if binding and binding.record.life.id == binding.lifeId then
+                    if not officialPrestige then
+                        binding.record.life.prestigeUnofficial = true
+                    end
                     if rewardsReady then
                         local changed
                         binding.survival, changed = Rewards.survival(binding.record, binding.survival,
@@ -280,6 +295,38 @@ function Authority.getState(player)
     local binding = bind(player)
     if not binding then return nil end
     return Shop.snapshot(player, binding.record)
+end
+
+---@nodiscard
+---@param player IsoPlayer
+---@return boolean|nil
+function Authority.hasUnofficialPrestige(player)
+    local binding = bind(player)
+    if not binding then return nil end
+    local creation = binding.record.life.creation
+    return creation.prestigeUnofficial == true or creation.status == "invalid"
+end
+
+---@nodiscard
+---@param playerId string
+---@return boolean|nil
+function Authority.hasUnofficialPrestigeForIdentity(playerId)
+    if not store or type(playerId) ~= "string" then return nil end
+    for slot = 0, 3 do
+        local account
+        if isServer() then
+            account = "user:" .. #playerId .. ":" .. playerId .. ":" .. slot
+        elseif playerId == "singleplayer:" .. slot then
+            account = "local:" .. slot
+        end
+        local record = store.accounts[account]
+        if record then
+            if not State.isRecord(record) then return nil end
+            if record.life.status == "alive" and (record.life.creation.prestigeUnofficial == true
+                or record.life.creation.status == "invalid") then return true end
+        end
+    end
+    return false
 end
 
 ---@param player IsoPlayer

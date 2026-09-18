@@ -85,5 +85,8 @@
   "UI_OMHTS_XP_HordeZombieXP": "Horde zombie kills",
   "UI_OMHTS_XP_HordeSurvivedXP": "Hordes survived",
   "UI_OMHTS_HordeRewards_missing": "Horde rewards require OMH: Horde Night and the upcoming integration.",
-  "UI_OMHTS_HordeRewards_upcoming": "Horde rewards arrive in a future update."
+  "UI_OMHTS_HordeRewards_upcoming": "Horde rewards arrive in a future update.",
+  "UI_OMHTS_PrestigeLoading": "Loading Prestige...",
+  "UI_OMHTS_CreationPrestige": "Prestige bonus: +%1 points",
+  "UI_OMHTS_PrestigeTokensTip": "Prestige creation bonus: %1\nUnused Prestige included in starting Tokens: %2"
 }

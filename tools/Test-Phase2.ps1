@@ -30,6 +30,7 @@ $stages = @(
     "OMHTS_Catalog=$lua\shared\OMHTS_Catalog.lua",
     "OMHTS_Effects=$lua\shared\OMHTS_Effects.lua",
     "OMHTS_Progression=$lua\shared\OMHTS_Progression.lua",
+    "OMHTS_Prestige=$lua\shared\OMHTS_Prestige.lua",
     "OMHTS_State=$lua\server\OMHTS_State.lua",
     "OMHTS_Creation=$lua\server\OMHTS_Creation.lua",
     "OMHTS_Shop=$lua\server\OMHTS_Shop.lua",

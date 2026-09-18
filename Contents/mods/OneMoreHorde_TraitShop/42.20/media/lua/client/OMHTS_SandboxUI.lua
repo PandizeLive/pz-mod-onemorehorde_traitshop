@@ -9,6 +9,7 @@ local SandboxUI = {}
 local sections = {
     ["OMHTraitShop.PositiveCostMultiplier"] = "OMHTraitShop_TraitCosts",
     ["OMHTraitShop.TokensPerLevel"] = "OMHTraitShop_LevelRewards",
+    ["OMHTraitShop.PrestigeRetentionPercentage"] = "OMHTraitShop_Prestige",
     ["OMHTraitShop.RewardMode"] = "OMHTraitShop_XPRewards",
     ["OMHTraitShop.PlayerKillCooldownDays"] = "OMHTraitShop_PlayerKillRules",
 }

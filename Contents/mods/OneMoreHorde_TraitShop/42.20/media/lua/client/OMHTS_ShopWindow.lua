@@ -496,7 +496,9 @@ function OMHTS_ShopWindow:refresh()
     self.prestige:setTitle(getText("UI_OMHTS_Prestige", tostring(state.retainedPrestige + state.earnedPrestige + state.pendingPrestige)))
     self.prestige:setTooltip(getText("UI_OMHTS_PrestigeTip", tostring(state.retainedPrestige + state.pendingPrestige), tostring(state.earnedPrestige)))
     self.tokens:setTooltip(getText("UI_OMHTS_TokenTip", tostring(state.startingTokens), tostring(state.spentTokens),
-        tostring(state.tokens), tostring(state.earnedLevelTokens)) .. "\n\n" .. getText("UI_OMHTS_Creation_" .. state.creationStatus, tostring(state.startingTokens))
+        tostring(state.tokens), tostring(state.earnedLevelTokens)) .. "\n"
+        .. getText("UI_OMHTS_PrestigeTokensTip", tostring(state.creationPrestige), tostring(state.prestigeTokens))
+        .. "\n\n" .. getText("UI_OMHTS_Creation_" .. state.creationStatus, tostring(state.startingTokens))
         .. "\n\n" .. getText("UI_OMHTS_TokenSourcesDeferred"))
     self.progress.xp = state.xp
     self.progress.requiredXP = Progression.requiredXP(state.level)

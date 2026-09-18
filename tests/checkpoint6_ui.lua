@@ -13,7 +13,7 @@ local function panel()
         setYScroll=function(self,value) self.scroll=value end,
         setScrollHeight=function(self,value) self.scrollHeight=value end,
         insertNewLineOfButtons=function(self,value) self.joypadButtonsY[#self.joypadButtonsY+1]={value} end}
-    local keys={"PositiveCostMultiplier","NegativeCostMultiplier","AllowNegativeRemoval","TokensPerLevel","PrestigeLevelInterval","RewardMode",
+    local keys={"PositiveCostMultiplier","NegativeCostMultiplier","AllowNegativeRemoval","TokensPerLevel","PrestigeLevelInterval","PrestigeRetentionPercentage","RewardMode",
         "ZombieXP","PlayerKillXP","DayXP","NightXP","HordeZombieXP","HordeSurvivedXP","PlayerKillCooldownDays"}
     for i=1,#keys do
         local name="OMHTraitShop."..keys[i]
@@ -58,7 +58,7 @@ check(p.originalCalled,"native panel render still called")
 local previous=p.prerender
 UI.attach(p)
 check(previous==p.prerender,"panel hook is not installed twice")
-check(#p.children==4 and #p.titles==4,"exactly four section headers without duplicate attachment")
+check(#p.children==5 and #p.titles==5,"exactly five section headers without duplicate attachment")
 p.width=600
 p.scroll=50
 p:prerender()
@@ -67,14 +67,14 @@ check(p.omhSectionTitles["OMHTraitShop.RewardMode"].x==200 and p.scroll==50,
 local admin=ISServerSandboxOptionsUI:createPanel(panel())
 check(admin.omhRewardLayout,"live admin sandbox panel receives visibility rules")
 admin:prerender()
-check(#admin.titles==4 and admin.scrollHeight>admin.controls["OMHTraitShop.PlayerKillCooldownDays"].y,
+check(#admin.titles==5 and admin.scrollHeight>admin.controls["OMHTraitShop.PlayerKillCooldownDays"].y,
     "live admin includes headings in scroll layout")
 local host=setmetatable({}, {__index=ServerSettingsScreen})
 host:create()
 local hostPanel=host.pageEdit:createPanel({},panel())
 check(hostPanel.omhRewardLayout,"host settings editor receives visibility rules")
 hostPanel:prerender()
-check(#hostPanel.titles==4,"host settings editor includes all section headers")
+check(#hostPanel.titles==5,"host settings editor includes all section headers")
 local unrelated={controls={}}
 check(UI.attach(unrelated)==unrelated and not unrelated.omhRewardLayout,"unrelated mod panels remain unchanged")
 testHorde=true

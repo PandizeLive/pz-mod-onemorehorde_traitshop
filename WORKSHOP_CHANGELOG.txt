@@ -1,11 +1,11 @@
-v0.6.4
+v0.7.0
+Checkpoint 7 - Prestige
+- Prestige now adds bonus points to your next character's trait selection.
+- Added Prestige Retention Percentage, defaulting to 30%, in a new Prestige settings category.
+- Unused creation points become Tokens; retained Prestige rounds to whole points without a minimum.
+- Added persistence protections for canceled creation, repeated entry and reconnects.
+- The Token tooltip now includes the Prestige creation bonus and its unused portion.
+- Preserved the origin of inherited Prestige for Horde Night's official settings checks.
 
-Level Rewards
-- Added Tokens per Level (default 1) and Prestige Level Interval (default 5) in a new Level Rewards sandbox section.
-- Reward settings apply to future level-ups, preserving existing Tokens and Prestige.
-- Prevented repeated interval changes from awarding the same Prestige entitlement again.
-- Reward text and the Tokens tooltip now show actual Tokens earned with custom rewards.
-
-Compatibility
-- Update Horde Night to v0.6.13.1 for the matching official-settings policy.
-- Prestige character-creation bonuses and retention remain Checkpoint 7.
+Still in development
+- Horde Night XP rewards arrive in Checkpoint 8.

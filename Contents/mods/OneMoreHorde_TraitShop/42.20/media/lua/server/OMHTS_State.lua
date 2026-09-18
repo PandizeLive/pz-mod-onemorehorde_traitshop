@@ -2,6 +2,7 @@ if isClient() then return end
 
 local Effects = require("OMHTS_Effects")
 local Progression = require("OMHTS_Progression")
+local Prestige = require("OMHTS_Prestige")
 local State = {}
 State.SCHEMA = 3
 State.LIMIT = 1000000000
@@ -99,12 +100,20 @@ end
 ---@return boolean
 function State.isRecord(record)
     if not State.isLegacyRecord(record) then return false end
+    if record.prestige.unofficial ~= nil and type(record.prestige.unofficial) ~= "boolean" then return false end
+    if record.life.prestigeUnofficial ~= nil and type(record.life.prestigeUnofficial) ~= "boolean" then return false end
     if record.life.prestigeRule ~= nil and record.life.prestigeRule ~= 2 then return false end
     if record.life.earnedLevelTokens ~= nil and not State.isCounter(record.life.earnedLevelTokens) then return false end
     local creation = record.life.creation
     if type(creation) ~= "table" or not State.isCounter(creation.tokens)
         or type(record.life.purchases) ~= "table" or type(record.life.removals) ~= "table"
         or not Effects.valid(record.life.effects) then return false end
+    if creation.prestigeBonus ~= nil and not State.isCounter(creation.prestigeBonus) then return false end
+    if creation.prestigeTokens ~= nil and (not State.isCounter(creation.prestigeTokens)
+        or creation.prestigeTokens > creation.tokens) then return false end
+    if creation.prestigeUnofficial ~= nil and type(creation.prestigeUnofficial) ~= "boolean" then return false end
+    if creation.retentionPercentage ~= nil and (not State.isCounter(creation.retentionPercentage)
+        or creation.retentionPercentage > 100) then return false end
     if creation.status ~= "pending" and creation.status ~= "granted"
         and creation.status ~= "legacy" and creation.status ~= "invalid" then return false end
     local count = 0
@@ -129,6 +138,8 @@ function State.settleDeath(record, lifeId)
     local prestige = record.prestige
     local pending = prestige.pending + prestige.retained + prestige.earned
     if not State.isCounter(pending) or record.revision >= State.LIMIT then return false end
+    prestige.unofficial = pending > 0 and (prestige.unofficial ~= false
+        or (prestige.earned > 0 and record.life.prestigeUnofficial ~= false))
     prestige.pending = pending
     prestige.retained = 0
     prestige.earned = 0
@@ -171,6 +182,12 @@ function State.attach(store, account, characterId, hours, fresh)
             if hours > record.life.hours then
                 record.life.hours = hours
             end
+            if record.life.prestigeUnofficial == nil then
+                record.life.prestigeUnofficial = true
+            end
+            if record.prestige.unofficial == nil then
+                record.prestige.unofficial = record.prestige.pending + record.prestige.retained + record.prestige.earned > 0
+            end
             return record, "resumed"
         end
         if not State.settleDeath(record, record.life.id) then return nil, "settlement_failed" end
@@ -180,7 +197,7 @@ function State.attach(store, account, characterId, hours, fresh)
     if not record then
         record = {
             revision = 0,
-            prestige = { retained = 0, earned = 0, pending = 0, settledLife = 0 },
+            prestige = { retained = 0, earned = 0, pending = 0, settledLife = 0, unofficial = false },
             unofficial = true,
         }
         store.accounts[account] = record
@@ -195,6 +212,7 @@ function State.attach(store, account, characterId, hours, fresh)
         level = 0,
         earnedLevelTokens = 0,
         prestigeRule = 2,
+        prestigeUnofficial = not Prestige.officialSettings(),
         creation = { status = "legacy", tokens = 0 },
         purchases = {},
         removals = {},
@@ -236,6 +254,10 @@ function State.awardXP(record, lifeId, revision, amount)
         or not State.isCounter(earnedLevelTokens)
         or not State.isCounter(prestige + record.prestige.retained + record.prestige.pending) then return false end
     life.tokens = tokens
+    life.prestigeUnofficial = life.prestigeUnofficial ~= false or not Prestige.officialSettings()
+    if prestigeReward > 0 and life.prestigeUnofficial then
+        record.prestige.unofficial = true
+    end
     life.earnedLevelTokens = earnedLevelTokens
     life.level = level
     life.xp = xp
@@ -267,6 +289,7 @@ function State.update(record, lifeId, revision, changes)
         end
     end
     if not changed then return false end
+    record.life.prestigeUnofficial = true
     for key, value in pairs(changes) do
         record.life[key] = value
     end
@@ -281,6 +304,14 @@ function State.snapshot(record, playerNum)
     local earnedLevelTokens = record.life.earnedLevelTokens
     if earnedLevelTokens == nil then
         earnedLevelTokens = record.life.level
+    end
+    local prestigeBonus = record.life.creation.prestigeBonus
+    local prestigeTokens = record.life.creation.prestigeTokens
+    if prestigeBonus == nil then
+        prestigeBonus = 0
+    end
+    if prestigeTokens == nil then
+        prestigeTokens = 0
     end
     return {
         schema = State.SCHEMA,
@@ -298,6 +329,8 @@ function State.snapshot(record, playerNum)
         unofficial = record.unofficial,
         creationStatus = record.life.creation.status,
         startingTokens = record.life.creation.tokens,
+        creationPrestige = prestigeBonus,
+        prestigeTokens = prestigeTokens,
     }
 end
 

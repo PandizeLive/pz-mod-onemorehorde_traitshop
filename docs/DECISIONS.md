@@ -43,7 +43,7 @@ Recorded September 14, 2026 from the OMH: Trait Shop conversation. New owner ins
 
 | Topic | Unresolved choice | Recommendation / impact |
 |---|---|---|
-| Prestige conversion | Can unused prestige-derived creation points also become starting Tokens? | Owner's general unused-points rule suggests yes, without prestige credit. Confirm this edge case. |
+| Prestige conversion | Can unused prestige-derived creation points also become starting Tokens? | Confirmed in CP7 scope: yes, without levels or newly earned Prestige. |
 | Official prestige provenance | What happens when custom-earned prestige enters a new character/run? | Persist provenance; do not silently treat it as official after changing settings. Decide whether to exclude that prestige from an official start or make the affected run unofficial. |
 | Official preset | XP rates/curve, prices, caps, eligible traits, prestige lifecycle and limits, future removal settings. | Must be explicit and versioned; 50% score alone cannot establish fairness. |
 | Official lock default | Default enabled with Horde Night? | Recommend yes. Unlocked but matching settings must remain eligible. |
@@ -111,3 +111,7 @@ The owner explicitly corrected both fixed day/night windows and use of Horde Nig
 Characters start at displayed Trait Level 1 with 0 / 100 XP toward Level 2. The starting level grants no currency. Saved earned-level counts and the existing XP curve are preserved; five earned levels produce the first Prestige Point at displayed Level 6. Existing characters display their earned count plus one without an XP or currency migration.
 
 Use the owner's `levelup.wav` for normal level-ups and `levelup_prestige.wav` instead when earned prestige increases. Show gold `Trait Level Up!` overhead text. Feedback belongs to the local living character and does not replay on loading/reconnection or duplicate updates. Sandbox category grouping was subsequently approved and implemented in v0.6.3: Trait Costs, XP Rewards and Player Kill Rules, with no empty Prestige section.
+
+## Checkpoint 7 approval and implementation (2026-09-18)
+
+The owner approved full CP7 after the scope recap: creation bonus, unused-point conversion, 30% retention, half-up rounding and one-time persistence. v0.7.0 implements that scope; see CHECKPOINT_7.md for the pre-spawn transport and old-save preview limits. No external publication is authorized by this implementation approval.
