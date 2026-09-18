@@ -15,7 +15,7 @@ Launcher option **6** uploads only `preview.gif` to existing item **3803035618**
 
 ## Complete owner test (after uploading both builds)
 
-1. Close the game. Use each launcher's **2 Mirror**, then **3 Publish**; update/restart the server and confirm Trait Shop **0.6.3.1**, Horde Night **0.6.13** loaded.
+1. Close the game. Use each launcher's **1 Install** (updates local/staged copies), **2 Mirror**, then **3 Publish**; update/restart the server and confirm Trait Shop **0.6.3.1**, Horde Night **0.6.13** loaded.
 2. On a disposable Hybrid test character, reach displayed Levels **4, 5 and 6**: normal sound at 4/6; at 5, one Prestige Point and Prestige sound. Turn/move the camera while listening: sound should stay centered.
 3. Reconnect: balances stay unchanged and no sound replays. An existing living Level 5 character missing its point receives it once.
 4. In a fresh official Horde Night-mode test run, check Difficulty Settings shows Trait Shop **x0.50** (with Cure, **x1.20**, combined **x0.60**); complete a horde and check its reduced score.
