@@ -2,7 +2,10 @@ testStage = "level feedback"
 local shop = OneMoreHordeTraitShop
 local originalText = getText
 local sounds, halos = {}, {}
-function getText(key) return key end
+function getText(key, value)
+    if value then return key .. ":" .. value end
+    return key
+end
 function getSoundManager()
     return { playUISound = function(self, name) sounds[#sounds + 1] = name end }
 end
@@ -42,7 +45,8 @@ for index = 1, #sides do
     snapshot.revision = snapshot.revision + 1
     shop.acceptState(snapshot)
     check(#sounds == 1 and sounds[1] == "OMHTS_LevelUp", "normal level uses supplied sound: " .. testSide)
-    check(#halos == 1 and halos[1].actor == actor and halos[1].text == "UI_OMHTS_LevelUp"
+    check(#halos == 1 and halos[1].actor == actor
+        and halos[1].text == "UI_OMHTS_LevelUp[br/]UI_OMHTS_LevelUpToken:1"
         and halos[1].r == 231 and halos[1].g == 180 and halos[1].b == 40,
         "level halo belongs to local actor in OMH gold")
     shop.acceptState(snapshot)
@@ -58,6 +62,10 @@ for index = 1, #sides do
     shop.acceptState(snapshot)
     check(#sounds == 2 and sounds[2] == "OMHTS_PrestigeLevelUp" and #halos == 2,
         "multiple levels and prestige milestones use one prestige sound and halo")
+    local expectedTokens = 10 - index
+    check(halos[2].text == "UI_OMHTS_LevelUp[br/]UI_OMHTS_LevelUpTokens:"
+        .. tostring(expectedTokens) .. "[br/]UI_OMHTS_LevelUpPrestige:2",
+        "batched reward lines show earned totals independently of wallet balance")
     snapshot.revision = snapshot.revision + 1
     snapshot.tokens = snapshot.tokens + 1
     shop.acceptState(snapshot)

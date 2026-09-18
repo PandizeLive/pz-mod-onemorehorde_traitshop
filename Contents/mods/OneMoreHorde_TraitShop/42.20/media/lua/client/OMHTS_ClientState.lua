@@ -119,11 +119,19 @@ function TraitShop.acceptState(snapshot)
         and previous and previous.status == "alive" and previous.lifeId == copy.lifeId
         and copy.revision > previous.revision and copy.level > previous.level then
         local sound = "OMHTS_LevelUp"
+        local tokens = copy.level - previous.level
+        local tokenKey = "UI_OMHTS_LevelUpTokens"
+        if tokens == 1 then
+            tokenKey = "UI_OMHTS_LevelUpToken"
+        end
+        local message = getText("UI_OMHTS_LevelUp") .. "[br/]" .. getText(tokenKey, tostring(tokens))
         if copy.earnedPrestige > previous.earnedPrestige then
             sound = "OMHTS_PrestigeLevelUp"
+            message = message .. "[br/]" .. getText("UI_OMHTS_LevelUpPrestige",
+                tostring(copy.earnedPrestige - previous.earnedPrestige))
         end
         getSoundManager():playUISound(sound)
-        HaloTextHelper.addText(player, getText("UI_OMHTS_LevelUp"), "[br/]", 231, 180, 40)
+        HaloTextHelper.addText(player, message, "[br/]", 231, 180, 40)
     end
     if not previous or previous.lifeId ~= copy.lifeId then
         print("[OMH Trait Shop] client state ready; slot=" .. copy.playerNum .. "; life=" .. copy.lifeId)
