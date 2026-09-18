@@ -93,7 +93,7 @@ try {
     Assert-ProjectZomboidClosed
     $confirmationWord = if ($workshopId -eq '0') { 'CREATE' } else { 'PUBLISH' }
     $label = if ($workshopId -eq '0') { 'create a NEW PRIVATE Trait Shop Workshop item' } else { "update Trait Shop item $workshopId (preserving description, cover and visibility)" }
-    if ((Read-Host "Type $confirmationWord to $label").Trim() -cne $confirmationWord) { throw 'Publication cancelled.' }
+    if ((Read-Host "Type $confirmationWord to $label").Trim() -ine $confirmationWord) { throw 'Publication cancelled.' }
     New-Item -ItemType Directory -Path $publisherRoot, $logFolder -Force | Out-Null
     [IO.File]::WriteAllText($vdfPath, $manifest, [Text.UTF8Encoding]::new($false))
     $credential = Get-PublisherCredential
