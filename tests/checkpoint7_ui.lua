@@ -1,10 +1,19 @@
 local Screen=require('OMHTS_CreationScreen')
 local Prestige=require('OMHTS_Prestige')
+check(UI_BORDER_SPACING==nil,'native file-local spacing is not exposed globally')
+testPanel:create()
+check(testPanel.nativeCreated and testPanel.topOfLists==94,'creation wrapper calls native create and reserves bonus row')
+check(testPanel.listboxProf.y==94 and testPanel.listboxProf.height==376
+    and testPanel.listboxTrait.y==94 and testPanel.listboxTraitSelected.y==94,
+    'all creation lists move below the bonus row without extending profession list bottom')
 check(testPanel:PointToSpend()==3,'SP reads pending Prestige on creation screen')
 testPanel.basePoints=-2
 check(testPanel:PointToSpend()==1,'screen adds bonus once, preserving native chosen-trait balance')
 testPanel:render()
 check(testPanel.nativeRendered and string.find(testPanel.label,'3'),'native rendering preserved and bonus labeled')
+check(testPanel.labelX==500 and testPanel.labelY==43,'bonus label has numeric native-aligned coordinates')
+for frame=1,120 do testPanel:render() end
+check(testPanel.labelY==43 and testPanel.topOfLists==94,'repeated render does not drift layout')
 local before=testStore.accounts['legacy'].prestige.pending
 MainScreen.instance.desc={}
 check(testPanel:PointToSpend()==1 and testStore.accounts['legacy'].prestige.pending==before,'cancellation/reopening never spends Prestige')

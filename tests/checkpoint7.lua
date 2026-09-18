@@ -108,14 +108,37 @@ testTransportPackets={preview,State.snapshot(record,0)}
 testStage='Checkpoint 7 creation screen and cancellation'
 MainScreen={instance={desc={},createWorld=false}}
 CharacterCreationProfession={PointToSpend=function(self) return self.basePoints end,render=function(self) self.nativeRendered=true end}
+local function creationList()
+    return {y=70,height=400,getY=function(self) return self.y end,
+        setY=function(self,value) self.y=value end,
+        getHeight=function(self) return self.height end,
+        setHeight=function(self,value) self.height=value end}
+end
+function CharacterCreationProfession:create()
+    self.nativeCreated=true
+    self.topOfLists=70
+    self.listboxProf=creationList()
+    self.listboxTrait=creationList()
+    self.listboxTraitSelected=creationList()
+end
 function getClientUsername() return 'Alice' end
 function getText(key,value) return key .. tostring(value) end
-UIFont={Small=1}
-UI_BORDER_SPACING=10
-function getTextManager() return {getFontHeight=function() return 20 end} end
+UIFont={Small=1,Large=2}
+-- Native CharacterCreationProfession.lua keeps UI_BORDER_SPACING local.
+-- Do not inject it into this module's environment.
+function getTextManager()
+    return {getFontHeight=function(self,font)
+        assert(font==UIFont.Small or font==UIFont.Large,'unknown font')
+        return font==UIFont.Large and 30 or 20
+    end}
+end
 testRequests={}
 function ModData.request(tag) testRequests[#testRequests+1]=tag end
 testPanel={basePoints=0,width=1000,playButton={setEnable=function(self,value) self.enabled=value end,
-    setTooltip=function() end,getY=function() return 600 end},drawTextCentre=function(self,text) self.label=text end}
+    setTooltip=function() end,getY=function() return 600 end},drawTextCentre=function(self,text,x,y)
+        self.label=text
+        self.labelX=x
+        self.labelY=y
+    end}
 setmetatable(testPanel,{__index=CharacterCreationProfession})
 testStore=store

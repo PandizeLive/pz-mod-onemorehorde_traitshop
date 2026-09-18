@@ -1,0 +1,7 @@
+[h1]v0.7.0.1[/h1]
+[h2]Prestige respawn fixes[/h2]
+[list]
+[*]Fixed a repeating error while displaying Prestige on the character-creation screen.
+[*]Fixed the Prestige Retention Percentage tooltip formatting warning.
+[*]Prestige rewards and retention rules are unchanged.
+[/list]

@@ -36,5 +36,5 @@
   "Sandbox_OMHTraitShop_PrestigeLevelInterval_tooltip": "Earn 1 Prestige Point at displayed Trait Levels that are multiples of this number. Default: 5 (Levels 5, 10, 15...). Starting Level 1 grants nothing. Changes affect future level-ups only; past rewards are unchanged.",
   "Sandbox_Title_OMHTraitShop_Prestige": "Prestige",
   "Sandbox_OMHTraitShop_PrestigeRetentionPercentage": "Prestige Retention Percentage",
-  "Sandbox_OMHTraitShop_PrestigeRetentionPercentage_tooltip": "Percentage of your Prestige retained after the next character enters the world. Default: 30%. Your full Prestige is first added to character-creation points. Retention rounds to the nearest whole point, with halves rounded up and no minimum. Canceling creation does not spend or reduce Prestige."
+  "Sandbox_OMHTraitShop_PrestigeRetentionPercentage_tooltip": "Percentage of your Prestige retained after the next character enters the world. Default: 30 percent. Your full Prestige is first added to character-creation points. Retention rounds to the nearest whole point, with halves rounded up and no minimum. Canceling creation does not spend or reduce Prestige."
 }

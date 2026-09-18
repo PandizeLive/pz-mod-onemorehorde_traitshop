@@ -3,6 +3,8 @@ if isServer() then return end
 require("OptionScreens/CharacterCreationProfession")
 local Prestige = require("OMHTS_Prestige")
 local Screen = {}
+-- CharacterCreationProfession uses this spacing as a file-local constant.
+local UI_BORDER_SPACING = 10
 local active
 local originalPoints = CharacterCreationProfession.PointToSpend
 local originalRender = CharacterCreationProfession.render

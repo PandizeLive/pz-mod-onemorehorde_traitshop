@@ -45,3 +45,7 @@ See [TEST_CHECKPOINT_7.md](TEST_CHECKPOINT_7.md) for the short first test. Dedic
 - 149 Horde Night settings/persistence/score assertions passed, including retention and inherited personal/faction advantages.
 - Three real dedicated-server save/restart cycles passed with graceful shutdown. Actual native traits and delayed birth capture produced the expected creation Tokens, then 3 -> 1 -> 0 retention. Evidence: `.local/phase7-server-652b701bebe743bf969e701a5359bded/stage-{1,2,3}.log`. This isolated candidate still printed the prior version label when copied; the tested gameplay code is included in 0.7.0. No human client connected.
 - Native startup also emitted the previously observed base-game content/map warnings; no Trait Shop probe failure occurred. This is not a claim that the whole native server log is warning-free.
+
+### Owner test and rendering correction
+
+The September 18 solo test exposed a repeating creation-screen rendering error despite functional Prestige progression. See [v0.7.0.1 correction](PATCH_v0.7.0.1.md) for the reproduced cause, corrected test fixture, tooltip warning fix and short retest. The reported final-respawn crash remains unconfirmed. CP7 is not marked fully accepted yet.

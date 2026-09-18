@@ -14,7 +14,7 @@ Prepared September 14, 2026. The owner selected a separate private repository: [
 
 A separate repository keeps the addon's standalone releases, Workshop identity and change history independent of Horde Night. Both projects can share the local GitHub CLI and SteamCMD installation. Coordinated gameplay changes still need matching work in Horde Night; this repository choice does not implement that integration.
 
-The current package is **v0.7.0, Checkpoint 7 Prestige**, with the owner-supplied icons. Current behavior and acceptance are recorded in [CHECKPOINT_6.md](CHECKPOINT_6.md). The owner created **Workshop item 3803035618**, Unlisted, through the native uploader; the staged metadata was read back and that ID is now recorded in the repository. The owner uploaded v0.5.0, verified in dedicated logs. Update this existing item for v0.7.0; no v0.7.0 publication is implied by preparation.
+The current package is **v0.7.0.1, Checkpoint 7 Prestige**, with the owner-supplied icons. Current behavior and acceptance are recorded in [CHECKPOINT_7.md](CHECKPOINT_7.md). The owner created **Workshop item 3803035618**, Unlisted, through the native uploader; the staged metadata was read back and that ID is now recorded in the repository. The owner uploaded v0.5.0, verified in dedicated logs. Update this existing item for v0.7.0.1; no v0.7.0.1 publication is implied by preparation.
 
 ## One launcher
 
@@ -44,7 +44,7 @@ Useful command-line forms from this directory:
 
 ## Tagged content and local installation
 
-The release tag is `v<modversion>` (currently `v0.6.4`). Work from a named development branch. The tag must be an ancestor of HEAD, and all `Contents` files must match it. Untracked files, including ignored build debris, are rejected. Tooling/documentation commits may follow the tag when packaged content is unchanged. Never move an existing release tag; use a new version/tag for changed packages.
+The release tag is `v<modversion>` (currently `v0.7.0.1`). Work from a named development branch. The tag must be an ancestor of HEAD, and all `Contents` files must match it. Untracked files, including ignored build debris, are rejected. Tooling/documentation commits may follow the tag when packaged content is unchanged. Never move an existing release tag; use a new version/tag for changed packages.
 
 Only `Contents/mods/OneMoreHorde_TraitShop` is installed. Default destinations are:
 
