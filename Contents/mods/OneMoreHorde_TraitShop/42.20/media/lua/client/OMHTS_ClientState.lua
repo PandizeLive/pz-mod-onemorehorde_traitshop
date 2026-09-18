@@ -104,6 +104,7 @@ function TraitShop.acceptState(snapshot)
         purchases[snapshot.playerNum] = nil
     end
     states[snapshot.playerNum] = copy
+    local feedbackReady = not isClient() or effectLives[snapshot.playerNum] == copy.lifeId
     if snapshot.nonce ~= nil and snapshot.nonce == nonces[snapshot.playerNum] then
         effectLives[snapshot.playerNum] = copy.lifeId
     end
@@ -113,6 +114,16 @@ function TraitShop.acceptState(snapshot)
     end
     if not isClient() or effectLives[snapshot.playerNum] == copy.lifeId then
         awaiting[snapshot.playerNum] = nil
+    end
+    if feedbackReady and player and not player:isDead() and copy.status == "alive"
+        and previous and previous.status == "alive" and previous.lifeId == copy.lifeId
+        and copy.revision > previous.revision and copy.level > previous.level then
+        local sound = "OMHTS_LevelUp"
+        if copy.earnedPrestige > previous.earnedPrestige then
+            sound = "OMHTS_PrestigeLevelUp"
+        end
+        getSoundManager():playUISound(sound)
+        HaloTextHelper.addText(player, getText("UI_OMHTS_LevelUp"), "[br/]", 231, 180, 40)
     end
     if not previous or previous.lifeId ~= copy.lifeId then
         print("[OMH Trait Shop] client state ready; slot=" .. copy.playerNum .. "; life=" .. copy.lifeId)

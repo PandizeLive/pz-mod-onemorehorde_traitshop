@@ -21,6 +21,13 @@ check(brand and brand.font == UIFont.Small and brand.r == 0.85
     and subtitle and subtitle.font == UIFont.Large and subtitle.r == 0.95 and subtitle.g == 0.75,
     "header matches full leaderboard fonts and colors")
 check(window.progress.title == "0 / 100", "XP label uses numeric requirement and no percent formatter")
+local startingLevel
+for index = 1, #testDraws do
+    local draw = testDraws[index]
+    if draw.font == UIFont.Medium and draw.text == "1" then startingLevel = draw end
+end
+check(startingLevel and window.state.level == 0 and window.state.earnedPrestige == 0,
+    "new character displays Level 1 without an earned level or prestige grant")
 check(#window.other.items == 2 and #window.positive.items == 0, "owned zero-cost traits occupy neutral middle panel")
 window:onSelect(window.other.items[1].item)
 check(window.cartCount == 0, "Other Traits click cannot add to cart")

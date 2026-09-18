@@ -553,7 +553,7 @@ function OMHTS_ShopWindow:prerender()
     local level = "-"
     local balance = "-"
     if self.state then
-        level = tostring(self.state.level)
+        level = tostring(self.state.level + 1)
         balance = tostring(self.state.tokens - self.cartTotal)
     end
     local titleRed = Presentation.TITLE_RED

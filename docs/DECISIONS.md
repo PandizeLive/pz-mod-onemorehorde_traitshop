@@ -106,3 +106,8 @@ The owner authorized all Phases 1 and 2 in the [roadmap](ROADMAP.md), plus [rele
 The owner approved Checkpoint 6 with the documented reward values and Hybrid default. Implementation choices: directional server-account cooldown pairs persist across death/reconnect/restart; players without a shared faction qualify; tagged horde kills are reserved rather than double-paid. Live two-player acceptance remains pending.
 
 The owner explicitly corrected both fixed day/night windows and use of Horde Night event hours. Survival now follows native seasonal dawn/dusk and the host's DayNightCycle, independently of OneMoreHorde.StartHour/EndHour. Complete connected periods qualify; sleep/fast-forward count, partial join/reconnect periods and endless day/night do not. These choices and limits are detailed in CHECKPOINT_6.md. No remote server settings or publication were changed by this implementation.
+# v0.6.1: level presentation and feedback
+
+Characters start at displayed Trait Level 1 with 0 / 100 XP toward Level 2. The starting level grants no currency. Saved earned-level counts and the existing XP curve are preserved; five earned levels produce the first Prestige Point at displayed Level 6. Existing characters display their earned count plus one without an XP or currency migration.
+
+Use the owner's `levelup.wav` for normal level-ups and `levelup_prestige.wav` instead when earned prestige increases. Show gold `Trait Level Up!` overhead text. Feedback belongs to the local living character and does not replay on loading/reconnection or duplicate updates. Sandbox category grouping is still awaiting approval separately.

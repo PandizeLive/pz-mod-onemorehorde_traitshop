@@ -39,7 +39,8 @@ $stages = @(
     "_=$tests\phase1_authority.lua",
     "_=$tests\checkpoint5_authority.lua",
     "_=$lua\client\OMHTS_ClientState.lua",
-    "_=$tests\phase1_client.lua"
+    "_=$tests\phase1_client.lua",
+    "_=$tests\level_feedback.lua"
 )
 & $java --enable-native-access=ALL-UNNAMED -cp $classpath KahluaBehaviorCheck @stages | Tee-Object -FilePath (Join-Path $output 'behavior.log')
 if ($LASTEXITCODE -ne 0) { throw 'Phase 1 behavior check failed.' }

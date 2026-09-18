@@ -7,14 +7,14 @@ Status: owner requirements recorded September 14, 2026. Explicit recommendations
 | Term | Meaning |
 |---|---|
 | XP | Progress earned from the selected reward sources; fills the Trait Level progress bar. |
-| Trait Level | Earned by filling the XP bar. Each level grants one Token. |
+| Trait Level | Starts at 1. Each XP-earned level-up grants one Token; the starting level grants none. |
 | Token | Currency spent on purchasing positive traits or removing negative traits. Lost on death. |
 | Prestige Point | Bonus character-creation trait point earned every five Trait Levels; a configurable share of prior prestige can also be retained. This is not shop currency. |
 | Unspent creation points | Remaining character-creation trait points converted into starting Tokens; never award XP, levels, or prestige. |
 
 Use **Tokens** for shop currency and **Prestige Points** for creation bonuses. Avoid calling both currencies Tokens.
 
-Each completed Trait Level awards one Token; milestones at levels 5, 10, 15, etc. award one Prestige Point. Newly earned prestige depends only on Trait Level, never Token count, starting grants, spending, or refunds. Level 1 requires 100 XP. Requirements after Level 1 remain undecided.
+Each completed XP bar awards one Token. Every five earned levels awards one Prestige Point: displayed Levels 6, 11, 16, etc. The starting Level 1 grants neither currency. Newly earned prestige depends only on earned levels, never Token count, starting grants, spending, or refunds. Level 1 starts at 0 / 100 XP toward Level 2. The existing Checkpoint 5 curve is unchanged; the displayed level is the saved earned-level counter plus one. Existing characters retain all progress.
 
 Examples:
 
@@ -29,7 +29,7 @@ Prestige grants bonus points at new-character creation, not a direct Token payou
 
 Prestige is not a permanently accumulated lifetime total. At death, the available prestige supplies the next character's full bonus creation points. Once that replacement character successfully enters the world, retain a configurable percentage of that prestige for subsequent lives; the owner's default is **30%**. This retained amount remains even though the full creation bonus was offered or spent. Apply retention once per completed life transition, never on ordinary login/reconnect and never a second time at death.
 
-Owner example: die with 3 Prestige Points -> next character receives +3 creation points -> after entering the world, the character has 1 retained Prestige Point and Trait Level 0. The retained point does not grant an additional creation bonus in that same transition.
+Owner example: die with 3 Prestige Points -> next character receives +3 creation points -> after entering the world, the character has 1 retained Prestige Point and Trait Level 1. The retained point does not grant an additional creation bonus in that same transition.
 
 Agreed rounding: nearest whole point, with no minimum-one guarantee. The documented exact-tie convention is half up for nonnegative values. At 30%, a no-new-earnings sequence is 3 -> 1 -> 0. Do not always round up: that would keep the final point forever and undermine decay.
 
