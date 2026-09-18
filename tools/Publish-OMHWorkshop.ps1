@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([switch]$PreflightOnly, [switch]$ResetCredentials)
+param([switch]$PreflightOnly, [switch]$ResetCredentials, [switch]$UpdatePreview)
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'OMH-ReleaseCommon.ps1')
@@ -17,18 +17,25 @@ $steamCmdPath = Find-OmhSharedPath $repoRoot '.tools\steamcmd\steamcmd.exe'
 $workshopAppId = '108600'
 
 function New-WorkshopVdf {
-    param([string]$ContentFolder, [string]$ChangeNote, [string]$ItemId, [string]$Description, [string]$PreviewFile)
+    param([string]$ContentFolder, [string]$ChangeNote, [string]$ItemId, [string]$Description, [string]$PreviewFile, [switch]$PreviewOnly)
     if ($ItemId -eq '3777891317' -or $ItemId -notmatch '^\d+$') { throw 'Invalid Trait Shop Workshop target.' }
     $fields = [ordered]@{
         appid = $workshopAppId
         publishedfileid = $ItemId
-        contentfolder = $ContentFolder
-        changenote = $ChangeNote
     }
-    if ($ItemId -eq '0') {
+    if ($PreviewOnly -and $ItemId -ne '3803035618') { throw 'Preview updates must target the existing Trait Shop item 3803035618.' }
+    if (-not $PreviewOnly) {
+        $fields.contentfolder = $ContentFolder
+        $fields.changenote = $ChangeNote
+    }
+    if ($ItemId -eq '0' -or $PreviewOnly) {
         if (-not $PreviewFile -or -not (Test-Path -LiteralPath $PreviewFile -PathType Leaf)) { throw 'The first Workshop upload requires preview.gif.' }
         if ((Get-Item -LiteralPath $PreviewFile).Length -ge 1MB) { throw 'Workshop preview must be smaller than 1 MB.' }
+        $bytes = [IO.File]::ReadAllBytes($PreviewFile)
+        if ($bytes.Length -lt 6 -or [Text.Encoding]::ASCII.GetString($bytes, 0, 6) -notmatch '^GIF8[79]a$') { throw 'Workshop preview must be a valid GIF file.' }
         $fields.previewfile = [IO.Path]::GetFullPath($PreviewFile)
+    }
+    if ($ItemId -eq '0') {
         $fields.title = 'OMH: Trait Shop'
         $fields.description = $Description
         $fields.visibility = '2'
@@ -63,9 +70,10 @@ try {
     if ($workshopId -eq '0' -and -not $description.Contains('DISCLAIMER: This mod was made in tandem with ChatGPT')) {
         throw 'The first Workshop description must include the required disclaimer.'
     }
-    $manifest = New-WorkshopVdf $contentFolder $changeLog.Steam $workshopId $description (Join-Path $repoRoot 'preview.gif')
+    $manifest = New-WorkshopVdf $contentFolder $changeLog.Steam $workshopId $description (Join-Path $repoRoot 'preview.gif') -PreviewOnly:$UpdatePreview
     Write-Host "OMH: TRAIT SHOP publisher - v$($release.Version) - Workshop ID $workshopId"
-    Write-Host $changeLog.Source
+    if ($UpdatePreview) { Write-Host 'Preview-only update: mod files, changelog, title, description and visibility are preserved.' }
+    else { Write-Host $changeLog.Source }
     Write-Host $manifest
     if ($PreflightOnly) {
         Write-Host 'Manifest preflight passed. No network calls, credentials, files, or external processes changed.'
@@ -91,8 +99,8 @@ try {
     $gitAuth = @('-c', 'credential.helper=', '-c', ('credential.helper=!"' + $ghPath.Replace('\', '/') + '" auth git-credential'))
     Assert-OmhRemoteMirror $release $config $gitAuth
     Assert-ProjectZomboidClosed
-    $confirmationWord = if ($workshopId -eq '0') { 'CREATE' } else { 'PUBLISH' }
-    $label = if ($workshopId -eq '0') { 'create a NEW PRIVATE Trait Shop Workshop item' } else { "update Trait Shop item $workshopId (preserving description, cover and visibility)" }
+    $confirmationWord = if ($UpdatePreview) { 'PREVIEW' } elseif ($workshopId -eq '0') { 'CREATE' } else { 'PUBLISH' }
+    $label = if ($UpdatePreview) { "replace ONLY the preview of Trait Shop item $workshopId with preview.gif" } elseif ($workshopId -eq '0') { 'create a NEW PRIVATE Trait Shop Workshop item' } else { "update Trait Shop item $workshopId (preserving description, cover and visibility)" }
     if ((Read-Host "Type $confirmationWord to $label").Trim() -ine $confirmationWord) { throw 'Publication cancelled.' }
     New-Item -ItemType Directory -Path $publisherRoot, $logFolder -Force | Out-Null
     [IO.File]::WriteAllText($vdfPath, $manifest, [Text.UTF8Encoding]::new($false))

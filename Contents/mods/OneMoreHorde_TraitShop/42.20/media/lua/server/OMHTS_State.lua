@@ -99,6 +99,7 @@ end
 ---@return boolean
 function State.isRecord(record)
     if not State.isLegacyRecord(record) then return false end
+    if record.life.prestigeRule ~= nil and record.life.prestigeRule ~= 2 then return false end
     local creation = record.life.creation
     if type(creation) ~= "table" or not State.isCounter(creation.tokens)
         or type(record.life.purchases) ~= "table" or type(record.life.removals) ~= "table"
@@ -156,6 +157,15 @@ function State.attach(store, account, characterId, hours, fresh)
     if record and record.revision >= State.LIMIT - 1 then return nil, "revision_limit" end
     if record and record.life.status == "alive" then
         if record.life.characterId == characterId and (hours > 0 or record.life.hours == 0) then
+            if record.life.prestigeRule == nil then
+                local earned = math.max(record.prestige.earned, math.floor((record.life.level + 1) / 5))
+                if not State.isCounter(earned + record.prestige.retained + record.prestige.pending) then
+                    return nil, "prestige_limit"
+                end
+                record.prestige.earned = earned
+                record.life.prestigeRule = 2
+                record.revision = record.revision + 1
+            end
             if hours > record.life.hours then
                 record.life.hours = hours
             end
@@ -181,6 +191,7 @@ function State.attach(store, account, characterId, hours, fresh)
         tokens = 0,
         xp = 0,
         level = 0,
+        prestigeRule = 2,
         creation = { status = "legacy", tokens = 0 },
         purchases = {},
         removals = {},
@@ -206,7 +217,7 @@ function State.awardXP(record, lifeId, revision, amount)
     local life = record.life
     local level, xp = Progression.advance(life.level, life.xp, amount)
     local tokens = life.tokens + level - life.level
-    local prestige = record.prestige.earned + math.floor(level / 5) - math.floor(life.level / 5)
+    local prestige = record.prestige.earned + math.floor((level + 1) / 5) - math.floor((life.level + 1) / 5)
     if not State.isCounter(level) or not State.isXP(xp) or not State.isCounter(tokens)
         or not State.isCounter(prestige + record.prestige.retained + record.prestige.pending) then return false end
     life.tokens = tokens

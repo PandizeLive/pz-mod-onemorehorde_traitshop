@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('Menu', 'Info', 'Check', 'Install', 'Mirror', 'Publish')]
+    [ValidateSet('Menu', 'Info', 'Check', 'Install', 'Mirror', 'Publish', 'Preview')]
     [string]$Action = 'Menu',
     [switch]$ValidateOnly,
     [string]$UserDataRoot = (Join-Path $env:USERPROFILE 'Zomboid')
@@ -28,6 +28,10 @@ function Invoke-OmhAction {
             $arguments += (Join-Path $PSScriptRoot 'Publish-OMHWorkshop.ps1')
             if ($CheckOnly) { $arguments += '-PreflightOnly' }
         }
+        'Preview' {
+            $arguments += @((Join-Path $PSScriptRoot 'Publish-OMHWorkshop.ps1'), '-UpdatePreview')
+            if ($CheckOnly) { $arguments += '-PreflightOnly' }
+        }
         default { throw "Unknown action: $SelectedAction" }
     }
     & $shell @arguments | Out-Host
@@ -50,6 +54,7 @@ try {
         Write-Host '  3  Publish to Steam Workshop (first item is private)'
         Write-Host '  4  Check local install readiness (no changes)'
         Write-Host '  5  Check Workshop upload manifest (no network or upload)'
+        Write-Host '  6  Update Workshop page preview to GIF (preview only)'
         Write-Host '  0  Exit'
         $choice = (Read-Host 'Choose an option').Trim()
         if ($choice -eq '0') { exit 0 }
@@ -59,9 +64,10 @@ try {
             '3' { 'Publish' }
             '4' { 'Check' }
             '5' { 'Publish' }
+            '6' { 'Preview' }
             default { $null }
         }
-        if (-not $selected) { Write-Host 'Enter a number from 0 to 5.'; continue }
+        if (-not $selected) { Write-Host 'Enter a number from 0 to 6.'; continue }
         $result = Invoke-OmhAction $selected ($choice -eq '5')
         if ($result -eq 0) { Write-Host 'Action finished.' -ForegroundColor Green }
         else { Write-Host "Action stopped (exit code $result)." -ForegroundColor Yellow }

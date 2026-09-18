@@ -175,6 +175,11 @@ Assert-Test ($initial -match '"previewfile"' -and $initial.Contains('preview.gif
 Assert-Rejected { New-WorkshopVdf 'C:\fixture' 'First upload' '0' 'Description' (Join-Path $fixture 'missing.gif') } 'Missing first-upload preview is rejected'
 $update = New-WorkshopVdf 'C:\fixture\Contents' 'Update' '1234567890' 'Must not overwrite'
 Assert-Test ($update -notmatch '"(title|description|visibility|previewfile)"' -and $update -match '"publishedfileid" "1234567890"') 'Existing-item uploads preserve description, title, cover and visibility'
+$previewUpdate = New-WorkshopVdf '' '' '3803035618' '' $previewPath -PreviewOnly
+Assert-Test ($previewUpdate -match '"previewfile"' -and $previewUpdate -notmatch '"(contentfolder|changenote|title|description|visibility)"') 'Preview-only update cannot replace content or page metadata'
+Assert-Rejected { New-WorkshopVdf '' '' '0' '' $previewPath -PreviewOnly } 'Preview-only action cannot create a new item'
+Assert-Rejected { New-WorkshopVdf '' '' '1234567890' '' $previewPath -PreviewOnly } 'Preview-only action cannot target another item'
+Assert-Rejected { New-WorkshopVdf '' '' '3803035618' '' (Join-Path $fixture 'preview.png') -PreviewOnly } 'Non-GIF preview is rejected'
 Assert-Rejected { New-WorkshopVdf 'C:\fixture' 'Update' '3777891317' '' } 'Horde Night Workshop ID is blocked'
 Assert-Rejected { New-WorkshopVdf 'C:\fixture' "line`nbreak" '0' 'Description' $previewPath } 'Manifest rejects control characters'
 Assert-Rejected { New-WorkshopVdf 'C:\fixture' 'quote"' '0' 'Description' $previewPath } 'Manifest rejects double quotes'

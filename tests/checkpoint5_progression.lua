@@ -16,9 +16,9 @@ check(State.awardXP(record,id,revision,1), "exact level threshold commits")
 check(record.life.level == 1 and record.life.tokens == 1 and record.life.xp == 0, "first level gives exactly one Token")
 check(not State.awardXP(record,id,revision,1) and record.life.tokens == 1, "replayed award revision is rejected")
 check(State.awardXP(record,id,record.revision,600), "multi-level XP award commits")
-check(record.life.level == 4 and record.life.tokens == 4 and record.prestige.earned == 0, "no prestige before fifth level")
+check(record.life.level == 4 and record.life.tokens == 4 and record.prestige.earned == 1, "displayed Level 5 earns first prestige")
 check(State.awardXP(record,id,record.revision,300), "fifth level commits")
-check(record.life.level == 5 and record.prestige.earned == 1, "fifth level gives one prestige")
+check(record.life.level == 5 and record.prestige.earned == 1, "displayed Level 6 does not repeat prestige")
 check(State.update(record,id,record.revision,{tokens=0}), "spend Tokens independently")
 check(record.prestige.earned == 1, "spending never changes prestige")
 check(State.awardXP(record,id,record.revision,2600.5), "cross fifth-to-tenth milestone with partial remainder")
@@ -48,4 +48,18 @@ check(record.prestige.pending == 2 and record.life.level == 0 and record.life.to
 local maximum = State.attach(store,"maximum",60,0)
 check(State.awardXP(maximum,maximum.life.id,maximum.revision,State.LIMIT), "large bounded reward completes")
 check(maximum.life.level > 100 and maximum.life.xp < Progression.requiredXP(maximum.life.level)
-    and maximum.prestige.earned == math.floor(maximum.life.level/5), "large award has canonical remainder and all milestones")
+    and maximum.prestige.earned == math.floor((maximum.life.level+1)/5), "large award has canonical remainder and all milestones")
+
+local legacy = State.attach(store,"legacy-milestone",61,0)
+legacy.life.level = 4
+legacy.life.prestigeRule = nil
+legacy.prestige.earned = 0
+local oldTokens = legacy.life.tokens
+legacy = State.attach(store,"legacy-milestone",61,0.1)
+check(legacy.prestige.earned == 1 and legacy.life.tokens == oldTokens,
+    "existing displayed Level 5 receives missing prestige without Token grants")
+local migratedRevision = legacy.revision
+store = nativeRoundTrip(store)
+legacy = State.attach(store,"legacy-milestone",61,0.2)
+check(legacy.prestige.earned == 1 and legacy.revision == migratedRevision,
+    "saved milestone correction never repeats on reconnect")

@@ -16,7 +16,7 @@ Positive Cost Multiplier, Negative Cost Multiplier and Allow Negative Trait Remo
 | Horde Zombie XP | Default 5 XP per qualifying OMH horde-zombie kill. Visible in Horde Night and Hybrid. | Value approved; implementation Checkpoint 8. |
 | Horde Survived XP | Default 100 XP upon the player's horde completion while connected and not a casualty. Visible in Horde Night and Hybrid. | Value and eligibility approved; implementation Checkpoint 8. |
 | XP per Trait Level | Rounded to nearest 50: `100 + 35n + (65/19)n²`, where n is the current level. Level 1 costs 100 and Level 20 costs 2,000. Each earned level grants one Token. | Approved and implemented in Checkpoint 5; no new sandbox control. |
-| Prestige cadence | One Prestige Point every five earned Trait Levels, independent of Token count. | Confirmed; whether exposed as a custom setting pending. |
+| Prestige cadence | One Prestige Point at displayed Trait Levels 5, 10, 15 and subsequent multiples of five, independent of Token count. | Confirmed; whether exposed as a custom setting pending. |
 | Prestige Retention Percentage | Retain 30% of the previous available prestige after the next character receives its full creation bonus and enters the world. Repeats once per life transition; round to nearest whole point with no minimum-one guarantee. | Separate setting, 30% default, and nearest-whole rounding confirmed; label working. |
 | Allow Negative Trait Removal | Disabled by default. Enables supported negative removals in the cart. | Implemented in v0.4.0. |
 | Negative Cost Multiplier | Default 2.0; range 0.1-100. Multiply absolute creation value, round up to whole Tokens. No surcharge. | Implemented in v0.4.0. |

@@ -130,8 +130,15 @@ function TraitShop.acceptState(snapshot)
             message = message .. "[br/]" .. getText("UI_OMHTS_LevelUpPrestige",
                 tostring(copy.earnedPrestige - previous.earnedPrestige))
         end
-        getSoundManager():playUISound(sound)
+        local manager = getSoundManager()
+        local handle = manager:playUISound(sound)
+        if handle ~= 0 then
+            manager:getUIEmitter():set3D(handle, false)
+        end
         HaloTextHelper.addText(player, message, "[br/]", 231, 180, 40)
+        print("[OMH Trait Shop] level feedback; life=" .. copy.lifeId .. "; displayedLevel=" .. (copy.level + 1)
+            .. "; tokens=" .. tokens .. "; prestige=" .. (copy.earnedPrestige - previous.earnedPrestige)
+            .. "; sound=" .. sound)
     end
     if not previous or previous.lifeId ~= copy.lifeId then
         print("[OMH Trait Shop] client state ready; slot=" .. copy.playerNum .. "; life=" .. copy.lifeId)

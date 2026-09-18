@@ -1,15 +1,13 @@
-v0.6.3
+v0.6.3.1
 
-Sandbox settings
-- Added Trait Costs, XP Rewards, and Player Kill Rules section headers in solo, host, and live admin settings.
-- Moved the player-kill cooldown below XP rewards. Its section hides in modes without player-kill rewards.
+Level-up fixes
+- Prestige is now awarded at displayed Trait Levels 5, 10, 15 and subsequent multiples of five.
+- Existing living characters receive missing milestone Prestige once, without duplicating Tokens.
+- Level-up and Prestige sounds now explicitly play in 2D to the local player.
 
-Level-up feedback
-- Added a sound for Trait Level increases and a special sound when a level-up earns prestige.
-- Added gold Trait Level Up! text above the player, with Token and Prestige rewards listed underneath, including while the shop is closed.
-- Trait Level now starts at 1 with 0 / 100 XP toward Level 2. Existing progress is preserved.
-- The starting level grants no Token or prestige. The first Prestige Point follows five earned level-ups.
-- Loading, reconnecting and duplicate updates do not replay level-up feedback.
+Release tools
+- Added a separate launcher option to update the Workshop preview to the supplied GIF.
+- Normal mod uploads preserve the cover, description and visibility.
 
 Still in development
-- Horde rewards, prestige character-creation bonuses, and official scoring remain upcoming.
+- Horde XP and next-character Prestige bonuses remain upcoming. Horde Night v0.6.13 supplies the separate settings/scoring integration.
