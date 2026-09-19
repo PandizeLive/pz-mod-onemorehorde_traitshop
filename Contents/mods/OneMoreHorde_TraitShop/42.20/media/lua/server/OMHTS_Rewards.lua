@@ -28,6 +28,17 @@ function Rewards.initialize(store)
     for victim, life in pairs(data.deaths) do
         if type(victim) ~= "string" or not State.isCounter(life) then return false end
     end
+    if data.hordes == nil then
+        data.hordes = {}
+    end
+    if type(data.hordes) ~= "table" then return false end
+    for eventId, receipt in pairs(data.hordes) do
+        if type(eventId) ~= "string" or type(receipt) ~= "table"
+            or type(receipt.finished) ~= "boolean" or type(receipt.kills) ~= "table" then return false end
+        for participantId, count in pairs(receipt.kills) do
+            if type(participantId) ~= "string" or not State.isCounter(count) then return false end
+        end
+    end
     return true
 end
 
@@ -69,7 +80,7 @@ end
 local function award(record, amount, source)
     local oldLevel = record.life.level
     if amount <= 0 or not State.awardXP(record, record.life.id, record.revision, amount) then return false end
-    if source ~= "zombie" or record.life.level ~= oldLevel then
+    if (source ~= "zombie" and source ~= "HordeZombieXP") or record.life.level ~= oldLevel then
         print("[OMH Trait Shop] XP awarded; life=" .. record.life.id .. "; source=" .. source
             .. "; amount=" .. amount .. "; level=" .. record.life.level .. "; xp=" .. record.life.xp)
     end
@@ -210,6 +221,58 @@ function Rewards.survival(record, session, now, timeOfDay, config)
         end
     end
     return session, award(record, amount, "survival")
+end
+
+---@param store table
+---@param eventId string
+---@return table
+local function hordeReceipt(store, eventId)
+    local receipt = store.rewards.hordes[eventId]
+    if not receipt then
+        receipt = { finished = false, kills = {} }
+        store.rewards.hordes[eventId] = receipt
+    end
+    return receipt
+end
+
+---@param facts table
+---@return boolean
+---@nodiscard
+function Rewards.isHordeFact(facts)
+    return type(facts) == "table" and facts.rewardSchema == 1
+        and type(facts.eventId) == "string" and #facts.eventId > 0 and #facts.eventId <= 512
+end
+
+---@param store table
+---@param facts table
+---@return boolean
+function Rewards.consumeHordeKill(store, facts)
+    if not Rewards.isHordeFact(facts) or type(facts.participantId) ~= "string"
+        or not State.isCounter(facts.killCount) or facts.killCount < 1 then return false end
+    local receipt = hordeReceipt(store, facts.eventId)
+    local previous = receipt.kills[facts.participantId]
+    if receipt.finished or (previous and previous >= facts.killCount) then return false end
+    receipt.kills[facts.participantId] = facts.killCount
+    return true
+end
+
+---@param store table
+---@param facts table
+---@return boolean
+function Rewards.consumeHordeFinish(store, facts)
+    if not Rewards.isHordeFact(facts) or type(facts.rewardParticipants) ~= "table" then return false end
+    local receipt = hordeReceipt(store, facts.eventId)
+    if receipt.finished then return false end
+    receipt.finished = true
+    receipt.kills = {}
+    return true
+end
+
+---@param record table
+---@param key string
+---@return boolean
+function Rewards.horde(record, key)
+    return award(record, Config.amount(Config.read(), key), key)
 end
 
 return Rewards

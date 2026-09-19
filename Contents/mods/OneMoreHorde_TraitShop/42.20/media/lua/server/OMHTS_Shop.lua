@@ -91,7 +91,9 @@ function Shop.snapshot(player, record)
     snapshot.hordeRewards = "none"
     if rewards.mode == 3 or rewards.mode == 4 then
         snapshot.hordeRewards = "missing"
-        if rewards.horde then
+        if RewardsConfig.hasHordeRewards() then
+            snapshot.hordeRewards = "none"
+        elseif rewards.horde then
             snapshot.hordeRewards = "upcoming"
         end
     end

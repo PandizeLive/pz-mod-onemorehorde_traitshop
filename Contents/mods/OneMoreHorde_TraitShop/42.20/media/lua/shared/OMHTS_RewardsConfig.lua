@@ -10,6 +10,14 @@ function Config.hasHordeNight()
 end
 
 ---@nodiscard
+---@return boolean
+function Config.hasHordeRewards()
+    if not Config.hasHordeNight() then return false end
+    local extensions = require("OMH_Extensions")
+    return type(extensions) == "table" and extensions.HORDE_REWARD_SCHEMA == 1
+end
+
+---@nodiscard
 ---@param mode number
 ---@param key string
 ---@return boolean
@@ -54,7 +62,7 @@ end
 function Config.amount(values, key)
     if not values.ready or not Config.visible(values.mode, key) then return 0 end
     if (key == "DayXP" or key == "NightXP") and values.cycle ~= 1 then return 0 end
-    if key == "HordeZombieXP" or key == "HordeSurvivedXP" then return 0 end
+    if (key == "HordeZombieXP" or key == "HordeSurvivedXP") and not Config.hasHordeRewards() then return 0 end
     return values[key]
 end
 

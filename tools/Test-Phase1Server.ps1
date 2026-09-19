@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [string]$GamePath = 'C:\Program Files (x86)\Steam\steamapps\common\ProjectZomboid',
-    [ValidateSet(1, 2, 3, 4, 7)][int]$Phase = 1
+    [ValidateSet(1, 2, 3, 4, 7, 8)][int]$Phase = 1
 )
 
 $ErrorActionPreference = 'Stop'
@@ -11,6 +11,10 @@ $mods = Join-Path $cache 'mods'
 $settings = Join-Path $cache 'Server'
 New-Item -ItemType Directory -Path $mods, $settings -Force | Out-Null
 Copy-Item -LiteralPath (Join-Path $repo 'Contents\mods\OneMoreHorde_TraitShop') -Destination $mods -Recurse
+if ($Phase -eq 8) {
+    $core = Join-Path (Split-Path -Parent $repo) 'pz-mod-onemorehorde_protectthecure\Contents\mods\OneMoreHorde_HordeNight'
+    Copy-Item -LiteralPath $core -Destination $mods -Recurse
+}
 Copy-Item -LiteralPath (Join-Path $repo "tests\phase${Phase}_server_probe.lua") -Destination (Join-Path $mods 'OneMoreHorde_TraitShop\42.20\media\lua\server\ZZ_StateProbe.lua')
 @'
 PauseEmpty=true
@@ -26,6 +30,12 @@ WorkshopItems=
 Map=Muldraugh, KY
 MaxPlayers=1
 '@ | Set-Content -LiteralPath (Join-Path $settings 'TraitShopPhase1.ini') -Encoding ASCII
+
+if ($Phase -eq 8) {
+    $ini = Join-Path $settings 'TraitShopPhase1.ini'
+    $text = [IO.File]::ReadAllText($ini).Replace('Mods=OneMoreHorde_TraitShop', 'Mods=OneMoreHorde_HordeNight;OneMoreHorde_TraitShop')
+    [IO.File]::WriteAllText($ini, $text, [Text.UTF8Encoding]::new($false))
+}
 
 for ($stage = 1; $stage -le 3; $stage++) {
     $start = [Diagnostics.ProcessStartInfo]::new()
@@ -56,6 +66,10 @@ for ($stage = 1; $stage -le 3; $stage++) {
                     if ($null -eq $line) { Set-Variable -Name $stream -Value $null; break }
                     $lines.Add($line)
                     if ($line.Contains('ZZ_StateProbe.lua:')) { throw "Native probe failed; inspect $cache." }
+                    if ($line.Contains('more than 200 local variables') -or
+                        ($line.Contains('Exception thrown') -and $line.Contains('MOD:OMH:'))) {
+                        throw "OMH native runtime error; inspect $cache."
+                    }
                     if ($line.Contains("[OMHTS TEST] disk stage $stage ready")) { $ready = $true }
                     $reader = if ($stream -eq 'stdout') { $process.StandardOutput } else { $process.StandardError }
                     $task = $reader.ReadLineAsync()

@@ -49,3 +49,7 @@ See [TEST_CHECKPOINT_7.md](TEST_CHECKPOINT_7.md) for the short first test. Dedic
 ### Owner test and rendering correction
 
 The September 18 solo test exposed a repeating creation-screen rendering error despite functional Prestige progression. See [v0.7.0.1 correction](PATCH_v0.7.0.1.md) for the reproduced cause, corrected test fixture, tooltip warning fix and short retest. The reported final-respawn crash remains unconfirmed. CP7 is not marked fully accepted yet.
+
+### Corrective solo retest
+
+The owner reported v0.7.0.1 working after the render fix. The latest inspected solo log loads that version without the previous render-loop signature; it does not independently prove the full respawn sequence. Accept the owner-reported solo result and retain the dedicated pre-spawn check in TEST_CHECKPOINT_8.md.

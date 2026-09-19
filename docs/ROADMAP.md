@@ -2,7 +2,7 @@
 
 This is the active phase/checkpoint roadmap. It organizes the approved product direction; creating the roadmap does not authorize implementation or publication.
 
-**Current status:** v0.5.0 implements Checkpoint 5 and the approved Other Traits panel and creation-grant follow-up. See [Checkpoint 5](CHECKPOINT_5.md) for source evidence, validation and limitations, and [current owner test](TEST_CHECKPOINT_5.md). The owner reported v0.4.3 dedicated purchases on the replacement character passed. Live reconnect/restart acceptance remains pending. XP earning sources begin in Checkpoint 6; prestige creation bonuses and official scoring remain later checkpoints. Common negative removal was brought forward from Checkpoints 13-14.
+**Current status:** v0.8.0 implements Checkpoint 8 with Horde Night 0.6.15. CP7's corrected solo test was reported passed; its live dedicated creation check is combined with the CP8 two-player test. Implementation and automated checks do not imply Workshop publication or full multiplayer acceptance. See [Checkpoint 8](CHECKPOINT_8.md) and [dedicated test](TEST_CHECKPOINT_8.md).
 
 The intended full release still includes progression, prestige, Horde Night rewards and official scoring. Common negative removal now arrives early, disabled by default; its official policy remains undecided.
 ## Checkpoint workflow
@@ -23,8 +23,8 @@ The intended full release still includes progression, prestige, Horde Night rewa
 |---|---|---|---|
 | 1. Foundation | Loadable standalone package and reliable character/account state | 1-2 | Implemented; solo sequence reported passed, live multiplayer pending |
 | 2. Positive trait shop | Usable health-hover entry and safe positive-trait purchases | 3-4 | v0.4.3 implemented; solo button and dedicated replacement-character purchases reported passed; remaining persistence checks and follow-ups carried forward |
-| 3. Progression and prestige | XP rewards, Trait Levels, death resets, and next-character bonuses | 5-7 | Checkpoints 5-6 implemented through v0.6.0; live reward acceptance and Checkpoint 7 pending |
-| 4. Horde Night integration | Horde XP, official lock, persistent eligibility, and score display | 8-10 | Pending |
+| 3. Progression and prestige | XP rewards, Trait Levels, death resets, and next-character bonuses | 5-7 | Checkpoints 5-7 implemented; corrected CP7 solo test reported passed; dedicated creation acceptance pending |
+| 4. Horde Night integration | Horde XP, official lock, persistent eligibility, and score display | 8-10 | CP8 implemented; live acceptance pending; CP9-10 remain |
 | 5. Initial release | Verified standalone and OMH builds, documentation, release package | 11-12 | Pending |
 | 6. Negative-trait removal | Optional default-off removal with verified effect cleanup | 13-14 | Common removal implemented in v0.4.0; custom exceptions and official policy remain |
 
@@ -118,7 +118,7 @@ The intended full release still includes progression, prestige, Horde Night rewa
 
 **Approved rewards:** Horde Zombie 5 XP; Horde Survived 100 XP.
 
-**Decisions needed:** any remaining Hybrid overlap decision; handling of saved settings when enabling/disabling the dependency.
+**Implemented in v0.8.0:** 5 XP horde kills, 100 XP completion, API 3 core facts and persistent receipt checks. Hybrid pays horde kills once; new settings use dependency-aware defaults and saved modes remain unchanged. See [Checkpoint 8](CHECKPOINT_8.md).
 
 **Pass when:** connected members of their completed horde receive completion XP unless they are casualties; late-connected eligible members can qualify; unrelated players, disconnected players, and casualties do not. Reconnect/respawn cannot undo event casualty status. Two-player testing proves event/kill attribution and no cross-credit or replay awards. The addon still loads and works without OMH.
 

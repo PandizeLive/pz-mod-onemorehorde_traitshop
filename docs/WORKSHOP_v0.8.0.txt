@@ -1,0 +1,9 @@
+[h1]v0.8.0[/h1]
+[h2]Checkpoint 8 - Horde Night rewards[/h2]
+[list]
+[*]Added 5 XP per credited Horde Zombie kill and 100 XP for surviving your completed horde by default.
+[*]Hybrid rewards horde kills once, without also paying ordinary zombie XP.
+[*]Casualties, disconnected players and unrelated players cannot claim horde completion rewards.
+[*]Added persistent protection against repeated rewards after reconnects, respawns and restarts.
+[*]Requires OMH: Horde Night 0.6.15 or newer for horde rewards. Standalone progression remains available.
+[/list]

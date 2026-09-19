@@ -158,6 +158,65 @@ local function rewardBinding(killer)
     return bind(killer)
 end
 
+---@param participantId string
+---@return IsoPlayer|nil
+---@nodiscard
+local function hordePlayer(participantId)
+    local players
+    local count = getNumActivePlayers()
+    if isServer() then
+        players = getOnlinePlayers()
+        count = players:size()
+    end
+    for index = 0, count - 1 do
+        local player
+        if isServer() then
+            player = players:get(index)
+        else
+            player = getSpecificPlayer(index)
+        end
+        if player then
+            local id = "singleplayer:" .. player:getPlayerNum()
+            if isServer() then
+                id = player:getUsername()
+            end
+            if id == participantId then return player end
+        end
+    end
+    return nil
+end
+
+---@param facts table
+---@return nil
+function Authority.onHordeKill(facts)
+    if not rewardsReady or not RewardsConfig.hasHordeRewards()
+        or not Rewards.consumeHordeKill(store, facts) or facts.eligible ~= true then return end
+    local player = hordePlayer(facts.participantId)
+    local binding = rewardBinding(player)
+    if binding and Rewards.horde(binding.record, "HordeZombieXP") then
+        binding.rewardDirty = true
+    end
+end
+
+---@param facts table
+---@return nil
+function Authority.onHordeFinished(facts)
+    if not rewardsReady or not RewardsConfig.hasHordeRewards()
+        or not Rewards.consumeHordeFinish(store, facts) or facts.outcome ~= "survived"
+        or facts.completionReason == "manual-run-reset"
+        or facts.completionReason == "faction-disbanded" then return end
+    for participantId, recipient in pairs(facts.rewardParticipants) do
+        local player = hordePlayer(participantId)
+        if player and type(recipient) == "table"
+            and player:getDescriptor():getID() == recipient.characterId then
+            local binding = rewardBinding(player)
+            if binding and Rewards.horde(binding.record, "HordeSurvivedXP") then
+                binding.rewardDirty = true
+            end
+        end
+    end
+end
+
 ---@param zombie IsoZombie
 ---@return nil
 local function onZombieDead(zombie)

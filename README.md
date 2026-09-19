@@ -2,13 +2,16 @@
 
 Standalone trait progression and purchasing addon for Project Zomboid Build 42, with optional OMH: Horde Night integration.
 
-**Status: v0.7.0.1 fixes the Prestige creation-screen error loop and implements Checkpoint 7: Prestige creation bonuses and configurable retention.** Earn Trait XP from ordinary zombie kills (2), eligible enemy player kills (75), and surviving complete nights (25); daytime defaults to 0. Hybrid is the standalone default. Player rewards enforce faction restrictions and a persistent two-game-day same-victim cooldown. Day/night follows the game's seasonal cycle, independently of horde scheduling. The shop retains its mixed cart, Other Traits panel, starting Tokens and server-owned progression.
+**Status: v0.8.0 implements Checkpoint 8: Horde Night XP rewards.** With Horde Night 0.6.15 or newer, earn 5 XP per credited horde kill and 100 XP for surviving your completed horde. Hybrid never pays ordinary XP for the same horde kill. Standalone kills/survival, the shop and Prestige remain available without Horde Night.
 
-**Horde rewards remain future work.** Horde Night v0.6.14 adds settings approval and score reduction; the matching website validation update must be deployed separately. Horde Night mode currently has no active rewards; choose Hybrid, Kills or Survival to test the new sources. Workshop item [3803035618](https://steamcommunity.com/sharedfiles/filedetails/?id=3803035618) remains the existing Unlisted test item. The owner confirmed v0.5.0 working on dedicated; v0.7.0.1 requires owner upload and live acceptance.
+CP7's corrected solo test was reported passed. The combined dedicated reward and character-creation test remains pending, after both matching Workshop versions are published. Full official-lock/history and website acceptance remain later integration work. Existing Workshop item 3803035618 is unchanged; nothing is automatically uploaded.
 
 Characters start at Level 1, with 0 / 100 XP toward Level 2. By default, each earned level grants one Token and displayed Levels 5, 10, 15 and subsequent multiples of five grant one Prestige Point; both rewards are configurable. Level-ups play the supplied normal or prestige sound and show gold overhead text. Your next character receives the full Prestige bonus, then retains 30% by default after entering the world.
 
 ## Documentation
+
+- [Checkpoint 8](docs/CHECKPOINT_8.md): authoritative horde rewards, verification and limits.
+- [Combined dedicated test](docs/TEST_CHECKPOINT_8.md): six steps after publishing both matching versions.
 
 - [Respawn rendering fix](docs/PATCH_v0.7.0.1.md): diagnosis and four-step retest.
 - [Checkpoint 7](docs/CHECKPOINT_7.md): creation flow, retention, native evidence and limits.

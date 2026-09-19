@@ -1,5 +1,7 @@
-v0.7.0.1
-Prestige respawn fixes
-- Fixed a repeating error while displaying Prestige on the character-creation screen.
-- Fixed the Prestige Retention Percentage tooltip formatting warning.
-- Prestige rewards and retention rules are unchanged.
+v0.8.0
+Checkpoint 8 - Horde Night rewards
+- Added 5 XP per credited Horde Zombie kill and 100 XP for surviving your completed horde by default.
+- Hybrid rewards horde kills once, without also paying ordinary zombie XP.
+- Casualties, disconnected players and unrelated players cannot claim horde completion rewards.
+- Added persistent protection against repeated rewards after reconnects, respawns and restarts.
+- Requires OMH: Horde Night 0.6.15 or newer for horde rewards. Standalone progression remains available.

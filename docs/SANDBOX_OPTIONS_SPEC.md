@@ -1,8 +1,8 @@
 # Sandbox options specification
 
-As of v0.7.0, settings are grouped under **Trait Costs** (multipliers and removal toggle), **Level Rewards** (Tokens per Level and Prestige Level Interval), **XP Rewards** (mode and applicable rates), and **Player Kill Rules** (cooldown, shown in Kills/Hybrid). The latter section follows all XP rates. These headers appear in solo setup, host setup and the live admin menu. **Prestige** now contains Prestige Retention Percentage.
+As of v0.8.0, settings are grouped under **Trait Costs** (multipliers and removal toggle), **Level Rewards** (Tokens per Level and Prestige Level Interval), **XP Rewards** (mode and applicable rates), and **Player Kill Rules** (cooldown, shown in Kills/Hybrid). The latter section follows all XP rates. These headers appear in solo setup, host setup and the live admin menu. **Prestige** now contains Prestige Retention Percentage.
 
-Positive Cost Multiplier, Negative Cost Multiplier and Allow Negative Trait Removal are implemented in v0.4.0; reward modes and standalone sources are implemented in v0.6.0; Prestige creation bonuses are implemented in v0.7.0; horde XP remains Checkpoint 8. Reward XP defaults below are approved. Caps and the complete official preset remain undecided. The owner has specified the initial 0.50 score multiplier and 30% prestige retention default.
+Positive Cost Multiplier, Negative Cost Multiplier and Allow Negative Trait Removal are implemented in v0.4.0; reward modes and standalone sources are implemented in v0.6.0; Prestige creation bonuses are implemented in v0.7.0; horde XP is implemented in v0.8.0 with Horde Night 0.6.15. Reward XP defaults below are approved. Caps and the complete official preset remain undecided. The owner has specified the initial 0.50 score multiplier and 30% prestige retention default.
 
 | Setting | Behavior / default | Status |
 |---|---|---|
@@ -13,8 +13,8 @@ Positive Cost Multiplier, Negative Cost Multiplier and Allow Negative Trait Remo
 | Player Kill Cooldown | Default 2 in-game days before killing the same player can reward XP again. | Implemented with persistent directional server-account pairs; no shared faction includes factionless players. |
 | Day Survived XP | Default 0 XP for a qualifying survived day. | Implemented in v0.6.0 using native seasonal dawn/dusk; full connected periods only. |
 | Night Survived XP | Default 25 XP for a qualifying survived night. | Implemented in v0.6.0 using native seasonal dawn/dusk; full connected periods only. |
-| Horde Zombie XP | Default 5 XP per qualifying OMH horde-zombie kill. Visible in Horde Night and Hybrid. | Value approved; implementation Checkpoint 8. |
-| Horde Survived XP | Default 100 XP upon the player's horde completion while connected and not a casualty. Visible in Horde Night and Hybrid. | Value and eligibility approved; implementation Checkpoint 8. |
+| Horde Zombie XP | Default 5 XP per qualifying OMH horde-zombie kill. Visible in Horde Night and Hybrid. | Implemented in v0.8.0; core credit only, no Hybrid overlap. |
+| Horde Survived XP | Default 100 XP upon the player's horde completion while connected and not a casualty. Visible in Horde Night and Hybrid. | Implemented in v0.8.0; connected eligible survivors, with persistent replay protection. |
 | XP per Trait Level | Rounded to nearest 50: `100 + 35n + (65/19)nÂ²`, where n is the current level. Level 1 costs 100 and Level 20 costs 2,000. Each earned level grants one Token. | Approved and implemented in Checkpoint 5; no new sandbox control. |
 | Prestige cadence | One Prestige Point at displayed Trait Levels 5, 10, 15 and subsequent multiples of five, independent of Token count. | Configurable Prestige Level Interval, default 5, implemented in v0.6.4. |
 | Prestige Retention Percentage | Retain 30% of the previous available prestige after the next character receives its full creation bonus and enters the world. Repeats once per life transition; round to nearest whole point with no minimum-one guarantee. | Implemented in v0.7.0; integer 0-100, default 30, half-up rounding, no minimum. |
