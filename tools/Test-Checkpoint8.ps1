@@ -12,7 +12,7 @@ if ($LASTEXITCODE -ne 0) { throw 'Could not compile Kahlua runner.' }
 $stages = @("_=$GamePath\stdlib.lua", "_=$tests\phase1_setup.lua", "_=$tests\checkpoint8_setup.lua")
 foreach ($name in @('Extensions')) { $stages += "OMH_${name}=$core\shared\OMH_${name}.lua" }
 foreach ($name in @('ExtensionRuntime','Phase4Ownership')) { $stages += "OMH_${name}=$core\server\OMH_${name}.lua" }
-foreach ($name in @('Bootstrap','RewardsConfig','Catalog','Effects','Progression','Prestige')) {
+foreach ($name in @('Bootstrap','RewardsConfig','Physical','Catalog','Effects','Progression','Prestige')) {
     $stages += "OMHTS_${name}=$lua\shared\OMHTS_${name}.lua"
 }
 foreach ($name in @('State','Creation','Shop','Rewards','Authority','HordeIntegration')) {

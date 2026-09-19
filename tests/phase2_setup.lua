@@ -78,6 +78,7 @@ Perks = { MAX = "MAX", None = "None" }
 local fixturePerks = {}
 function perkFixture(id)
     local perk = setmetatable({ id = id }, { __tostring = function(self) return self.id end })
+    function perk:getName() return self.id end
     function perk:getTotalXpForLevel(level) return level * level * 100 end
     fixturePerks[id] = perk
     return perk
@@ -85,6 +86,7 @@ end
 function Perks.FromString(id) return fixturePerks[id] or Perks.MAX end
 perkFixture("Cooking")
 perkFixture("Fitness")
+perkFixture("Strength")
 testOptions["OMHTraitShop.NegativeCostMultiplier"] = 2
 testOptions["OMHTraitShop.AllowNegativeRemoval"] = false
 local basicShopPlayer = player
@@ -121,4 +123,8 @@ function player(name, slot, characterId, hours)
         }
     end
     return value
+end
+
+function addXpNoMultiplier(player, perk, amount)
+    check(isServer() and amount == 0, "server refreshes native XP grant baseline without duplicate award")
 end

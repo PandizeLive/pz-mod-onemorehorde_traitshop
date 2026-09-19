@@ -27,6 +27,7 @@ $stages = @(
     "_=$tests\phase2_setup.lua",
     "OMHTS_Bootstrap=$lua\shared\OMHTS_Bootstrap.lua",
     "OMHTS_RewardsConfig=$lua\shared\OMHTS_RewardsConfig.lua",
+    "OMHTS_Physical=$lua\shared\OMHTS_Physical.lua",
     "OMHTS_Catalog=$lua\shared\OMHTS_Catalog.lua",
     "OMHTS_Effects=$lua\shared\OMHTS_Effects.lua",
     "OMHTS_Progression=$lua\shared\OMHTS_Progression.lua",
@@ -49,7 +50,8 @@ $stages = @(
     "_=$tests\phase2_catalog.lua",
     "OMHTS_ShopWindow=$lua\client\OMHTS_ShopWindow.lua",
     "_=$lua\client\OMHTS_HealthButton.lua",
-    "_=$tests\phase2_ui.lua"
+    "_=$tests\phase2_ui.lua",
+    "_=$tests\physical_traits.lua"
 )
 & $java --enable-native-access=ALL-UNNAMED -cp "$jar;$output" KahluaBehaviorCheck @stages | Tee-Object -FilePath (Join-Path $output 'behavior.log')
 if ($LASTEXITCODE -ne 0) { throw 'Phase 2 behavior check failed.' }

@@ -3,6 +3,7 @@ local Creation = require("OMHTS_Creation")
 local Catalog = require("OMHTS_Catalog")
 local Shop = require("OMHTS_Shop")
 local Effects = require("OMHTS_Effects")
+local Physical = require("OMHTS_Physical")
 
 local function verifyNativeShop()
     Translator.loadFiles()
@@ -21,7 +22,8 @@ local function verifyNativeShop()
         local definition = definitions:get(index)
         if Catalog.supported(definition) then
             supported = supported + 1
-            if not definition:getXpBoosts():isEmpty() and definition:getGrantedTraits():isEmpty() then
+            if not definition:getXpBoosts():isEmpty() and definition:getGrantedTraits():isEmpty()
+                and not Physical.stat(tostring(definition:getType())) then
                 skillTrait = definition
             end
             if not definition:getGrantedRecipes():isEmpty() then

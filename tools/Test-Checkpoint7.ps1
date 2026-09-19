@@ -10,7 +10,7 @@ New-Item -ItemType Directory -Path $output -Force | Out-Null
 & javac.exe -d $output (Join-Path $PSScriptRoot 'KahluaBehaviorCheck.java')
 if ($LASTEXITCODE -ne 0) { throw 'Could not compile Kahlua runner.' }
 $stages = @("_=$GamePath\stdlib.lua", "_=$tests\phase1_setup.lua", "_=$tests\phase2_setup.lua", "OMH_ModSettingsIntegrity=$policy")
-foreach ($name in @('Bootstrap','RewardsConfig','Catalog','Effects','Progression','Prestige')) {
+foreach ($name in @('Bootstrap','RewardsConfig','Physical','Catalog','Effects','Progression','Prestige')) {
     $stages += "OMHTS_${name}=$lua\shared\OMHTS_${name}.lua"
 }
 foreach ($name in @('State','Creation')) {

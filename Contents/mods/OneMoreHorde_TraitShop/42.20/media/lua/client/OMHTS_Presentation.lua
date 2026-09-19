@@ -1,6 +1,7 @@
 if isServer() then return end
 
 local Catalog = require("OMHTS_Catalog")
+local Physical = require("OMHTS_Physical")
 local Presentation = {}
 Presentation.GOLD = { r = 231 / 255, g = 180 / 255, b = 40 / 255, a = 1 }
 Presentation.GREEN = { r = 114 / 255, g = 184 / 255, b = 109 / 255, a = 1 }
@@ -83,6 +84,10 @@ function Presentation.ownership(player, state)
         ids[#ids + 1] = id
     end
     table.sort(ids)
+    for stat in pairs(Physical.families) do
+        local perk = Perks.FromString(stat)
+        ids[#ids + 1] = stat .. ":" .. player:getXp():getXP(perk)
+    end
     return owned, table.concat(ids, "|")
 end
 
@@ -194,6 +199,51 @@ function Presentation.fitName(text, width)
         if manager:MeasureStringX(UIFont.Small, shortened) <= width then return shortened end
     end
     return "..."
+end
+
+---@param player IsoPlayer
+---@param row table
+---@param rows table
+---@param cart table
+---@return string
+function Presentation.physicalTooltip(player, row, rows, cart)
+    local tooltip = row.name .. "\n" .. row.description
+    local stat = Physical.stat(row.id)
+    if not stat or row.group == "positive" or row.group == "other"
+        or row.previewStatus == "conflict" then return tooltip end
+    if row.status == "already_purchased" or row.status == "no_effect" or row.status == "nutrition" then
+        return tooltip .. "\n\n" .. getText("UI_OMHTS_Status_" .. row.status)
+    end
+    local definitions = {}
+    local changes = {}
+    for id in pairs(cart) do
+        local selected = rows[id]
+        if selected then
+            definitions[id] = selected.definition
+            changes[id] = selected.group == "negative"
+        end
+    end
+    definitions[row.id] = row.definition
+    changes[row.id] = row.group == "negative"
+    local plans, reason = Physical.plan(player, definitions, changes)
+    if not plans then return tooltip .. "\n\n" .. getText("UI_OMHTS_Status_" .. reason) end
+    local preview = plans[stat]
+    if not preview then return tooltip end
+    local perk = Perks.FromString(stat)
+    tooltip = tooltip .. "\n\n" .. getText("UI_OMHTS_PhysicalPreview", perk:getName(),
+        tostring(preview.before), tostring(preview.after))
+    if preview.beforeTrait ~= preview.afterTrait then
+        local before = Catalog.definition(preview.beforeTrait)
+        local after = Catalog.definition(preview.afterTrait)
+        if before and after then
+            tooltip = tooltip .. "\n" .. getText("UI_OMHTS_PhysicalReplaces", before:getLabel(), after:getLabel())
+        elseif before then
+            tooltip = tooltip .. "\n" .. getText("UI_OMHTS_PhysicalRemoves", before:getLabel())
+        elseif after then
+            tooltip = tooltip .. "\n" .. getText("UI_OMHTS_PhysicalGains", after:getLabel())
+        end
+    end
+    return tooltip
 end
 
 return Presentation

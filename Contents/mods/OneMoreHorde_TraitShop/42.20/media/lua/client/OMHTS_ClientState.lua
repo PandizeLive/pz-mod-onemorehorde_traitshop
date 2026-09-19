@@ -13,9 +13,9 @@ local effectLives = {}
 local nextNonce = 0
 local nextRequest = 0
 local counters = { "lifeId", "revision", "tokens", "level", "retainedPrestige", "earnedPrestige", "pendingPrestige", "startingTokens" }
-local statuses = { available = true, owned = true, conflict = true, dead = true, loading = true,
+local statuses = { no_effect = true, nutrition = true, asleep = true, already_purchased = true, available = true, owned = true, conflict = true, dead = true, loading = true,
     funds = true, unsupported = true, settings = true, limit = true, absent = true, body = true, multiplayer = true, grants = true, granted = true, excluded = true, removal_disabled = true }
-local results = { purchased = true, busy = true, invalid = true, dead = true, stale = true, price_changed = true,
+local results = { no_effect = true, nutrition = true, asleep = true, already_purchased = true, purchased = true, busy = true, invalid = true, dead = true, stale = true, price_changed = true,
     owned = true, conflict = true, funds = true, unsupported = true, settings = true, loading = true, limit = true, absent = true, body = true, multiplayer = true, grants = true, granted = true, excluded = true, removal_disabled = true }
 
 ---@param playerNum number

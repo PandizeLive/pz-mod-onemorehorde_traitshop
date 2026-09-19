@@ -1,3 +1,4 @@
+local Physical = require("OMHTS_Physical")
 local Catalog = {}
 Catalog.MAX_PURCHASE_TRAITS = 192
 Catalog.MAX_CART = 64
@@ -7,9 +8,6 @@ local registrySize = -1
 local exclusions = {
     ["base:emaciated"] = "body", ["base:very underweight"] = "body",
     ["base:underweight"] = "body", ["base:overweight"] = "body", ["base:obese"] = "body",
-    ["base:fit"] = "body", ["base:athletic"] = "body", ["base:unfit"] = "body",
-    ["base:out of shape"] = "body", ["base:stout"] = "body", ["base:strong"] = "body",
-    ["base:weak"] = "body", ["base:feeble"] = "body",
 }
 
 ---@nodiscard
@@ -96,7 +94,8 @@ function Catalog.exclusion(definition)
     local boosts = transformIntoKahluaTable(definition:getXpBoosts())
     for perk, value in pairs(boosts) do
         value = tonumber(tostring(value))
-        if tostring(perk) == "Fitness" or tostring(perk) == "Strength" then return "body" end
+        if (tostring(perk) == "Fitness" or tostring(perk) == "Strength")
+            and Physical.stat(tostring(definition:getType())) ~= tostring(perk) then return "body" end
         if type(value) ~= "number" or value ~= math.floor(value) or value < -10 or value > 10 then
             return "unsupported"
         end

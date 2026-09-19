@@ -26,6 +26,7 @@ $stages = @(
     "_=$tests\phase1_setup.lua",
     "OMHTS_Bootstrap=$lua\shared\OMHTS_Bootstrap.lua",
     "OMHTS_RewardsConfig=$lua\shared\OMHTS_RewardsConfig.lua",
+    "OMHTS_Physical=$lua\shared\OMHTS_Physical.lua",
     "OMHTS_Catalog=$lua\shared\OMHTS_Catalog.lua",
     "OMHTS_Effects=$lua\shared\OMHTS_Effects.lua",
     "OMHTS_Progression=$lua\shared\OMHTS_Progression.lua",

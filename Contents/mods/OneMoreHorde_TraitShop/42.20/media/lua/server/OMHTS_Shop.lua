@@ -4,6 +4,7 @@ local State = require("OMHTS_State")
 local Catalog = require("OMHTS_Catalog")
 local Effects = require("OMHTS_Effects")
 local RewardsConfig = require("OMHTS_RewardsConfig")
+local Physical = require("OMHTS_Physical")
 local Shop = {}
 
 ---@param player IsoPlayer
@@ -57,6 +58,9 @@ function Shop.offer(player, record, id)
     if not price then return "settings", 0 end
     local removing = definition:getCost() < 0
     local owned = player:hasTrait(definition:getType())
+    if not removing and not owned and record.life.purchases[id] and Physical.stat(id) then
+        return "already_purchased", price
+    end
     if not removing and (owned or record.life.purchases[id] or record.life.effects.traits[id] == true) then
         return "owned", price
     end
@@ -71,6 +75,10 @@ function Shop.offer(player, record, id)
     if record.life.status ~= "alive" or player:isDead() then return "dead", price end
     if record.life.creation.status == "pending" then return "loading", price end
     if not removing and Catalog.conflicts(player, definition) then return "conflict", price end
+    if Physical.stat(id) then
+        local preview, physicalReason = Physical.preview(player, definition)
+        if not preview then return physicalReason, price end
+    end
     if record.life.tokens < price then return "funds", price end
     return "available", price
 end
@@ -104,7 +112,8 @@ function Shop.snapshot(player, record)
     for _, price in pairs(record.life.removals) do
         snapshot.spentTokens = snapshot.spentTokens + price
     end
-    snapshot.effects = { traits = {}, recipes = {}, perks = Effects.copy(record.life.effects).perks }
+    local effects = Effects.copy(record.life.effects)
+    snapshot.effects = { traits = {}, recipes = {}, perks = effects.perks, physical = effects.physical }
     if record.life.effects.traits["base:smoker"] == false then
         snapshot.effects.traits["base:smoker"] = false
     end

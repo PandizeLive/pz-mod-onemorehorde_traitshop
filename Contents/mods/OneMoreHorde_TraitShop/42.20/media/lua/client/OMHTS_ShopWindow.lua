@@ -8,6 +8,7 @@ require("ISUI/ISTextEntryBox")
 require("OMHTS_ClientState")
 local TraitShop = require("OMHTS_Bootstrap")
 local Catalog = require("OMHTS_Catalog")
+local Physical = require("OMHTS_Physical")
 local Presentation = require("OMHTS_Presentation")
 local Progression = require("OMHTS_Progression")
 local GOLD = Presentation.GOLD
@@ -397,7 +398,7 @@ function OMHTS_ShopWindow:updateCart()
     table.sort(rows, Presentation.cheapestFirst)
     for index = 1, #rows do
         local row = rows[index]
-        self.receipt:addItem(row.name, row)
+        self.receipt:addItem(row.name, row).tooltip = Presentation.physicalTooltip(self.player, row, self.allRows, self.cart)
         if row.group == "catalog" then
             for id, other in pairs(final) do
                 if id ~= row.id and (row.definition:isMutuallyExclusive(other.definition)
@@ -406,6 +407,17 @@ function OMHTS_ShopWindow:updateCart()
                 end
             end
         end
+    end
+    local definitions = {}
+    local changes = {}
+    for index = 1, #rows do
+        local row = rows[index]
+        definitions[row.id] = row.definition
+        changes[row.id] = row.group == "negative"
+    end
+    local physical, physicalReason = Physical.plan(self.player, definitions, changes)
+    if not physical then
+        reason = physicalReason
     end
     if #rows > Catalog.MAX_CART then
         reason = "limit"
@@ -462,7 +474,7 @@ function OMHTS_ShopWindow:refreshLists()
         list:clear()
         for rowIndex = 1, #rows do
             local row = rows[rowIndex]
-            list:addItem(row.name, row).tooltip = row.tooltip
+            list:addItem(row.name, row).tooltip = Presentation.physicalTooltip(self.player, row, self.allRows, self.cart)
         end
         list:setYScroll(math.max(math.min(0, list.height - #rows * list.itemheight), math.min(0, scroll)))
     end

@@ -115,3 +115,7 @@ Use the owner's `levelup.wav` for normal level-ups and `levelup_prestige.wav` in
 ## Checkpoint 7 approval and implementation (2026-09-18)
 
 The owner approved full CP7 after the scope recap: creation bonus, unused-point conversion, 30% retention, half-up rounding and one-time persistence. v0.7.0 implements that scope; see CHECKPOINT_7.md for the pre-spawn transport and old-save preview limits. No external publication is authorized by this implementation approval.
+
+## Physical trait follow-up approval (2026-09-19)
+
+The owner approved stat-based purchases of native Strength/Fitness traits after confirming character-creator mutual exclusions. Keep those exclusions; explicitly remove an eligible conflicting negative in the cart rather than silently replacing it. Preserve existing XP, cap at 10, reject no-benefit purchases, preview resulting stats/traits, and let vanilla choose the final physical trait. Removal must actually eliminate the penalty. v0.8.1 implements this follow-up; it is not Checkpoint 9 approval.

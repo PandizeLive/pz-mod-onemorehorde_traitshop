@@ -1,4 +1,5 @@
 local Catalog = require("OMHTS_Catalog")
+local Physical = require("OMHTS_Physical")
 local Effects = {}
 
 ---@nodiscard
@@ -14,7 +15,8 @@ end
 ---@return boolean
 function Effects.valid(effects)
     if type(effects) ~= "table" or type(effects.traits) ~= "table"
-        or type(effects.recipes) ~= "table" or type(effects.perks) ~= "table" then return false end
+        or type(effects.recipes) ~= "table" or type(effects.perks) ~= "table"
+        or not Physical.valid(effects.physical) then return false end
     local count = 0
     for id, enabled in pairs(effects.traits) do
         if not Catalog.validId(id) or type(enabled) ~= "boolean" then return false end
@@ -41,7 +43,7 @@ end
 ---@param effects table
 ---@return table
 function Effects.copy(effects)
-    local copy = { traits = {}, recipes = {}, perks = {} }
+    local copy = { traits = {}, recipes = {}, perks = {}, physical = Physical.copy(effects.physical) }
     for id, enabled in pairs(effects.traits) do
         copy.traits[id] = enabled
     end
@@ -104,7 +106,7 @@ function Effects.apply(player, effects)
             end
         end
     end
-    return changed
+    return Physical.apply(player, effects.physical) or changed
 end
 
 ---@param player IsoPlayer
@@ -166,29 +168,61 @@ function Effects.plan(player, previous, changes)
             effects.recipes[recipes:get(recipeIndex)] = true
         end
     end
+    local definitions = {}
+    local physicalChanges = {}
+    for id, removing in pairs(changes) do
+        definitions[id] = Catalog.definition(id)
+        physicalChanges[id] = removing
+    end
+    for index = 1, #additions do
+        local definition = additions[index]
+        local id = tostring(definition:getType())
+        definitions[id] = definition
+        physicalChanges[id] = false
+    end
+    for id in pairs(physicalChanges) do
+        if Physical.stat(id) then
+            effects.traits[id] = nil
+        end
+    end
+    local physical, physicalReason = Physical.plan(player, definitions, physicalChanges)
+    if not physical then return nil, physicalReason end
+    for stat, preview in pairs(physical) do
+        local serial = 1
+        if effects.physical[stat] then
+            serial = effects.physical[stat].serial + 1
+        end
+        effects.physical[stat] = { xp = preview.xp, serial = serial, applied = false }
+    end
     local deltas = {}
     for index = 1, #additions do
         local boosts = transformIntoKahluaTable(additions[index]:getXpBoosts())
+        local physicalStat = Physical.stat(tostring(additions[index]:getType()))
         for perk, value in pairs(boosts) do
-            value = tonumber(tostring(value))
             local id = tostring(perk)
-            if not deltas[id] then
-                deltas[id] = { perk = perk, levels = 0, boost = 0 }
+            if id ~= physicalStat then
+                value = tonumber(tostring(value))
+                if not deltas[id] then
+                    deltas[id] = { perk = perk, levels = 0, boost = 0 }
+                end
+                deltas[id].levels = deltas[id].levels + math.max(0, value)
+                deltas[id].boost = deltas[id].boost + value
             end
-            deltas[id].levels = deltas[id].levels + math.max(0, value)
-            deltas[id].boost = deltas[id].boost + value
         end
     end
     for id, removing in pairs(changes) do
         if removing then
             local boosts = transformIntoKahluaTable(Catalog.definition(id):getXpBoosts())
+            local physicalStat = Physical.stat(id)
             for perk, value in pairs(boosts) do
-                value = tonumber(tostring(value))
                 local key = tostring(perk)
-                if not deltas[key] then
-                    deltas[key] = { perk = perk, levels = 0, boost = 0 }
+                if key ~= physicalStat then
+                    value = tonumber(tostring(value))
+                    if not deltas[key] then
+                        deltas[key] = { perk = perk, levels = 0, boost = 0 }
+                    end
+                    deltas[key].boost = deltas[key].boost - value
                 end
-                deltas[key].boost = deltas[key].boost - value
             end
         end
     end

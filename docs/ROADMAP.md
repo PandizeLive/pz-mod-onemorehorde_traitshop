@@ -2,7 +2,7 @@
 
 This is the active phase/checkpoint roadmap. It organizes the approved product direction; creating the roadmap does not authorize implementation or publication.
 
-**Current status:** v0.8.0 implements Checkpoint 8 with Horde Night 0.6.15. CP7's corrected solo test was reported passed; its live dedicated creation check is combined with the CP8 two-player test. Implementation and automated checks do not imply Workshop publication or full multiplayer acceptance. See [Checkpoint 8](CHECKPOINT_8.md) and [dedicated test](TEST_CHECKPOINT_8.md).
+**Current status:** v0.8.1 adds the approved physical-trait follow-up to Checkpoint 8 (Horde Night 0.6.15). CP8 local behavior was reported passed; see [physical patch](PATCH_v0.8.1.md) and [short solo test](TEST_v0.8.1.md). CP7's corrected solo test was reported passed; its live dedicated creation check is combined with the CP8 two-player test. Implementation and automated checks do not imply Workshop publication or full multiplayer acceptance. See [Checkpoint 8](CHECKPOINT_8.md) and [dedicated test](TEST_CHECKPOINT_8.md).
 
 The intended full release still includes progression, prestige, Horde Night rewards and official scoring. Common negative removal now arrives early, disabled by default; its official policy remains undecided.
 ## Checkpoint workflow

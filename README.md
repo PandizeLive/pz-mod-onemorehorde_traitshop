@@ -2,13 +2,15 @@
 
 Standalone trait progression and purchasing addon for Project Zomboid Build 42, with optional OMH: Horde Night integration.
 
-**Status: v0.8.0 implements Checkpoint 8: Horde Night XP rewards.** With Horde Night 0.6.15 or newer, earn 5 XP per credited horde kill and 100 XP for surviving your completed horde. Hybrid never pays ordinary XP for the same horde kill. Standalone kills/survival, the shop and Prestige remain available without Horde Night.
+**Status: v0.8.1 adds physical trait purchases/removals; Checkpoint 8 Horde Night XP remains implemented.** With Horde Night 0.6.15 or newer, earn 5 XP per credited horde kill and 100 XP for surviving your completed horde. Hybrid never pays ordinary XP for the same horde kill. Standalone kills/survival, the shop and Prestige remain available without Horde Night.
 
-CP7's corrected solo test was reported passed. The combined dedicated reward and character-creation test remains pending, after both matching Workshop versions are published. Full official-lock/history and website acceptance remain later integration work. Existing Workshop item 3803035618 is unchanged; nothing is automatically uploaded.
+CP7's corrected solo test and CP8 local behavior were reported passed. The physical-trait follow-up awaits owner testing. The combined dedicated reward and character-creation test remains pending, after both matching Workshop versions are published. Full official-lock/history and website acceptance remain later integration work. Existing Workshop item 3803035618 is unchanged; nothing is automatically uploaded.
 
 Characters start at Level 1, with 0 / 100 XP toward Level 2. By default, each earned level grants one Token and displayed Levels 5, 10, 15 and subsequent multiples of five grant one Prestige Point; both rewards are configurable. Level-ups play the supplied normal or prestige sound and show gold overhead text. Your next character receives the full Prestige bonus, then retains 30% by default after entering the world.
 
 ## Documentation
+
+- [Physical traits patch](docs/PATCH_v0.8.1.md) and [six-step solo test](docs/TEST_v0.8.1.md).
 
 - [Checkpoint 8](docs/CHECKPOINT_8.md): authoritative horde rewards, verification and limits.
 - [Combined dedicated test](docs/TEST_CHECKPOINT_8.md): six steps after publishing both matching versions.
@@ -22,7 +24,7 @@ Characters start at Level 1, with 0 / 100 XP toward Level 2. By default, each ea
 - [v0.6.3.1 fixes](docs/PATCH_v0.6.3.1.md): prestige, audio, GIF preview and integration test.
 - [Checkpoint 6 report](docs/CHECKPOINT_6.md): reward rules, seasonal survival, cooldowns and source evidence.
 - [Current dedicated test](docs/TEST_CHECKPOINT_6.md): mode controls, kill/survival rewards, PvP and persistence.
-- [Roadmap](docs/ROADMAP.md): six phases and sequential Checkpoints 1-14. Checkpoint 7 is implemented; live creation acceptance and Checkpoint 8 horde XP remain. Common removal was brought forward into v0.4.0.
+- [Roadmap](docs/ROADMAP.md): six phases and sequential Checkpoints 1-14. Checkpoints 7 and 8 are implemented; combined dedicated acceptance remains. Common removal was brought forward into v0.4.0.
 - [Phase 2 report](docs/PHASE_2.md): shop, catalog, starting Tokens, purchase recovery, source evidence and verification limits.
 - [v0.4.3 patch](docs/PATCH_v0.4.3.md): stable Purchase colors under native button refreshes.
 - [v0.4.2 patch](docs/PATCH_v0.4.2.md): scroll-aware row rendering, action layout/colors and XP tooltip.
