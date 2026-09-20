@@ -1,6 +1,7 @@
 local State = require("OMHTS_State")
 local Authority = require("OMHTS_Authority")
 local Prestige = require("OMHTS_Prestige")
+local Bootstrap = require("OMHTS_CreationBootstrap")
 
 local function nativePlayer(id)
     local descriptor = SurvivorFactory.CreateSurvivor()
@@ -14,6 +15,13 @@ end
 
 local function verifyPrestige()
     local store = ModData.getOrCreate("OMHTraitShop_State_v1")
+    local system = SGlobalObjects.getSystemByName(Prestige.SYSTEM)
+    assert(system and system:getObjectCount() == 0, "creation connection system not registered")
+    local initial = system:getInitialStateForClient()
+    assert(initial.schema == 1 and initial.ready and type(initial.bonuses) == "table",
+        "native connection callback cannot supply initialized authority")
+    system:getModData().OnClientCommand(system:getModData(), "fakePurchase", nil, {bonus=999})
+    assert(Bootstrap.initialState().bonuses["fakePurchase"] == nil, "bootstrap accepted a client mutation")
     local probe = ModData.getOrCreate("OMHTS_Checkpoint7Probe")
     local key = "user:13:PrestigeProbe:0"
     local player
@@ -26,10 +34,12 @@ local function verifyPrestige()
         assert(State.settleDeath(record, record.life.id))
         Prestige.publish(key, record)
         assert(ModData.get(Prestige.tag(key)).bonus == 3)
+        assert(system:getInitialStateForClient().bonuses[key] == 3, "death absent from connection snapshot")
         probe.stage = 1
         print("[OMHTS TEST] disk stage 1 ready")
     elseif probe.stage == 1 then
         assert(store.accounts[key].prestige.pending == 3)
+        assert(initial.bonuses[key] == 3, "reconnect preview lost on native restart")
         assert(ModData.get(Prestige.tag(key)).bonus == 3, "creation preview lost on server restart")
         player = nativePlayer(7702)
         player:getCharacterTraits():add(CharacterTrait.FAST_READER)
@@ -50,6 +60,7 @@ local function verifyPrestige()
         player:setHoursSurvived(0.2)
         local state = Authority.getState(player)
         assert(state.tokens == 9 and state.retainedPrestige == 1 and state.creationPrestige == 3)
+        assert(initial.bonuses[key] == 1, "consumed inheritance not reflected on next reconnect")
         local record = store.accounts[key]
         assert(State.settleDeath(record, record.life.id))
         local replacement = nativePlayer(7703)

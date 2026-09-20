@@ -2,7 +2,7 @@
 
 Standalone trait progression and purchasing addon for Project Zomboid Build 42, with optional OMH: Horde Night integration.
 
-**Status: v0.8.1 adds physical trait purchases/removals; Checkpoint 8 Horde Night XP remains implemented.** With Horde Night 0.6.15 or newer, earn 5 XP per credited horde kill and 100 XP for surviving your completed horde. Hybrid never pays ordinary XP for the same horde kill. Standalone kills/survival, the shop and Prestige remain available without Horde Night.
+**Status: v0.8.1.1 fixes multiplayer character creation stuck on Loading Prestige; v0.8.1 physical traits and Checkpoint 8 Horde Night XP remain implemented.** With Horde Night 0.6.15 or newer, earn 5 XP per credited horde kill and 100 XP for surviving your completed horde. Hybrid never pays ordinary XP for the same horde kill. Standalone kills/survival, the shop and Prestige remain available without Horde Night.
 
 CP7's corrected solo test and CP8 local behavior were reported passed. The physical-trait follow-up awaits owner testing. The combined dedicated reward and character-creation test remains pending, after both matching Workshop versions are published. Full official-lock/history and website acceptance remain later integration work. Existing Workshop item 3803035618 is unchanged; nothing is automatically uploaded.
 
@@ -10,6 +10,7 @@ Characters start at Level 1, with 0 / 100 XP toward Level 2. By default, each ea
 
 ## Documentation
 
+- [Prestige loading correction](docs/PATCH_v0.8.1.1.md) and [six-step dedicated test](docs/TEST_v0.8.1.1.md).
 - [Physical traits patch](docs/PATCH_v0.8.1.md) and [six-step solo test](docs/TEST_v0.8.1.md).
 
 - [Checkpoint 8](docs/CHECKPOINT_8.md): authoritative horde rewards, verification and limits.

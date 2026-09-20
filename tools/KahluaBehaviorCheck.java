@@ -45,6 +45,42 @@ public final class KahluaBehaviorCheck {
             return 1;
         });
         set.invoke(env, "nativeRoundTrip", roundTrip);
+        Object creationRoundTrip = java.lang.reflect.Proxy.newProxyInstance(functionType.getClassLoader(), new Class<?>[] {functionType}, (proxy, method, values) -> {
+            if (!method.getName().equals("call")) return null;
+            Object frame = values[0];
+            Object callback = frame.getClass().getMethod("get", int.class).invoke(frame, 0);
+            Class<?> manager = Class.forName("zombie.Lua.LuaManager");
+            manager.getField("thread").set(null, thread);
+            manager.getField("env").set(null, env);
+            Class<?> server = Class.forName("zombie.globalObjects.SGlobalObjects");
+            Class<?> client = Class.forName("zombie.globalObjects.CGlobalObjects");
+            Class<?> random = Class.forName("zombie.core.random.RandStandard");
+            random.getMethod("init").invoke(random.getField("INSTANCE").get(null));
+            Class<?> gameClient = Class.forName("zombie.network.GameClient");
+            if (gameClient.getField("playerConnectSent").getBoolean(gameClient.getField("instance").get(null))) throw new AssertionError("Already spawned");
+            client.getMethod("Reset").invoke(null);
+            Object system = server.getMethod("getSystemByName", String.class).invoke(null, "OMHTS_Creation");
+            if (system == null) system = server.getMethod("newSystem", String.class).invoke(null, "OMHTS_Creation");
+            Object data = system.getClass().getMethod("getModData").invoke(system);
+            set.invoke(data, "getInitialStateForClient", callback);
+            java.nio.ByteBuffer bytes = java.nio.ByteBuffer.allocate(1024 * 1024);
+            Class<?> writerType = Class.forName("zombie.core.network.ByteBufferWriter");
+            Class<?> readerType = Class.forName("zombie.core.network.ByteBufferReader");
+            Object writer = writerType.getConstructor(java.nio.ByteBuffer.class).newInstance(bytes);
+            server.getMethod("saveInitialStateForClient", writerType).invoke(null, writer);
+            int size = bytes.position();
+            bytes.flip();
+            Object reader = readerType.getConstructor(java.nio.ByteBuffer.class).newInstance(bytes);
+            client.getMethod("loadInitialState", readerType).invoke(null, reader);
+            Object restored = client.getMethod("registerSystem", String.class).invoke(null, "OMHTS_Creation");
+            Object result = restored.getClass().getMethod("getModData").invoke(restored);
+            if (bytes.hasRemaining()) throw new AssertionError("Initial state was not fully consumed");
+            if (gameClient.getField("playerConnectSent").getBoolean(gameClient.getField("instance").get(null))) throw new AssertionError("Test connected a player");
+            System.out.println("Native creation initial state: " + size + " bytes; playerConnectSent=false");
+            frame.getClass().getMethod("push", Object.class).invoke(frame, result);
+            return 1;
+        });
+        set.invoke(env, "nativeCreationRoundTrip", creationRoundTrip);
         for (String arg : args) {
             int split = arg.indexOf('=');
             String name = arg.substring(0, split);
@@ -84,5 +120,7 @@ public final class KahluaBehaviorCheck {
         Object output = get.invoke(env, "testOutput");
         if (output instanceof String) System.out.println(output);
         System.out.println("Kahlua behavior assertions passed");
+        // Native GameClient initialization creates background game services.
+        System.exit(0);
     }
 }

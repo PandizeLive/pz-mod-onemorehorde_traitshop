@@ -108,6 +108,8 @@ The intended full release still includes progression, prestige, Horde Night rewa
 
 **Implemented in v0.7.0:** creation preview, authoritative budget/settlement, retained Prestige, menu persistence, cancellation/replay protections and inherited-origin tracking. [Source evidence and limits](CHECKPOINT_7.md). Live creation UI and dedicated pre-spawn handshake still require acceptance; use the [short solo test](TEST_CHECKPOINT_7.md) first.
 
+**Correction v0.8.1.1:** dedicated first-join logs proved ordinary ModData responses cannot reach creation before spawning. The new native connection bootstrap supplies the creation bonus before entry; existing respawn refresh and settlement are preserved. See [patch evidence](PATCH_v0.8.1.1.md) and [six-step dedicated regression](TEST_v0.8.1.1.md). Connected-client acceptance remains pending.
+
 **Pass when:** 3 prestige gives +3 creation points then 1 retained point at starting Trait Level 1; without new earnings, consecutive lives demonstrate 3 -> 1 -> 0. Spending Tokens never changes this. Canceled creation and repeated load callbacks do not grant twice or decay twice. Verify the sequence in singleplayer and one-player dedicated, with two-player account isolation where needed.
 
 ## Phase 4 - Horde Night integration

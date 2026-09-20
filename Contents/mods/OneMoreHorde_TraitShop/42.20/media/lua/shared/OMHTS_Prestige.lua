@@ -1,6 +1,7 @@
 local Prestige = {}
 local written = {}
 Prestige.PREFIX = "OMHTS_Creation_v1_"
+Prestige.SYSTEM = "OMHTS_Creation"
 
 ---@nodiscard
 ---@param value any

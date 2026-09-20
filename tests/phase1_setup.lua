@@ -84,6 +84,8 @@ function event()
     }
 end
 Events = {}
+Events.OnSGlobalObjectSystemInit = event()
+Events.OnConnected = event()
 local names = { "OnInitGlobalModData", "OnNewGame", "OnCreatePlayer", "OnCharacterDeath", "OnZombieDead", "OnZombieCreate", "OnTick", "OnSave", "OnClientCommand", "OnDisconnect", "OnGameStart", "OnServerCommand" }
 for index = 1, #names do Events[names[index]] = event() end
 ModData = {}

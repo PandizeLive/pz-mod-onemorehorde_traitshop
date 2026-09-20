@@ -1,7 +1,6 @@
-v0.8.1
-Physical trait purchases
-- Stout, Strong, Fit and Athletic now grant their Strength or Fitness increase, preserving existing XP progress and respecting level 10.
-- Added stat-based removal of Puny, Weak, Unfit and Out of Shape when negative removal is enabled.
-- Cart and trait tooltips preview the resulting stat and trait changes.
-- Character-creation conflicts still apply; queue removal of a conflicting negative before buying its replacement.
-- Physical grants apply once per purchase and do not repeatedly refill lost XP after reconnecting or restarting.
+v0.8.1.1
+Multiplayer Prestige loading fix
+- Fixed new characters getting stuck on Loading Prestige when joining a server.
+- Prestige creation points now arrive before character creation, including returning players with saved Prestige.
+- Preserved normal respawn refreshes, retention and one-time settlement.
+- Added a clear message for missing or invalid server Prestige data instead of endless first-join requests.

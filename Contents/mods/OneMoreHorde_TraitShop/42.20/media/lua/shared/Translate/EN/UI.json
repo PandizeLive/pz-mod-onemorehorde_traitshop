@@ -87,6 +87,7 @@
   "UI_OMHTS_HordeRewards_missing": "Horde rewards require OMH: Horde Night.",
   "UI_OMHTS_HordeRewards_upcoming": "Horde rewards require OMH: Horde Night 0.6.15 or newer.",
   "UI_OMHTS_PrestigeLoading": "Loading Prestige...",
+  "UI_OMHTS_PrestigeUnavailable": "Prestige unavailable. Check the server's Trait Shop version and logs, then reconnect.",
   "UI_OMHTS_CreationPrestige": "Prestige bonus: +%1 points",
   "UI_OMHTS_PrestigeTokensTip": "Prestige creation bonus: %1\nUnused Prestige included in starting Tokens: %2",
   "UI_OMHTS_PhysicalPreview": "Cart result: %1 %2 -> %3",

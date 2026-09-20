@@ -17,6 +17,8 @@ foreach ($name in @('State','Creation')) {
     $stages += "OMHTS_${name}=$lua\server\OMHTS_${name}.lua"
 }
 $stages += "_=$tests\checkpoint7.lua"
+$stages += "OMHTS_CreationBootstrap=$lua\server\OMHTS_CreationBootstrap.lua"
+$stages += "_=$tests\creation_bootstrap.lua"
 $stages += "OMHTS_CreationScreen=$lua\client\OMHTS_CreationScreen.lua"
 $stages += "_=$tests\checkpoint7_ui.lua"
 & (Join-Path $GamePath 'jre64\bin\java.exe') --enable-native-access=ALL-UNNAMED -cp "$(Join-Path $GamePath 'projectzomboid.jar');$output" KahluaBehaviorCheck @stages |
