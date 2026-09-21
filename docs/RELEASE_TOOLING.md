@@ -75,6 +75,14 @@ Updates omit title, description, previewfile and visibility so the existing Work
 
 Steam's documented create/update behavior uses an unset/zero published ID for creation, returns the new ID in the VDF, and only updates fields supplied in subsequent uploads. See [Steamworks Workshop implementation](https://partner.steamgames.com/doc/features/workshop/implementation). The separate private repository was created without pushing source using the [GitHub CLI repository-creation command](https://cli.github.com/manual/gh_repo_create).
 
+## Cumulative upload changelog
+
+`WORKSHOP_CHANGELOG.txt` accumulates net player-facing changes across every local version since Trait Shop's last confirmed successful content upload. Keep one heading matching the latest packaged version and the existing category/bullet format. Version bumps, tests, installs, commits/tags, and GitHub mirrors never reset pending notes.
+
+Merge superseded entries: updating a trait and later removing it becomes only its removal; adding and then removing a feature that never shipped produces no bullet. Retain unrelated changes. Start a fresh draft only after a successful upload for this exact item and release, confirmed by the publisher log, verified Workshop release history, or the owner. Record the uploaded version and evidence in release documentation; if uncertain, preserve the draft. Failed, cancelled, interrupted, unverified, preflight, and preview-only uploads do not reset it. Horde Night uploads do not reset Trait Shop's notes.
+
+The publisher leaves the source changelog intact. Keep the uploaded note until the next change begins a fresh draft, retaining any changes made after the uploaded snapshot. Steam and Git retain published history; already-published bullets do not belong in the next upload.
+
 ## Verification
 
 Run the offline checks with:

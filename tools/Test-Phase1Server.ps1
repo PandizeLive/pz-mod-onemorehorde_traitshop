@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [string]$GamePath = 'C:\Program Files (x86)\Steam\steamapps\common\ProjectZomboid',
-    [ValidateSet('1', '2', '3', '4', '7', '8', 'Physical')][string]$Phase = 1
+    [ValidateSet('1', '2', '3', '4', '7', '8', '9', 'Physical')][string]$Phase = 1
 )
 
 $ErrorActionPreference = 'Stop'
@@ -11,7 +11,7 @@ $mods = Join-Path $cache 'mods'
 $settings = Join-Path $cache 'Server'
 New-Item -ItemType Directory -Path $mods, $settings -Force | Out-Null
 Copy-Item -LiteralPath (Join-Path $repo 'Contents\mods\OneMoreHorde_TraitShop') -Destination $mods -Recurse
-if ($Phase -eq 8) {
+if ($Phase -eq 8 -or $Phase -eq 9) {
     $core = Join-Path (Split-Path -Parent $repo) 'pz-mod-onemorehorde_protectthecure\Contents\mods\OneMoreHorde_HordeNight'
     Copy-Item -LiteralPath $core -Destination $mods -Recurse
 }
@@ -31,7 +31,7 @@ Map=Muldraugh, KY
 MaxPlayers=1
 '@ | Set-Content -LiteralPath (Join-Path $settings 'TraitShopPhase1.ini') -Encoding ASCII
 
-if ($Phase -eq 8) {
+if ($Phase -eq 8 -or $Phase -eq 9) {
     $ini = Join-Path $settings 'TraitShopPhase1.ini'
     $text = [IO.File]::ReadAllText($ini).Replace('Mods=OneMoreHorde_TraitShop', 'Mods=OneMoreHorde_HordeNight;OneMoreHorde_TraitShop')
     [IO.File]::WriteAllText($ini, $text, [Text.UTF8Encoding]::new($false))

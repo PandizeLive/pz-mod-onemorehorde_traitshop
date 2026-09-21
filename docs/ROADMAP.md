@@ -124,13 +124,13 @@ The intended full release still includes progression, prestige, Horde Night rewa
 
 **Pass when:** connected members of their completed horde receive completion XP unless they are casualties; late-connected eligible members can qualify; unrelated players, disconnected players, and casualties do not. Reconnect/respawn cannot undo event casualty status. Two-player testing proves event/kill attribution and no cross-credit or replay awards. The addon still loads and works without OMH.
 
-### Checkpoint 9 - Locked Official Mode and persistent rules history
+**Live follow-up (2026-09-21):** owner reports working behavior after v0.8.1.1, with incomplete manual coverage. [Log review and upload baseline](LIVE_v0.8.1.1.md) confirm successful dedicated first-join creation, starting Tokens and death settlement. Carry the unverified inheritance/reconnect/hosted cases into later acceptance; the loading defect is no longer a demonstrated blocker.
 
-**Deliver:** a versioned approved Trait Shop preset, authoritative lock enforcement, and persistent run flags for divergent play. Unlocked but matching values remain eligible. Carry relevant custom-rule provenance through prestige and retained benefits; restoring settings must not restore eligibility for affected history. Integrate with existing OMH eligibility rather than replace its other checks.
+### Checkpoint 9 - Run Options and persistent character eligibility
 
-**Decisions needed:** full official preset, lock default, enabled-mod detection semantics, and the policy for custom-earned prestige/retained advantages at a new official start. Review the new preset explicitly; do not infer it from current sandbox values.
+**Implemented in v0.9.0 with Horde Night v0.6.16:** Run Options, server access toggle, verified creation, durable benefits/rules history, and official earning provenance. Locked Official Mode was explicitly rejected. See [implementation and evidence](CHECKPOINT_9.md) and the [six-step local check](TEST_CHECKPOINT_9.md).
 
-**Pass when:** lock enforcement works beyond the UI; temporary divergent settings flag the run before benefits can be earned; restore/reconnect/restart do not clear the flag; switching modes, resetting runs, or removing/reinstalling the addon cannot silently make custom benefits official. Verify normal OMH eligibility rules still hold.
+**Acceptance:** automated and native persistence results are documented in the report. Live UI and two-player faction checks remain; implementation is not a claim of complete live acceptance. Ordinary standalone play remains supported.
 
 ### Checkpoint 10 - Score multiplier and difficulty-menu breakdown
 
@@ -181,7 +181,7 @@ The intended full release still includes progression, prestige, Horde Night rewa
 | 6 | Implementation choices recorded in CHECKPOINT_6.md; owner feedback/live reward acceptance pending |
 | 7 | Remaining character-creation transport and transaction details |
 | 8 | Dependency changes with saved settings; any remaining Hybrid overlap |
-| 9 | Official preset/lock default; detection; custom-earned prestige and retained-benefit policy |
+| 9 | Resolved: Run Options, no lock preset, fresh verified characters, durable benefits and unofficial provenance |
 | 13-14 | Official removal policy and any custom trait adapters; multiplier 2/no surcharge is settled |
 
 No open Phase 6 decision blocks the initial release. No unimplemented checkpoint should be marked complete solely because its design is documented.

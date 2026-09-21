@@ -2,9 +2,7 @@
 
 Standalone trait progression and purchasing addon for Project Zomboid Build 42, with optional OMH: Horde Night integration.
 
-**Status: v0.8.1.1 fixes multiplayer character creation stuck on Loading Prestige; v0.8.1 physical traits and Checkpoint 8 Horde Night XP remain implemented.** With Horde Night 0.6.15 or newer, earn 5 XP per credited horde kill and 100 XP for surviving your completed horde. Hybrid never pays ordinary XP for the same horde kill. Standalone kills/survival, the shop and Prestige remain available without Horde Night.
-
-CP7's corrected solo test and CP8 local behavior were reported passed. The physical-trait follow-up awaits owner testing. The combined dedicated reward and character-creation test remains pending, after both matching Workshop versions are published. Full official-lock/history and website acceptance remain later integration work. Existing Workshop item 3803035618 is unchanged; nothing is automatically uploaded.
+**Prepared: v0.9.0, paired with Horde Night 0.6.16.** Checkpoint 9 adds Run Options access controls, verified character starts and persistent scoring safeguards. Standalone play remains enabled. See [Checkpoint 9](docs/CHECKPOINT_9.md) and its [six-step local check](docs/TEST_CHECKPOINT_9.md). Live acceptance and owner-run Mirror/Publish remain pending.
 
 Characters start at Level 1, with 0 / 100 XP toward Level 2. By default, each earned level grants one Token and displayed Levels 5, 10, 15 and subsequent multiples of five grant one Prestige Point; both rewards are configurable. Level-ups play the supplied normal or prestige sound and show gold overhead text. Your next character receives the full Prestige bonus, then retains 30% by default after entering the world.
 

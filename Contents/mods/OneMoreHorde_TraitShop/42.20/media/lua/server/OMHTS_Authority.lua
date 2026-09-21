@@ -18,6 +18,42 @@ local STORE_KEY = "OMHTraitShop_State_v1"
 
 ---@nodiscard
 ---@param player IsoPlayer
+---@return boolean
+local function enabled(player)
+    if not RewardsConfig.hasHordeNight() then return true end
+    local runtime = rawget(_G, "OneMoreHordeDifficultyRuntime")
+    return runtime ~= nil and runtime.isTraitShopEnabled ~= nil and runtime.isTraitShopEnabled(player)
+end
+
+---@param player IsoPlayer
+---@param record table
+---@return nil
+local function auditEarnings(player, record)
+    if not RewardsConfig.hasHordeNight() then
+        record.life.prestigeUnofficial = true
+    else
+        local runtime = rawget(_G, "OneMoreHordeDifficultyRuntime")
+        if not runtime or not runtime.isTraitShopEarningOfficial
+            or not runtime.isTraitShopEarningOfficial(player) then
+            record.life.prestigeUnofficial = true
+        end
+    end
+    if record.life.prestigeUnofficial and record.prestige.earned > 0 then
+        record.prestige.unofficial = true
+    end
+end
+
+---@param player IsoPlayer
+---@param record table
+---@return table
+local function snapshotFor(player, record)
+    local snapshot = Shop.snapshot(player, record)
+    snapshot.enabled = enabled(player)
+    return snapshot
+end
+
+---@nodiscard
+---@param player IsoPlayer
 ---@return string|nil
 local function creationKey(player)
     local descriptor = player:getDescriptor()
@@ -49,7 +85,7 @@ end
 ---@return nil
 local function sendSnapshot(player, binding, nonce)
     Prestige.publish(accountKey(player), binding.record)
-    local snapshot = Shop.snapshot(player, binding.record)
+    local snapshot = snapshotFor(player, binding.record)
     snapshot.nonce = nonce
     if isServer() then
         sendServerCommand(player, "OMHTraitShop", "state", snapshot)
@@ -91,6 +127,7 @@ local function bind(player)
         lastPurchase = -10000, lastBusy = -10000 }
     current.survival = Rewards.session(getGameTime():getWorldAgeHours(), getGameTime():getTimeOfDay(), RewardsConfig.read())
     bindings[player] = current
+    current.access = enabled(player)
     print("[OMH Trait Shop] state " .. result .. "; slot=" .. player:getPlayerNum()
         .. "; life=" .. record.life.id .. "; revision=" .. record.revision
         .. "; hours=" .. tostring(hours) .. "; creation=" .. record.life.creation.status
@@ -155,6 +192,7 @@ local function rewardBinding(killer)
     if not killer or not instanceof(killer, "IsoPlayer") or killer:isDead() then return nil end
     if isServer() and not getOnlinePlayers():contains(killer) then return nil end
     if not isServer() and getSpecificPlayer(killer:getPlayerNum()) ~= killer then return nil end
+    if not enabled(killer) then return nil end
     return bind(killer)
 end
 
@@ -194,6 +232,7 @@ function Authority.onHordeKill(facts)
     local player = hordePlayer(facts.participantId)
     local binding = rewardBinding(player)
     if binding and Rewards.horde(binding.record, "HordeZombieXP") then
+        auditEarnings(player, binding.record)
         binding.rewardDirty = true
     end
 end
@@ -211,6 +250,7 @@ function Authority.onHordeFinished(facts)
             and player:getDescriptor():getID() == recipient.characterId then
             local binding = rewardBinding(player)
             if binding and Rewards.horde(binding.record, "HordeSurvivedXP") then
+                auditEarnings(player, binding.record)
                 binding.rewardDirty = true
             end
         end
@@ -224,6 +264,7 @@ local function onZombieDead(zombie)
     local killer = zombie:getAttackedBy()
     local binding = rewardBinding(killer)
     if binding and Rewards.zombie(zombie, binding.record) then
+        auditEarnings(killer, binding.record)
         binding.rewardDirty = true
     end
 end
@@ -238,6 +279,7 @@ local function observeDeath(player)
         local killer = player:getAttackedBy()
         local killerBinding = rewardBinding(killer)
         if killerBinding and Rewards.player(store, killer, player, killerBinding.record) then
+            auditEarnings(killer, killerBinding.record)
             killerBinding.rewardDirty = true
         end
     end
@@ -250,7 +292,6 @@ end
 ---@return nil
 local function scanPlayers()
     if not store then return end
-    local officialPrestige = Prestige.officialSettings()
     local seen = {}
     local players
     local count = getNumActivePlayers()
@@ -272,14 +313,19 @@ local function scanPlayers()
             else
                 local binding = bind(player)
                 if binding and binding.record.life.id == binding.lifeId then
-                    if not officialPrestige then
-                        binding.record.life.prestigeUnofficial = true
+                    local access = enabled(player)
+                    if binding.access ~= access then
+                        binding.access = access
+                        binding.rewardDirty = true
+                        binding.survival = Rewards.session(getGameTime():getWorldAgeHours(),
+                            getGameTime():getTimeOfDay(), RewardsConfig.read())
                     end
-                    if rewardsReady then
+                    if rewardsReady and access then
                         local changed
                         binding.survival, changed = Rewards.survival(binding.record, binding.survival,
                             getGameTime():getWorldAgeHours(), getGameTime():getTimeOfDay(), RewardsConfig.read())
                         if changed then
+                            auditEarnings(player, binding.record)
                             binding.rewardDirty = true
                         end
                     end
@@ -353,7 +399,7 @@ end
 function Authority.getState(player)
     local binding = bind(player)
     if not binding then return nil end
-    return Shop.snapshot(player, binding.record)
+    return snapshotFor(player, binding.record)
 end
 
 ---@nodiscard
@@ -396,15 +442,20 @@ function Authority.purchase(player, args)
     if not binding then return "unavailable" end
     local now = getTimestampMs()
     local result
-    if now - binding.lastPurchase < 500 then
+    if not enabled(player) then
+        result = "disabled"
+    elseif now - binding.lastPurchase < 500 then
         if now - binding.lastBusy < 500 then return "busy" end
         binding.lastBusy = now
         result = "busy"
     else
         binding.lastPurchase = now
         result = Shop.purchase(player, binding.record, args)
+        if result == "purchased" then
+            auditEarnings(player, binding.record)
+        end
     end
-    local snapshot = Shop.snapshot(player, binding.record)
+    local snapshot = snapshotFor(player, binding.record)
     snapshot.result = result
     if type(args) == "table" and State.isCounter(args.revision) then
         snapshot.requestRevision = args.revision
@@ -424,7 +475,7 @@ end
 ---@return boolean
 function Authority.updateState(player, lifeId, revision, changes)
     local binding = bind(player)
-    if not binding or not State.update(binding.record, lifeId, revision, changes) then return false end
+    if not binding or not enabled(player) or not State.update(binding.record, lifeId, revision, changes) then return false end
     sendSnapshot(player, binding)
     return true
 end
@@ -436,7 +487,9 @@ end
 ---@return boolean
 function Authority.awardXP(player, lifeId, revision, amount)
     local binding = bind(player)
-    if not binding or not State.awardXP(binding.record, lifeId, revision, amount) then return false end
+    if not binding or not enabled(player) then return false end
+    auditEarnings(player, binding.record)
+    if not State.awardXP(binding.record, lifeId, revision, amount) then return false end
     sendSnapshot(player, binding)
     return true
 end

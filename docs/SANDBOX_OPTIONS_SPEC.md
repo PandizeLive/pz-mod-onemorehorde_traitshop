@@ -1,5 +1,7 @@
 # Sandbox options specification
 
+> Current policy (2026-09-21): [Checkpoint 9](CHECKPOINT_9.md) supersedes earlier Locked Official Mode planning. Run Options provides Enable Trait Shop, default ON when installed with Horde Night; standalone stays enabled. Existing benefits force access, missing creation provenance is unofficial, and default-or-harder rules retain eligibility.
+
 As of v0.8.0, settings are grouped under **Trait Costs** (multipliers and removal toggle), **Level Rewards** (Tokens per Level and Prestige Level Interval), **XP Rewards** (mode and applicable rates), and **Player Kill Rules** (cooldown, shown in Kills/Hybrid). The latter section follows all XP rates. These headers appear in solo setup, host setup and the live admin menu. **Prestige** now contains Prestige Retention Percentage.
 
 Positive Cost Multiplier, Negative Cost Multiplier and Allow Negative Trait Removal are implemented in v0.4.0; reward modes and standalone sources are implemented in v0.6.0; Prestige creation bonuses are implemented in v0.7.0; horde XP is implemented in v0.8.0 with Horde Night 0.6.15. Reward XP defaults below are approved. Caps and the complete official preset remain undecided. The owner has specified the initial 0.50 score multiplier and 30% prestige retention default.

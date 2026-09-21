@@ -37,7 +37,8 @@ end
 ---@return nil
 function ISEquippedItem:prerender()
     originalPrerender(self)
-    if not self.healthBtn or not self:getIsVisible() or not self.healthBtn:getIsVisible() then
+    if not self.chr or not TraitShop.isEnabled(self.chr:getPlayerNum()) or not self.healthBtn
+        or not self:getIsVisible() or not self.healthBtn:getIsVisible() then
         if self.omhTraitShopButton then
             hideButton(self.omhTraitShopButton)
         end

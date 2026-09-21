@@ -101,5 +101,6 @@
   "UI_OMHTS_Status_asleep": "Wake up before purchasing physical traits.",
   "UI_OMHTS_Result_asleep": "Wake up before purchasing physical traits. No Tokens were spent.",
   "UI_OMHTS_Status_already_purchased": "You already purchased this stat increase during this life.",
-  "UI_OMHTS_Result_already_purchased": "You already purchased this stat increase during this life. No Tokens were spent."
+  "UI_OMHTS_Result_already_purchased": "You already purchased this stat increase during this life. No Tokens were spent.",
+  "UI_OMHTS_Result_disabled": "Trait Shop is disabled in Run Options."
 }

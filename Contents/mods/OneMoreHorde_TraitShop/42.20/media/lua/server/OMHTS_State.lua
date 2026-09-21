@@ -212,7 +212,7 @@ function State.attach(store, account, characterId, hours, fresh)
         level = 0,
         earnedLevelTokens = 0,
         prestigeRule = 2,
-        prestigeUnofficial = not Prestige.officialSettings(),
+        prestigeUnofficial = false,
         creation = { status = "legacy", tokens = 0 },
         purchases = {},
         removals = {},

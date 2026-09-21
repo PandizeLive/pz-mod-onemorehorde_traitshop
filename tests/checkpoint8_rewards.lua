@@ -157,5 +157,19 @@ Runtime.notifyHordeKill(sp,"singleplayer:0")
 Runtime.notifyEventFinished(sp)
 local localRecord=testTables.OMHTraitShop_State_v1.accounts["local:0"]
 check(localRecord.life.level==1 and localRecord.life.xp==5,"SP identity and both core reward callbacks work")
-testTransportPackets={Authority.getState(testPlayers[1])}
+local current = testPlayers[1]
+local xpBefore = localRecord.life.xp
+OneMoreHordeDifficultyRuntime.isTraitShopEnabled = function() return false end
+check(Authority.getState(current).enabled == false, "disabled access is sent in the authoritative snapshot")
+check(Authority.purchase(current, {}) == "disabled", "server denies purchase while disabled")
+check(not Authority.awardXP(current,localRecord.life.id,localRecord.revision,5), "server denies direct XP while disabled")
+Authority.onHordeKill({rewardSchema=1,eventId="disabled",participantId="singleplayer:0",killCount=1,eligible=true})
+check(localRecord.life.xp==xpBefore, "disabled player earns no horde XP")
+OneMoreHordeDifficultyRuntime.isTraitShopEnabled = function() return true end
+Authority.onHordeKill({rewardSchema=1,eventId="disabled",participantId="singleplayer:0",killCount=1,eligible=true})
+check(localRecord.life.xp==xpBefore, "re-enabling cannot replay a skipped horde reward")
+OneMoreHordeDifficultyRuntime.isTraitShopEarningOfficial = function() return false end
+Authority.onHordeKill({rewardSchema=1,eventId="unofficial",participantId="singleplayer:0",killCount=1,eligible=true})
+check(localRecord.life.prestigeUnofficial, "full run eligibility taints XP provenance")
+testTransportPackets={Authority.getState(current)}
 testOutput=tostring(testChecks).." Checkpoint 8 assertions passed."

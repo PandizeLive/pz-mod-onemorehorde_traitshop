@@ -14,3 +14,8 @@ __modules.OMH_Phase3Persistence = {
 }
 testCorePlayer = {}
 testCoreOwner = {}
+
+OneMoreHordeDifficultyRuntime = {
+    isTraitShopEnabled = function() return true end,
+    isTraitShopEarningOfficial = function() return true end,
+}

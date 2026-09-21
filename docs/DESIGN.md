@@ -1,5 +1,7 @@
 # Trait Shop design
 
+> Current policy (2026-09-21): [Checkpoint 9](CHECKPOINT_9.md) supersedes earlier Locked Official Mode planning. Run Options provides Enable Trait Shop, default ON when installed with Horde Night; standalone stays enabled. Existing benefits force access, missing creation provenance is unofficial, and default-or-harder rules retain eligibility.
+
 Status: owner requirements recorded September 14, 2026. Explicit recommendations and unresolved details are tracked in [DECISIONS.md](DECISIONS.md).
 
 ## Vocabulary and progression

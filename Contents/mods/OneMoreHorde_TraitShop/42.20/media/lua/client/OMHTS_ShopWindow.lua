@@ -551,7 +551,7 @@ end
 ---@return nil
 function OMHTS_ShopWindow:prerender()
     ISPanel.prerender(self)
-    if self.player:isDead() or getSpecificPlayer(self.playerNum) ~= self.player then
+    if not TraitShop.isEnabled(self.playerNum) or self.player:isDead() or getSpecificPlayer(self.playerNum) ~= self.player then
         self:close()
         return
     end
@@ -655,6 +655,7 @@ end
 ---@return nil
 function TraitShop.toggleWindow(player)
     if not player or player:isDead() then return end
+    if not TraitShop.isEnabled(player:getPlayerNum()) then return end
     local slot = player:getPlayerNum()
     local window = windows[slot]
     if window and (window.player ~= player or window.fontHeight ~= getTextManager():getFontHeight(UIFont.Small)

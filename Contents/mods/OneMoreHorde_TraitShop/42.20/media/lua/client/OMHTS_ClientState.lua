@@ -15,7 +15,7 @@ local nextRequest = 0
 local counters = { "lifeId", "revision", "tokens", "level", "retainedPrestige", "earnedPrestige", "pendingPrestige", "startingTokens" }
 local statuses = { no_effect = true, nutrition = true, asleep = true, already_purchased = true, available = true, owned = true, conflict = true, dead = true, loading = true,
     funds = true, unsupported = true, settings = true, limit = true, absent = true, body = true, multiplayer = true, grants = true, granted = true, excluded = true, removal_disabled = true }
-local results = { no_effect = true, nutrition = true, asleep = true, already_purchased = true, purchased = true, busy = true, invalid = true, dead = true, stale = true, price_changed = true,
+local results = { disabled = true, no_effect = true, nutrition = true, asleep = true, already_purchased = true, purchased = true, busy = true, invalid = true, dead = true, stale = true, price_changed = true,
     owned = true, conflict = true, funds = true, unsupported = true, settings = true, loading = true, limit = true, absent = true, body = true, multiplayer = true, grants = true, granted = true, excluded = true, removal_disabled = true }
 
 ---@param playerNum number
@@ -102,6 +102,7 @@ function TraitShop.acceptState(snapshot)
     local previous = states[snapshot.playerNum]
     if previous and (snapshot.lifeId < previous.lifeId
         or (snapshot.lifeId == previous.lifeId and snapshot.revision < previous.revision)) then return end
+    copy.enabled = snapshot.enabled ~= false
     copy.schema = 3
     copy.playerNum = snapshot.playerNum
     copy.status = snapshot.status
@@ -160,6 +161,14 @@ function TraitShop.acceptState(snapshot)
     end
 end
 
+---@nodiscard
+---@param playerNum number
+---@return boolean
+function TraitShop.isEnabled(playerNum)
+    if not RewardsConfig.hasHordeNight() then return true end
+    return states[playerNum] ~= nil and states[playerNum].enabled == true
+end
+
 ---@param playerNum number
 ---@return table|nil
 function TraitShop.getState(playerNum)
@@ -208,7 +217,7 @@ function TraitShop.purchase(player, selection)
     if not player or player:isDead() then return false end
     local slot = player:getPlayerNum()
     local state = states[slot]
-    if not state or purchases[slot] then return false end
+    if not state or state.enabled == false or purchases[slot] then return false end
     if type(selection) == "string" then
         selection = { [selection] = true }
     end

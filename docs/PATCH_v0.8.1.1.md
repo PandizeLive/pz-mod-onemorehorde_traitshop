@@ -35,3 +35,7 @@ No human client joined the automated dedicated probe. Connected dedicated first 
 Runtime: new server OMHTS_CreationBootstrap, client OMHTS_CreationScreen, shared Prestige system name, UI translation and 0.8.1.1 version markers. Tests: native initial-state runner, bootstrap fixtures, creation UI assertions and dedicated CP7 startup/persistence probe. Documentation: patch/PR/test/Steam changelog, README and roadmap handoff.
 
 Target local tag: v0.8.1.1 on codex/phase-2. No Horde Night source changes. The live Workshop description was retrieved and preserved in `.local/workshop-before-v0.8.1.1.html`; it still describes the older 0.4.3 development build. This corrective update deliberately preserves that owner-facing description, artwork and visibility. The publisher omits those fields and submits only content/changelog. GitHub mirror and Workshop upload remain owner-run via OMH_TraitShop.cmd options 2 then 3.
+
+## Live follow-up - 2026-09-21
+
+[Partial live acceptance and confirmed Workshop baseline](LIVE_v0.8.1.1.md): client/server logs prove first-join creation succeeds on 0.8.1.1, with starting Tokens and death settlement. Owner reports working behavior but did not complete all cases. Nonzero inheritance/reconnect/hosted acceptance remains open; do not interpret this as a full test pass.
