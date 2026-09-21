@@ -32,7 +32,11 @@ The paired versions passed three real dedicated-server save/restart cycles in `.
 
 The website API policy now recognizes `Character Unverified` as a known disqualifying flag, rather than suspicious unknown data. Its eligibility/review suites pass 36 tests. This small local change is in the separate OMH Website workspace; its existing unrelated work was preserved. Deploy that reviewed API policy before public release. No website deployment or broad website commit was performed here.
 
-## Publication baseline
+## Current release status — September 21, 2026
+
+The owner subsequently published Trait Shop 0.9.0 and Horde Night 0.6.16.3 successfully. Dedicated/client logs confirm that pair, verified replacement creation and one-time starting Tokens; the client callback error loop is absent. The owner reports the corrected behavior working. Website compatibility has now been deployed and verified. See [current release evidence](PUBLIC_RELEASE_READINESS.md) and [the final two-player check](TEST_PUBLIC_RELEASE.md). Earlier preparation/publication statements below describe the original checkpoint handoff, not the current state.
+
+## Historical publication baseline
 
 Trait Shop 0.8.1.1 was successfully uploaded to item 3803035618: `%LOCALAPPDATA%/OMH/TraitShopPublisher/Logs/traitshop-v0.8.1.1-20260920-231134.log`, matching content manifest and successful content commit; see LIVE_v0.8.1.1.md.
 

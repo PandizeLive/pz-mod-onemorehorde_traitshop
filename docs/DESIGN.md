@@ -41,16 +41,16 @@ Confirmed with Phase 1 approval: available prestige at death equals retained pre
 
 | Reward Mode | XP settings shown |
 |---|---|
-| Kills | Zombie; Unique Player |
+| Kills | Zombie; Player Kill |
 | Survival | Day Survived; Night Survived |
 | Horde Night | Horde Zombie; Horde Survived |
 | Hybrid | All six settings above |
 
-With OMH: Horde Night active, Horde Night is the default reward mode and the only mode eligible for official Trait Shop scoring. Without OMH, the addon must remain usable; the standalone default is undecided (Kills is recommended).
+With OMH: Horde Night active, Horde Night is the default reward mode and the only mode eligible for official Trait Shop scoring. Standalone defaults to Hybrid. Existing saved reward modes are preserved.
 
-Hybrid reveals all reward settings. Values and overlap behavior remain configurable design decisions. Recommendation: a horde zombie grants Horde Zombie XP instead of also granting ordinary Zombie XP. This recommendation has not been approved.
+Hybrid reveals all reward settings. A tagged horde zombie grants Horde Zombie XP instead of ordinary Zombie XP; the same kill is never paid by both sources. Defaults are listed in SANDBOX_OPTIONS_SPEC.md.
 
-Unique Player needs a stable definition and repeat-reward policy before implementation. Recommendation: identify the victim by account, not respawned character. Survival day/night boundaries, required elapsed time, sleep, disconnect, and time-skip behavior are also undecided.
+Player Kill XP requires an enemy outside the killer's faction and a server-account same-victim cooldown, default 2 in-game days. Survival uses full connected native seasonal dawn/dusk periods, independently of host-configured horde hours. Sleep/fast-forward count; joining partway through a period does not.
 
 ### Horde completion eligibility
 
@@ -60,11 +60,11 @@ A late-connected member can qualify under this rule. A casualty must not regain 
 
 ## Shop and UI
 
-The approved v0.4.2 window is a movable, resizable OMH panel, without pinning/collapsing. It retains geometry while reused during the session. Center the branding: One More Horde uses the full leaderboard Small font and red (0.85, 0.25, 0.25); Trait Shop uses its Large font and gold (0.95, 0.75, 0.2). Header spacing measures the actual font height. Center Trait Level and its separate number; the number and XP fill use gold #E7B428. The XP bar has white `current / required` text and starts at `0 / 100`. Earning still belongs to Phase 3. The XP tooltip will list only source names allowed by the active reward mode whose configured reward is above zero, without amounts. Until reward sources exist, it says that none are available in this build.
+The approved v0.4.2 window is a movable, resizable OMH panel, without pinning/collapsing. It retains geometry while reused during the session. Center the branding: One More Horde uses the full leaderboard Small font and red (0.85, 0.25, 0.25); Trait Shop uses its Large font and gold (0.95, 0.75, 0.2). Header spacing measures the actual font height. Center Trait Level and its separate number; the number and XP fill use gold #E7B428. The XP bar has white `current / required` text and starts at `0 / 100`. The XP tooltip lists only source names allowed by the active reward mode whose configured reward is above zero, without amounts.
 
 Tokens and Prestige have equal weight. Prestige displays retained plus earned as one total; its tooltip shows those components. The Token tooltip explains unused creation points, spending and current balance, including actual level rewards, the original Prestige creation bonus, and its unused portion.
 
-Use the owner's three boxes: unowned positives left, current positives/profession traits upper right, and current negatives lower right. Positive names are green, negatives red, unavailable choices grey. Selected cart rows have gold outlines and subtle green/red fill. Trait tooltips show the name and description only. There is no duplicate description footer or action-button tooltip.
+Use unowned positives on the left and current positives/Other Traits/negatives stacked on the right. Other Traits contains read-only zero-cost abilities and weight conditions. Positive names are green, negatives red, unavailable choices grey. Selected cart rows have gold outlines and subtle green/red fill. Trait tooltips show the name and description only. There is no duplicate description footer or action-button tooltip.
 
 Plain clicks toggle individual traits without clearing other choices. Shift adds an anchored visible range of eligible traits. Ctrl+A adds eligible visible traits from the last-clicked actionable list, respecting search/filter; while search is focused, it selects text instead. Disabled choices and unresolved conflicts are skipped by bulk selection. A combined selection may exceed the wallet or contain mutually conflicting additions; checkout stays disabled until resolved. Search/filter changes preserve the cart. A scrolling receipt shows additions/removals, individual prices, total and remaining balance. Clicking either a receipt entry or its selected source row removes it. Availability, grey shading and filters immediately reflect valid queued negative removals; undoing a removal restores any conflict. Server validation remains authoritative. Purchase submits the complete cart; Reset clears choices; Close discards an unpaid cart. Validation problems appear once near the receipt. Reset anchors lower-left with the Difficulty menu's black fill and red text/border. Close and Purchase anchor lower-right in that order: red Close, green enabled Purchase, neutral disabled Purchase. All lists and the receipt cull rows in viewport coordinates including the current scroll offset.
 
@@ -80,4 +80,4 @@ Removal was brought forward into this update. Allow Negative Trait Removal defau
 
 Validate the whole cart against the final trait combination before charging: removing a conflicting negative and adding its positive counterpart can succeed together. Invalid entries, duplicate entries, changed quotes, insufficient total funds and mutually conflicting additions reject the entire cart. Skill/recipe grants are recorded as recoverable targets; retries never intentionally stack rewards. Removing a negative does not erase trained skills or learned recipes. Smoker removal clears nicotine withdrawal and its smoke timer, without clearing unrelated stress/unhappiness.
 
-No blanket claim of arbitrary mod compatibility or atomic saving across native player files and world ModData is made. Official removal policy remains a future scoring decision.
+No blanket claim of arbitrary mod compatibility or atomic saving across native player files and world ModData is made. Enabling negative removal is Lessened/unofficial under Horde Night's current policy.

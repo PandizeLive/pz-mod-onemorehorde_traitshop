@@ -2,11 +2,13 @@
 
 Standalone trait progression and purchasing addon for Project Zomboid Build 42, with optional OMH: Horde Night integration.
 
-**Prepared: v0.9.0, paired with Horde Night 0.6.16.** Checkpoint 9 adds Run Options access controls, verified character starts and persistent scoring safeguards. Standalone play remains enabled. See [Checkpoint 9](docs/CHECKPOINT_9.md) and its [six-step local check](docs/TEST_CHECKPOINT_9.md). Live acceptance and owner-run Mirror/Publish remain pending.
+**Release candidate: v0.9.0, paired with Horde Night 0.6.16.3.** Both Workshop content uploads are confirmed; the leaderboard API update is deployed. Local/dedicated owner checks passed, with the targeted two-player check remaining. See [release evidence](docs/PUBLIC_RELEASE_READINESS.md) and [the final short test](docs/TEST_PUBLIC_RELEASE.md).
 
 Characters start at Level 1, with 0 / 100 XP toward Level 2. By default, each earned level grants one Token and displayed Levels 5, 10, 15 and subsequent multiples of five grant one Prestige Point; both rewards are configurable. Level-ups play the supplied normal or prestige sound and show gold overhead text. Your next character receives the full Prestige bonus, then retains 30% by default after entering the world.
 
 ## Documentation
+
+- [Current release readiness](docs/PUBLIC_RELEASE_READINESS.md), [seven-step multiplayer test](docs/TEST_PUBLIC_RELEASE.md), and [prepared Workshop description](docs/WORKSHOP_DESCRIPTION.txt).
 
 - [Prestige loading correction](docs/PATCH_v0.8.1.1.md) and [six-step dedicated test](docs/TEST_v0.8.1.1.md).
 - [Physical traits patch](docs/PATCH_v0.8.1.md) and [six-step solo test](docs/TEST_v0.8.1.md).
@@ -16,7 +18,7 @@ Characters start at Level 1, with 0 / 100 XP toward Level 2. By default, each ea
 
 - [Respawn rendering fix](docs/PATCH_v0.7.0.1.md): diagnosis and four-step retest.
 - [Checkpoint 7](docs/CHECKPOINT_7.md): creation flow, retention, native evidence and limits.
-- [Current short solo test](docs/TEST_CHECKPOINT_7.md): eight steps for 3 -> 1 -> 0.
+- [Historical CP7 solo test](docs/TEST_CHECKPOINT_7.md): eight steps for 3 -> 1 -> 0.
 
 - [Checkpoint 5 report](docs/CHECKPOINT_5.md): curve, authority, creation investigation and native evidence.
 - [v0.6.4 level rewards](docs/PATCH_v0.6.4.md): configurable rewards and four-step test.
@@ -39,7 +41,7 @@ Characters start at Level 1, with 0 / 100 XP toward Level 2. By default, each ea
 - [OMH integration](docs/OMH_INTEGRATION.md): horde rewards, official eligibility, score multiplier, and difficulty-menu work.
 - [Architecture](docs/ARCHITECTURE.md): proposed packaging, authority, persistence, and source references.
 - [Decisions](docs/DECISIONS.md): settled requirements and open questions; recommendations are not approved settings.
-- [Validation](docs/VALIDATION.md): future acceptance checks, not completed tests.
+- [Validation](docs/VALIDATION.md): current evidence and remaining acceptance coverage.
 
 ## Workspace structure
 
@@ -70,8 +72,8 @@ The package's mod-list icon is copied unchanged from [icon_7.png](art/Images/ico
 
 ## Release boundary
 
-The owner brought common negative removal forward into v0.4.0, disabled by default. Progression, prestige creation bonuses, scoring integration and live multiplayer acceptance still precede the intended full release. Custom trait exceptions need targeted compatibility handling; broad default eligibility is not a universal compatibility guarantee.
+Progression, Prestige creation bonuses, Horde Night rewards and scoring integration are implemented. Common negative removal is included, disabled by default. Final two-player acceptance remains; custom trait exceptions need targeted compatibility handling, and broad default eligibility is not a universal compatibility guarantee.
 
-Official-score support requires coordinated Horde Night and score-validation changes. Documentation does not make current runs official or implement the 50% modifier.
+With Horde Night, Enable Trait Shop is in Run Options and defaults ON. Actual purchases/removals or a Prestige creation bonus force it ON for the affected character/faction. Eligible Trait Shop scoring uses x0.50, multiplied with other score modifiers. Default-or-harder settings stay eligible; easier rules, enabling removal, or leaving Horde Night reward mode make the affected run unofficial. Older characters without creation proof remain playable but unverified. The current leaderboard API recognizes these rules; see the release evidence above.
 
 The owner-supplied [animated Workshop preview](preview.gif) and [still image](preview.png) are included unchanged. The still is also packaged as the in-game poster; the existing mod-list and health icons remain in use.

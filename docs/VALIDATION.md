@@ -1,68 +1,31 @@
-# Future validation checklist
+# Validation and remaining acceptance
 
-**Current checkpoint:** v0.5.0 implements Checkpoint 5. See [evidence](CHECKPOINT_5_EVIDENCE.txt) and [six-step dedicated follow-up](TEST_CHECKPOINT_5.md). Owner-reported v0.4.3 dedicated purchases passed; real reconnect/restart and the new middle panel remain unverified. The historical checklist below includes planned reward/scoring work, not claims of current functionality.
+Current candidate: **Trait Shop 0.9.0 / Horde Night 0.6.16.3**, PZ 42.20.4. Both content uploads are confirmed. Website compatibility is deployed. See [release evidence](PUBLIC_RELEASE_READINESS.md) and the [single remaining targeted player test](TEST_PUBLIC_RELEASE.md). This is developer coverage tracking, not another player checklist.
 
-This is developer coverage tracking, not an owner-facing test script. See [PHASE_2.md](PHASE_2.md) for the foundation and [PATCH_v0.4.0.md](PATCH_v0.4.0.md) for the cart/removal revision. The owner completed that solo test and reported UI changes; [PATCH_v0.4.1.md](PATCH_v0.4.1.md) covers the resize/selection fixes and pending rendered recheck. The owner reported the v0.3.0 solo lifecycle/purchase sequence passed; the reviewed log includes Horde Night, so standalone loading is not independently established by that log. [TEST_PHASE_2.md](TEST_PHASE_2.md) is the current four-step patch test. Dedicated/hosted reconnect/restart, price-rounding, existing-save migration and broader UI/addon compatibility acceptance remain pending; prepare separate 4-8-step instructions when those sessions are selected. Reward earning and prestige creation-screen flows below remain future work.
+## Established evidence
 
-## Documentation pass
+- Owner-reported solo shop/UI checks, purchases, progression, Prestige milestones and corrected respawn behavior passed across the recorded checkpoints.
+- Latest dedicated/client captures load the intended pair, settle death, verify replacement creation and grant starting Tokens once. The previous client `observePlayers` loop is absent; vanilla startup/asset warnings are separate.
+- CP9 automated checks: 777 Trait Shop assertions, 149 core settings assertions, native Kahlua compilation of 22 addon / 107 core files, three dedicated save/restart probe cycles. Core follow-up adds 34 integrity assertions and a fresh-client callback regression. These are automated/native results, not two human players.
+- Website: 55 API tests; known Trait Shop/Character Unverified flags, x0.50 and multiplicative Cure scoring, frozen official boundaries and current-version configuration. Production bundle hash verified; public leaderboard and snapshot endpoints healthy; no existing public record removed or rewritten.
+- Historical reports remain in CHECKPOINT_1.md through CHECKPOINT_9.md and individual PATCH/LIVE/DEDICATED reports. Their original pending statements do not override the current evidence above.
 
-- Verify the README index resolves and the preserved visual reference exists.
-- Check that owner decisions, recommendations, deferred work, and open values are distinguished.
-- Do not claim a playable build or official eligibility from documentation alone.
+## Remaining live acceptance
 
-## Progression and death
+The owner has not yet reported the focused two-player Prestige creation, shared faction lock/count, individual reward ownership, reconnect and membership-change sequence. TEST_PUBLIC_RELEASE.md contains the complete seven-step check. Inspect client and SFTP logs afterward; do not infer success from package uploads or automated probes.
 
-- XP crossing one or multiple level thresholds grants exactly one Token per earned level.
-- Levels 4 -> 5 and 9 -> 10 grant exactly one Prestige Point each; replay/reconnect grants no duplicate.
-- Granting, spending, or refunding Tokens cannot alter earned prestige or Trait Level; only earned Trait Level milestones generate new prestige.
-- Five unused creation points grant exactly five starting Tokens once and no XP, Trait Levels, or prestige.
-- Death wipes Tokens and settles prestige once; reconnect, server restart, and repeated death callbacks cannot duplicate settlement.
-- Owner example: dying with 3 Prestige Points gives the next character +3 creation points and 1 retained Prestige Point after entering the world, with Trait Level 0.
-- Validate repeated retention over at least three lives. Agreed nearest-whole rounding at 30% gives 3 -> 1 -> 0 without new earnings. Verify the documented half-up convention at exact ties and no minimum-one guarantee.
-- Validate the separate retention setting, including 0% and 100% if supported, without changing the full bonus offered at that transition.
-- Reconnect, canceled creation, repeated spawn callbacks, and crash recovery cannot repeat the bonus or retention step. Do not apply decay both at death and spawn.
-- Test retained-plus-newly-earned prestige as the next bonus total. Verify Tokens, Trait Level and partial XP reset on death.
+Standalone and hosted/split-screen combinations, arbitrary third-party traits and optional negative-removal multiplayer combinations are not exhaustively certified. They remain compatibility coverage limits, not new required full test matrices. Broaden testing only for a demonstrated failure or changed behavior.
 
-## Rewards
+## Regression rules
 
-- Every mode shows and uses its intended categories; Hybrid shows all six.
-- Horde completion: connected member/non-casualty receives XP; casualty, unrelated player, and disconnected member do not.
-- Late connection qualifies when event membership is valid; casualty reconnect/respawn cannot recover eligibility for the old event.
-- Replayed completion and kill notifications grant no duplicate XP; separate simultaneous hordes cannot cross-credit players.
-- Verify the chosen Hybrid overlap, Unique Player identity, survival timing, sleep, and time-skip rules.
+- Start at displayed Level 1, 0 / 100 XP. Each earned level grants configured Tokens (default 1); displayed Levels 5, 10, etc. grant Prestige by default. Multi-level gains and repeated callbacks must not duplicate rewards.
+- Creation points become starting Tokens once; they grant no XP/levels/Prestige. Death wipes Tokens/XP/level progress and settles retained plus earned Prestige once. Next creation uses the full bonus, then retains the configured share once. At 30%, 3 -> 1 -> 0 without fresh earnings.
+- Purchases validate the complete cart and server prices; repeat requests cannot double-charge or stack effect grants. Native physical traits apply stat changes; zero-cost Other Traits remain read-only. Negative removal is default OFF, costs ceil(abs(value) * multiplier), and has no surcharge.
+- XP rewards follow active mode and positive configured rates. Hybrid never pays one tagged kill twice. Enemy-player rewards use separate accounts and a same-victim cooldown; day/night survival follows full connected native dawn/dusk periods, not horde hours. Only connected, eligible non-casualty members receive horde completion rewards.
+- Resizing/scrolling keeps every matching trait reachable. Plain-click toggles, Shift ranges, Ctrl+A, receipt removal, name/description search and server-conflict validation remain consistent. Gold XP bar uses current / required; tooltip lists sources without amounts.
+- Run Options enables/disables shop access and rewards. Acquired benefits/Prestige force ON. There is no Locked Official Mode. Default-or-harder rules remain eligible; easier/removal/non-Horde reward settings disqualify the affected run. Character benefit/provenance history persists across new runs and addon removal.
+- x0.50 applies once to eligible Trait Shop scoring; Cure +20% with Shop yields x0.60. UI, authoritative totals, exports, website and frozen official boundaries must agree. Restoring settings or respawning never erases old run flags; fix causes and reset for a fresh check.
 
-## Shop and UI
+## Public handoff
 
-- Purchases validate funds, ownership, conflicts, catalog eligibility, and actual trait effects.
-- Repeated purchase requests cannot double-spend or grant duplicate traits; failure leaves a recoverable balance/trait state.
-- Only health hover reveals the button; hidden button coordinates do not. Moving onto the visible button keeps it usable; clicking opens the shop without breaking health UI.
-- Verify all three panels, price ordering, search/filter states, grey inspectable unavailable traits and gold owned/selection styling. A completed purchase transfers selection to the owned positive panel; all current negatives remain inspectable with removal disabled.
-- Verify resource tooltip breakdowns, equal Tokens/Prestige emphasis, centered level and gold percentage bar. Modded trait discovery must not bypass effect support or server purchase validation.
-- Verify icon scaling and coexistence with reference mods that modify the same UI area.
-- Before initial release, negative removal is unavailable. Later, verify default-off toggle, approved price formula, and actual effect removal separately.
-- Verify the exact labels Positive Cost Multiplier and Negative Cost Multiplier, their authoritative price calculations, and eventual whole-Token rounding. Keep exclusions separate from price controls.
-
-## Official scoring
-
-- Detection defaults to Horde Night appropriately; standalone mode works without the dependency.
-- Locked Official Mode applies authoritative values and rejects conflicting edits.
-- Unlocked/matching rules remain eligible; divergent play persistently flags the run, including after restoring the preset and reloading.
-- Custom-earned prestige or retained traits cannot bypass eligibility by starting another run or changing settings.
-- Score 100 before Trait Shop becomes 50; Cure-only +20% plus Trait Shop turns illustrative base 100 into 60, applied once.
-- Hypothetical 80% and 60% reductions produce 8 from 100 in either order (combined 92% reduction), never -40. These are test examples, not approved actual Cure/Trait Shop values. Round only the final result; validate reduction bounds.
-- Difficulty-menu breakdown, authoritative score, export, and leaderboard interpretation agree.
-- Historical scores retain their original rules; removing the addon does not restore full scoring to an affected run.
-
-## Runtime order
-
-Use the smallest meaningful check: rule-level checks and singleplayer first; one-player dedicated for authority, creation grants, persistence and reconnect; two players only for event membership, casualties, unique-player rewards, and cross-player isolation. Hosted multiplayer should cover any host-specific lifecycle differences. Review relevant logs before declaring a build ready.
-
-Current UI follow-up: [v0.4.2](PATCH_v0.4.2.md) fixes scroll-offset row clipping and updates the footer/XP tooltip. Run the [current solo recheck](TEST_PHASE_2.md), then proceed to the dedicated player session. Dedicated acceptance is still pending.
-
-Current follow-up: [v0.4.3](PATCH_v0.4.3.md) fixes native button color mutation. Its four-step button recheck precedes the dedicated player session.
-
-## Owner acceptance - 2026-09-17
-
-Latest: owner reports v0.5.0 working on dedicated; [SFTP review](DEDICATED_v0.5.0.md) confirms version and resumed settled state. Checkpoint 6 is now implemented as v0.6.0 with 472 behavioral checks, 17-file compilation, 32 release-tooling checks and three native dedicated save/restart cycles. [Evidence](CHECKPOINT_6_EVIDENCE.txt) distinguishes native/fixture coverage from pending [two-player acceptance](TEST_CHECKPOINT_6.md). Survival follows seasonal dawn/dusk, not horde-event hours.
-
-The owner reported **Passed** for the v0.4.3 four-step button recheck. Record this as owner-reported in-game acceptance, separate from automated checks. The dedicated player session remains pending.
+After the short multiplayer pass and log review, use the prepared Workshop description and owner-selected public visibility. Keep uploaded changelogs intact until a new gameplay change starts a new cumulative draft. No gameplay package changed in this release-readiness pass.

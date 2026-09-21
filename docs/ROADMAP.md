@@ -2,9 +2,9 @@
 
 This is the active phase/checkpoint roadmap. It organizes the approved product direction; creating the roadmap does not authorize implementation or publication.
 
-**Current status:** v0.8.1 adds the approved physical-trait follow-up to Checkpoint 8 (Horde Night 0.6.15). CP8 local behavior was reported passed; see [physical patch](PATCH_v0.8.1.md) and [short solo test](TEST_v0.8.1.md). CP7's corrected solo test was reported passed; its live dedicated creation check is combined with the CP8 two-player test. Implementation and automated checks do not imply Workshop publication or full multiplayer acceptance. See [Checkpoint 8](CHECKPOINT_8.md) and [dedicated test](TEST_CHECKPOINT_8.md).
+**Current status:** Trait Shop 0.9.0 and Horde Night 0.6.16.3 are uploaded and running on the dedicated test server. Checkpoints 1–10 are implemented; the website compatibility update is deployed. Checkpoint 11 awaits the targeted two-player acceptance; Checkpoint 12 documentation/package preparation is complete, with final owner page/visibility handoff after acceptance. See [current evidence](PUBLIC_RELEASE_READINESS.md) and [the final test](TEST_PUBLIC_RELEASE.md). Historical checkpoint notes below retain their original scope and are not new test requests.
 
-The intended full release still includes progression, prestige, Horde Night rewards and official scoring. Common negative removal now arrives early, disabled by default; its official policy remains undecided.
+Progression, Prestige, Horde Night rewards and official scoring are present. Common negative removal is optional/default OFF; enabling it is Lessened and unofficial under the current Horde Night policy.
 ## Checkpoint workflow
 
 - Resolve only the decisions needed for the upcoming checkpoint. Keep the remaining decisions in [DECISIONS.md](DECISIONS.md); do not silently implement recommendations as approved values.
@@ -21,12 +21,12 @@ The intended full release still includes progression, prestige, Horde Night rewa
 
 | Phase | Outcome | Checkpoints | Status |
 |---|---|---|---|
-| 1. Foundation | Loadable standalone package and reliable character/account state | 1-2 | Implemented; solo sequence reported passed, live multiplayer pending |
+| 1. Foundation | Loadable standalone package and reliable character/account state | 1-2 | Implemented; solo and dedicated lifecycle evidence recorded |
 | 2. Positive trait shop | Usable health-hover entry and safe positive-trait purchases | 3-4 | v0.4.3 implemented; solo button and dedicated replacement-character purchases reported passed; remaining persistence checks and follow-ups carried forward |
-| 3. Progression and prestige | XP rewards, Trait Levels, death resets, and next-character bonuses | 5-7 | Checkpoints 5-7 implemented; corrected CP7 solo test reported passed; dedicated creation acceptance pending |
-| 4. Horde Night integration | Horde XP, official lock, persistent eligibility, and score display | 8-10 | CP8 implemented; live acceptance pending; CP9-10 remain |
-| 5. Initial release | Verified standalone and OMH builds, documentation, release package | 11-12 | Pending |
-| 6. Negative-trait removal | Optional default-off removal with verified effect cleanup | 13-14 | Common removal implemented in v0.4.0; custom exceptions and official policy remain |
+| 3. Progression and prestige | XP rewards, Trait Levels, death resets, and next-character bonuses | 5-7 | Implemented; solo and dedicated creation verified; two-account inheritance/reconnect check remains |
+| 4. Horde Night integration | Horde XP, Run Options, persistent eligibility, and score display | 8-10 | CP8-10 implemented; API deployed; two-player acceptance remains |
+| 5. Initial release | Verified standalone and OMH builds, documentation, release package | 11-12 | Release preparation complete; final two-player test and owner public handoff pending |
+| 6. Negative-trait removal | Optional default-off removal with verified effect cleanup | 13-14 | Common removal and official policy implemented; custom adapters remain targeted follow-ups |
 
 ## Phase 1 - Foundation
 
@@ -34,7 +34,7 @@ The intended full release still includes progression, prestige, Horde Night rewa
 
 **Deliver:** confirm Mod ID and supported B42 build; create the standalone package using the existing OMH folder conventions. Inspect actual vanilla and reference-mod sources for health UI, character-creation remaining points, trait application, and multiplayer identity. Inspect Horde Night's extension callbacks and identify missing data without modifying the core yet. Document feasible integration paths and any blocker before building dependent systems.
 
-**Selected during implementation:** `OneMoreHorde_TraitShop`, version 0.1.0, `42.20/` layout with metadata minimum 42.20.0; actual installed build 42.20.4. Separate private repository `PandizeLive/pz-mod-onemorehorde_traitshop`; Workshop identity remains unassigned. Do not copy Horde Night's release identity or bundle third-party code unchanged.
+**Selected during implementation:** `OneMoreHorde_TraitShop`, version 0.1.0, `42.20/` layout with metadata minimum 42.20.0; actual installed build 42.20.4. Separate private repository `PandizeLive/pz-mod-onemorehorde_traitshop`; Workshop identity was later assigned as 3803035618. Do not copy Horde Night's release identity or bundle third-party code unchanged.
 
 **Supporting tooling:** the owner separately authorized a Trait Shop-specific OMH_TraitShop.cmd and private repository. Installer, mirror and publisher preparation is recorded in [RELEASE_TOOLING.md](RELEASE_TOOLING.md). This does not complete later gameplay checkpoints or the initial-release acceptance checks.
 
@@ -82,7 +82,7 @@ The intended full release still includes progression, prestige, Horde Night rewa
 
 **Dedicated test context:** replacement character displayed 19 Tokens and the owner confirmed purchases worked. Server settings had `AllowNegativeRemoval=false`; grey removal entries were expected under that setting. Live negative-removal acceptance remains unverified. Source/log findings are recorded in [diagnosis](../../../diagnostics/2026-09-17-traitshop/diagnosis.md).
 
-**Approved curve:** round `100 + 35n + (65/19)n²` to the nearest 50, half-up, where n is the current Trait Level. This tunes the approved gentle acceleration to exactly 2,000 for reaching Level 20, starting at 100 for Level 1. Compute from the unrounded formula each time. Partial XP, Trait Level and Token reset on death; prestige entitlement persists. See [implementation report](CHECKPOINT_5.md).
+**Approved curve:** round `100 + 35n + (65/19)n²` to the nearest 50, half-up, where n is the saved earned-level counter (displayed Trait Level minus 1). The current Level 1 bar requires 100 XP and the Level 20 bar requires 2,000 XP; the starting Level 1 itself grants nothing. Compute from the unrounded formula each time. Partial XP, Trait Level and Token reset on death; prestige entitlement persists. See [implementation report](CHECKPOINT_5.md).
 
 **Pass when:** level transitions 4 -> 5 and 9 -> 10 grant exactly one Prestige Point each; multi-level gains grant the expected Tokens and milestones; reload/replayed requests do not repeat awards; death resets the appropriate life fields while preserving the intended next-character prestige entitlement. Verify shared rules and dedicated persistence.
 
@@ -130,9 +130,11 @@ The intended full release still includes progression, prestige, Horde Night rewa
 
 **Implemented in v0.9.0 with Horde Night v0.6.16:** Run Options, server access toggle, verified creation, durable benefits/rules history, and official earning provenance. Locked Official Mode was explicitly rejected. See [implementation and evidence](CHECKPOINT_9.md) and the [six-step local check](TEST_CHECKPOINT_9.md).
 
-**Acceptance:** automated and native persistence results are documented in the report. Live UI and two-player faction checks remain; implementation is not a claim of complete live acceptance. Ordinary standalone play remains supported.
+**Acceptance:** owner-reported live UI and dedicated lifecycle checks passed after core 0.6.16.3. Automated/native evidence remains in the report. Two-player faction acceptance remains in TEST_PUBLIC_RELEASE.md; ordinary standalone play is supported.
 
 ### Checkpoint 10 - Score multiplier and difficulty-menu breakdown
+
+**Implemented and deployed — September 21, 2026:** mod calculation/display/export support and website validation are present. The API passes 55 tests, accepts 0.6.16.3 / 42.20.4 and preserves the existing public record. See PUBLIC_RELEASE_READINESS.md. Final live multiplayer acceptance belongs to Checkpoint 11.
 
 **Deliver:** Trait Shop x0.50 applied once, multiplicative stacking of score reductions, and a Horde Night difficulty-menu breakdown showing Cure, Trait Shop, combined multiplier, and official eligibility. Use the authoritative calculation for display, export, and leaderboard validation. Identify and prepare any necessary website changes within this checkpoint; publish externally only when explicitly authorized.
 
@@ -146,7 +148,7 @@ The intended full release still includes progression, prestige, Horde Night rewa
 
 **Deliver:** one complete verified flow from creation through XP earning, purchases, horde rewards where enabled, death, prestige creation bonus, and retention. Resolve release-blocking bugs and tune explicitly approved values. Document the verified initial catalog and compatibility limits. Optional common negative removal is already implemented.
 
-**Pass when:** the applicable [validation checklist](VALIDATION.md) passes in standalone singleplayer, hosted multiplayer, and dedicated multiplayer. Use focused two-player scenarios for casualties, unique-player rewards, ownership isolation, and repeated requests. Logs show no unresolved material errors; reward processing and UI updates do not introduce noticeable continuous load. Repeat tests only for changed or unresolved behavior.
+**Pass when:** the applicable [validation checklist](VALIDATION.md) passes in standalone singleplayer, hosted multiplayer, and dedicated multiplayer. Use focused two-player scenarios for casualties, enemy-player rewards/cooldowns, ownership isolation, and repeated requests. Logs show no unresolved material errors; reward processing and UI updates do not introduce noticeable continuous load. Repeat tests only for changed or unresolved behavior.
 
 ### Checkpoint 12 - Release package and owner handoff
 
@@ -154,7 +156,7 @@ The intended full release still includes progression, prestige, Horde Night rewa
 
 **Pass when:** package contents match tested source, a clean installation loads the intended version, required official-score integration is available, and the owner has a concrete release package to review. Publishing is a separate explicitly authorized action; a prepared package is not a published release. Record actual publication and post-publication verification when they occur.
 
-**Initial release boundary:** positive purchases, all agreed reward modes, prestige, and optional official OMH integration are present; common negative removal is included, with official-policy decisions still pending. An earlier reduced release would need an explicit scope decision.
+**Initial release boundary:** positive purchases, all agreed reward modes, prestige, and optional official OMH integration are present; common negative removal is included, default OFF and unofficial when enabled. An earlier reduced release would need an explicit scope decision.
 
 ## Phase 6 - Negative-trait removal and compatibility (common support brought forward)
 
@@ -166,7 +168,7 @@ The intended full release still includes progression, prestige, Horde Night rewa
 
 ### Checkpoint 14 - Optional UI, official policy, and removal release
 
-**Implemented in v0.4.0:** default-off removal setting, mixed cart and pricing controls, persistence and compatibility documentation. **Remaining:** decide and implement official removal policy with the scoring phase.
+**Implemented in v0.4.0:** default-off removal setting, mixed cart and pricing controls, persistence and compatibility documentation. **Official policy implemented:** enabling removal is Lessened/unofficial. Custom trait adapters remain case-specific follow-ups.
 
 **Pass when:** the default disables removal; enabling it permits only validated removals at the correct prices; duplicate/interrupted requests are safe; official eligibility follows the approved policy. Positive purchasing, progression, prestige, and score regressions pass. Prepare a separate versioned release for owner review.
 
@@ -182,10 +184,8 @@ The intended full release still includes progression, prestige, Horde Night rewa
 | 7 | Remaining character-creation transport and transaction details |
 | 8 | Dependency changes with saved settings; any remaining Hybrid overlap |
 | 9 | Resolved: Run Options, no lock preset, fresh verified characters, durable benefits and unofficial provenance |
-| 13-14 | Official removal policy and any custom trait adapters; multiplier 2/no surcharge is settled |
+| 13-14 | Official removal policy resolved (OFF for official); custom adapters only for demonstrated incompatibilities |
 
 No open Phase 6 decision blocks the initial release. No unimplemented checkpoint should be marked complete solely because its design is documented.
 
-Current UI follow-up: [v0.4.2](PATCH_v0.4.2.md) fixes scroll-offset row clipping and updates the footer/XP tooltip. Run the [current solo recheck](TEST_PHASE_2.md), then proceed to the dedicated player session. Dedicated acceptance is still pending.
-
-Current follow-up: [v0.4.3](PATCH_v0.4.3.md) fixes native button color mutation. Its four-step button recheck precedes the dedicated player session.
+Historical v0.4.2/v0.4.3 UI follow-ups were reported passed. Use TEST_PUBLIC_RELEASE.md for the current remaining test.

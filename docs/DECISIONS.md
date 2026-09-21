@@ -9,14 +9,14 @@ Recorded September 14, 2026 from the OMH: Trait Shop conversation. New owner ins
 1. Project home: `C:/Users/bandi/Zomboid_Modding/OMH/Trait Shop`; standalone operation plus optional Horde Night integration.
 2. A unified shop and progression window, entered through a custom health-icon hover interaction similar to Trait Purchase System; use the owner's icon and GIF reference.
 3. XP fills a level bar. One Token per Trait Level and one Prestige Point every five Trait Levels. Newly earned prestige depends on Trait Level, never Token count.
-4. Tokens buy traits and later removals. Prestige Points grant bonus character-creation trait points. These are distinct resources.
+4. Tokens buy traits and supported removals. Prestige Points grant bonus character-creation trait points. These are distinct resources.
 5. Tokens wipe and Trait Level resets on death. Unused creation points become starting Tokens once (five unused points -> five Tokens), with no prestige credit because they do not grant Trait Levels.
 6. Reward modes: Kills, Survival, Horde Night, Hybrid; six XP reward categories as specified in DESIGN.md.
 7. Horde completion rewards require connection at completion of the player's horde and no casualty status for that event. No minimum participation tracking.
 8. Horde Night mode defaults on with Horde Night detected and is required for official Trait Shop scoring.
-9. Official lock forces the approved settings. Unlocking permits edits; divergent play persistently flags the run. Restoring settings cannot clear the flag.
+9. Locked Official Mode was rejected. Enable Trait Shop lives in Run Options, defaults ON when installed and is forced ON by character benefits. Default-or-harder settings remain eligible; easier settings and leaving Horde Night reward mode persistently flag the run. Restoring settings does not clear history.
 10. Initial Trait Shop score modifier is x0.50. Multiple reductions multiply their remaining-score factors; never sum the reduction percentages. Round only the final score. Horde Night's difficulty menu must explain modifiers, including Cure and Trait Shop. The owner's 80% and 60% reductions are an illustrative example, not new approved Cure/Trait Shop settings.
-11. Negative-trait removal is a later feature, disabled by default when available. Initial release need not include it or complex removal support.
+11. Common negative removal was brought forward and is implemented, default OFF. Enabling it makes Horde Night scoring unofficial. Complex custom adapters remain separate follow-ups.
 12. Prestige does not remain an undiminished cumulative lifetime total. The next character receives the available prestige as creation points, then retains 30% after entering the world. A separate retention setting controls this percentage. Owner example: 3 points -> +3 creation points and 1 retained Prestige Point.
 13. Cost setting names are Positive Cost Multiplier and Negative Cost Multiplier. Exclusions are separate from pricing.
 14. Prestige retention rounds to the nearest whole point, with no minimum-one guarantee: 3 -> 1 -> 0 at 30% without new earnings. The documented tie convention is half up for nonnegative values; always rounding upward is rejected.
@@ -30,29 +30,24 @@ Recorded September 14, 2026 from the OMH: Trait Shop conversation. New owner ins
 22. September 15: defer the live dedicated player test until after Phase 2 so it covers shop access, purchases and actual balance/trait persistence along with Phase 1 lifecycle behavior. Batch remaining owner checks into that session. Continue automated and source-based verification during implementation; deferred live acceptance does not block starting Phase 2 and must not be described as passed.
 23. The owner authorized full Phase 2 implementation, both Checkpoints 3 and 4, using the three PZ skills and native/decompiled sources. v0.3.0 implements the health-hover shop and positive purchases; the current owner test is TEST_PHASE_2.md.
 24. Phase 2 implementation choices: Positive Cost Multiplier defaults to 1.0 (range 0.1-100), prices round upward, and the initial catalog contains ten source-verified native traits requiring only membership effects. The tooltip is included; no additional keybind. Native costs and translations supply presentation. These defaults do not settle the later official scoring preset.
-25. Starting-Token conversion applies to new zero-age lives under the new code. Existing characters and migrated v0.2.0 records preserve counters without retroactive grants. Purchase receipts are per-life entitlements used to repair missing native trait membership; restoring full world backups is the supported persistence boundary.
+25. Starting-Token conversion uses captured creation points and one-time server settlement; it no longer depends on exact zero survived hours. Existing characters and migrated v0.2.0 records preserve counters without retroactive grants. Purchase receipts are per-life entitlements used to repair missing native trait membership; restoring full world backups is the supported persistence boundary.
 26. Owner testing must use 4-8 short numbered steps per test, with the whole sequence up front. The first Phase 2 handoff was too long; TEST_PHASE_2.md now contains the focused eight-step solo test. Dedicated/hosted and broader coverage remain pending, with short checklists to be prepared for those sessions.
 27. Historical v0.3.1 decision (superseded by 29-33 below): the owner reported that solo sequence passed, then approved the three-box UI patch: catalog left, current positive traits upper right, current negative traits lower right. Health-only opening, persistent hover across the visible button, equal Tokens/Prestige prominence, centered Trait Level, gold percentage XP bar, compact descriptions, and tooltip breakdowns replace the first UI. One Prestige number represents retained plus earned; negative removal stays deferred.
 28. Discover modded traits through the loaded registry and sort by current Token cost, cheapest first, with alphabetical ties. Visibility does not authorize unsupported effects. v0.3.1 adds an explicit shared membership-only registration hook for verified integrations; it does not certify arbitrary trait packs or infer custom initialization from empty metadata. The current owner handoff is the six-step UI test in TEST_PHASE_2.md.
 
-29. v0.4.0 replaces the preceding UI design with a resizable, unpinned OMH panel; centered red/green branding; gold #E7B428 two-line level; equal Token/Prestige controls; and numeric XP progress. Trait descriptions appear only in tooltips. Positive/negative rows are green/red, unavailable rows grey, selections gold-outlined.
-30. One Purchase button checks out a receipt containing additions and removals. Ctrl/Shift multiselection, Reset and Close are approved. Search includes descriptions after name matches, with price sorting inside relevance groups.
-31. Level 1 requires 100 XP; the display begins at `0 / 100`. Checkpoint 5 later approves gentle acceleration: round `100 + 35n + (65/19)n²` to the nearest 50 (half-up), where n is current level. Level 20 costs exactly 2,000. Earning rates remain undecided.
+29. v0.4.0 replaces the preceding UI design with a resizable, unpinned OMH panel; centered red/gold branding; gold #E7B428 two-line level; equal Token/Prestige controls; and numeric XP progress. Trait descriptions appear only in tooltips. Positive/negative rows are green/red, unavailable rows grey, selections gold-outlined.
+30. One Purchase button checks out a receipt containing additions and removals. Plain-click toggles, Shift range selection, Ctrl+A, Reset and Close are approved. Search includes descriptions after name matches, with price sorting inside relevance groups.
+31. Level 1 requires 100 XP; the display begins at `0 / 100`. Checkpoint 5 later approves gentle acceleration: round `100 + 35n + (65/19)n²` to the nearest 50 (half-up), where n is the saved earned-level counter (displayed level minus 1). The Level 20 bar costs exactly 2,000. Earning rates are resolved in SANDBOX_OPTIONS_SPEC.md.
 32. Negative removal is brought forward into this patch, default-off. Negative Cost Multiplier defaults to 2, prices round up, and the owner explicitly rejected the +2 surcharge.
 33. Broad default eligibility replaces the ten-trait allowlist. Common standard effects are processed together; a small reasoned exclusion set covers body progression and known unsupported cases. This does not promise execution of arbitrary mod initialization scripts.
 
-## Open decisions
+## Remaining release work and optional follow-ups
 
-| Topic | Unresolved choice | Recommendation / impact |
-|---|---|---|
-| Prestige conversion | Can unused prestige-derived creation points also become starting Tokens? | Confirmed in CP7 scope: yes, without levels or newly earned Prestige. |
-| Official prestige provenance | What happens when custom-earned prestige enters a new character/run? | Persist provenance; do not silently treat it as official after changing settings. Decide whether to exclude that prestige from an official start or make the affected run unofficial. |
-| Official preset | XP rates/curve, prices, caps, eligible traits, prestige lifecycle and limits, future removal settings. | Must be explicit and versioned; 50% score alone cannot establish fairness. |
-| Official lock default | Default enabled with Horde Night? | Recommend yes. Unlocked but matching settings must remain eligible. |
-| Custom compatibility | Trait-specific scripts beyond declared effects. | Common effects are implemented in v0.4.0; add targeted adapters for demonstrated incompatibilities. |
-| Score detection | Enabled mod versus mere subscription; adding/removing during a run. | Recommend enabled runtime detection plus durable affected-run history. |
-| UI conveniences | Optional keybind beyond the implemented hover button and tooltip. | Add only if desired; live scale and competing-popup checks remain in the test plan. |
-| Workshop presentation | Final cover, description, visibility and readiness for public release. | Tooling creates a private development item on first owner-run publication; live updates preserve existing presentation. No Workshop ID is invented or borrowed. |
+Core design decisions are resolved: unused Prestige creation points become Tokens; unofficial Prestige provenance persists; default-or-harder settings stay eligible; actual runtime access/benefits control the score modifier; there is no lock preset. See SANDBOX_OPTIONS_SPEC.md for the complete current baseline.
+
+- Final two-player acceptance and owner public-page/visibility handoff: PUBLIC_RELEASE_READINESS.md.
+- Custom trait adapters: add only for demonstrated incompatibilities; not a promise of universal support.
+- Optional keybind: not part of this release.
 
 ## Superseded proposals
 
