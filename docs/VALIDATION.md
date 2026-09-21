@@ -12,7 +12,7 @@ Current candidate: **Trait Shop 0.9.0 / Horde Night 0.6.16.3**, PZ 42.20.4. Both
 
 ## Remaining live acceptance
 
-The owner has not yet reported the focused two-player Prestige creation, shared faction lock/count, individual reward ownership, reconnect and membership-change sequence. TEST_PUBLIC_RELEASE.md contains the complete seven-step check. Inspect client and SFTP logs afterward; do not infer success from package uploads or automated probes.
+The owner requested a shorter test without earning Prestige. TEST_PUBLIC_RELEASE.md now contains seven quick steps using unused creation points as starting Tokens: access toggles, purchase/account isolation, shared faction locks, reconnect, run reset and membership changes. Inspect client and SFTP logs afterward; do not infer success from package uploads or automated probes. Prestige-specific two-account inheritance/retention, horde reward ownership and casualty handling are outside this shortened check and remain live-coverage limits.
 
 Standalone and hosted/split-screen combinations, arbitrary third-party traits and optional negative-removal multiplayer combinations are not exhaustively certified. They remain compatibility coverage limits, not new required full test matrices. Broaden testing only for a demonstrated failure or changed behavior.
 

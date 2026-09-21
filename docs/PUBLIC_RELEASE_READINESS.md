@@ -15,6 +15,8 @@
 
 Complete [the seven-step two-player test](TEST_PUBLIC_RELEASE.md). After a passing report and log review, update the Workshop description from the prepared text and choose public visibility in Steam. No new gameplay version/content upload is needed for these documentation and API changes. The page and visibility were not changed by this pass.
 
+The owner requested a quicker release check: it now uses starting Tokens and purchases instead of requiring earned Prestige or a completed horde. This covers the main account/faction persistence paths without grinding. Prestige-specific inheritance and live horde reward/casualty coverage are not newly established by this shorter test.
+
 Keep both existing uploaded `WORKSHOP_CHANGELOG.txt` drafts intact. The next gameplay change starts a new cumulative draft from the confirmed versions above; website/docs-only work is not a new mod changelog. GitHub mirroring remains owner-run.
 
 ## Release limits
