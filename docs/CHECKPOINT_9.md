@@ -39,3 +39,11 @@ Trait Shop 0.8.1.1 was successfully uploaded to item 3803035618: `%LOCALAPPDATA%
 Horde Night/Cure Defense 0.6.15.1 was successfully uploaded to item 3777891317: `%LOCALAPPDATA%/OMH/WorkshopPublisher/Logs/workshop-v0.6.15.1-20260919-190826.log` contains Uploading content and Committing update...Success. That publisher targets 3777891317 explicitly; subsequent dedicated logs previously verified 0.6.15.1 loaded. The pending changelog contained only that already-published release. Each next draft therefore begins with this update; these new drafts remain cumulative until their exact content upload succeeds.
 
 Both live Workshop pages were retrieved into each repository's ignored `.local/workshop-before-v<version>.html` and their descriptions read. Owner page text, artwork and visibility are preserved. Content publishers omit these fields. No GitHub push, PR update or Workshop upload is executed by this task; the owner uses Mirror then Publish. Local source commits and tags provide the rollback point before installation.
+
+## Local release readiness — 2026-09-21
+
+Trait Shop source commit `1a7163c`, annotated tag `v0.9.0`; core source commit `3c9d0a3`, annotated tag `test/v0.6.16`. Both launchers passed offline Mirror and installer validation; both Workshop content preflights passed for their own item IDs. Remote mirror verification happens when the owner runs Mirror/Publish and is not claimed here.
+
+Both packages were installed into local mods and Workshop staging. Every copied file matched tagged source hashes. Previous packages are backed up in `C:/Users/bandi/Zomboid/OMH-TraitShop-local-backups/before-v0.9.0-20260921-031407-2382` and `C:/Users/bandi/Zomboid/OMH-local-backups/before-v0.6.16-20260921-031354-8866`. No game was launched. Later documentation-only commits do not change tagged Contents.
+
+**Test now:** launch through Steam and use [the six-step check](TEST_CHECKPOINT_9.md). After acceptance and the separate website policy deployment, use each launcher → 2 (Mirror), then → 3 (Publish). The copy-ready Steam note is [STEAM_CHANGELOG_v0.9.0.txt](STEAM_CHANGELOG_v0.9.0.txt). Neither item has been uploaded by this task, so both cumulative drafts remain pending.
