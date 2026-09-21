@@ -19,6 +19,8 @@ Events.OnClientCommand.fire("OMHTraitShop", "purchase", alice,
 check(authority.getState(alice).tokens == 3 and authority.getState(bob).tokens == 5, "command debits only authenticated sender")
 local response = testPackets[#testPackets]
 check(response.player == alice and response.args.result == "purchased", "purchase receipt routes only to buyer")
+check(testTables.OMHTraitShop_State_v1.accounts["user:5:Alice:0"].life.prestigeUnofficial == false,
+    "Starting-token purchase does not manufacture unofficial XP provenance")
 testClock = testClock + 1000
 local count = #testPackets
 Events.OnClientCommand.fire("OMHTraitShop", "purchase", alice,

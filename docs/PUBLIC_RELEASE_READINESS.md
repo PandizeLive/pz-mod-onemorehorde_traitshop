@@ -1,6 +1,8 @@
 # Public release readiness — September 21, 2026
 
-**Release candidate:** Trait Shop 0.9.0 with Horde Night 0.6.16.3; PZ 42.20.4. Gameplay packages are already uploaded. Website compatibility is deployed. Final two-player acceptance and the owner-run Workshop page/visibility handoff remain; this is not a claim that every manual test has passed.
+**Release candidate:** Trait Shop **0.9.0.1** with Horde Night **0.6.16.4**; PZ 42.20.4. These corrective packages await owner mirror/upload and the short retest. Website version compatibility is deployed. The preceding 0.9.0 / 0.6.16.3 uploads are the confirmed baseline, not the new patch.
+
+The September 21 two-player test exposed a purchase-only false Trait Shop Lessened flag. Both accounts had zero XP/Prestige; spending starting Tokens incorrectly created unofficial earnings history. The paired patch separates those checks and adds the gold participant-count username tooltip. Existing flags remain; retest with fresh characters. See PATCH_v0.9.0.1.md and core PATCH_v0.6.16.4.md.
 
 ## Verified
 
@@ -13,11 +15,11 @@
 
 ## Remaining handoff
 
-Complete [the seven-step two-player test](TEST_PUBLIC_RELEASE.md). After a passing report and log review, update the Workshop description from the prepared text and choose public visibility in Steam. No new gameplay version/content upload is needed for these documentation and API changes. The page and visibility were not changed by this pass.
+Mirror/upload both corrective packages, then complete [the seven-step two-player test](TEST_PUBLIC_RELEASE.md). After a passing report and log review, update the Workshop description from the prepared text and choose public visibility in Steam. The page and visibility were not changed by this pass.
 
 The owner requested a quicker release check: it now uses starting Tokens and purchases instead of requiring earned Prestige or a completed horde. This covers the main account/faction persistence paths without grinding. Prestige-specific inheritance and live horde reward/casualty coverage are not newly established by this shorter test.
 
-Keep both existing uploaded `WORKSHOP_CHANGELOG.txt` drafts intact. The next gameplay change starts a new cumulative draft from the confirmed versions above; website/docs-only work is not a new mod changelog. GitHub mirroring remains owner-run.
+Both `WORKSHOP_CHANGELOG.txt` files now contain new cumulative drafts for the paired fix, starting after the confirmed uploads above. GitHub mirroring remains owner-run.
 
 ## Release limits
 

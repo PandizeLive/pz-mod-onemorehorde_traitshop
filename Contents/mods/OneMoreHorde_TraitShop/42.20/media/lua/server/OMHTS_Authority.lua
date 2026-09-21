@@ -451,9 +451,6 @@ function Authority.purchase(player, args)
     else
         binding.lastPurchase = now
         result = Shop.purchase(player, binding.record, args)
-        if result == "purchased" then
-            auditEarnings(player, binding.record)
-        end
     end
     local snapshot = snapshotFor(player, binding.record)
     snapshot.result = result
