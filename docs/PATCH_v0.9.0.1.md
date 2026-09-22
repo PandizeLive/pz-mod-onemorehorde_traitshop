@@ -1,5 +1,7 @@
 # v0.9.0.1 — purchase provenance correction
 
+**Published / accepted September 21:** `traitshop-v0.9.0.1-20260921-203514.log` confirms successful content commit for item 3803035618. Core 0.6.16.4 also uploaded successfully. Owner reports the latest test passes; final console/SFTP review records fresh creation, starting grants and no recurrence of the OMH callback loop. This supersedes pending-upload/test wording below. Preserve the uploaded changelog until the next gameplay change.
+
 Pair with Horde Night **0.6.16.4**. A successful purchase no longer calls the XP/Prestige earnings audit. Starting Tokens represent unused creation points and buying traits with them must not invent earned XP/Prestige history. All actual reward handlers retain their audit. Purchases still force Trait Shop benefits/scoring restrictions normally.
 
 Read-only dedicated save inspection found both test accounts had zero XP/earned levels/Prestige, creation grants of four Tokens, purchases, and an unofficial earnings marker introduced by the purchase path. Horde Night's companion correction no longer infers unofficial earnings from purchases alone. Existing persistent flags are deliberately preserved; use fresh characters for the short retest.

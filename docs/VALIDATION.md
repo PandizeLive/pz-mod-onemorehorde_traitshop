@@ -1,6 +1,6 @@
 # Validation and remaining acceptance
 
-Current candidate: **Trait Shop 0.9.0.1 / Horde Night 0.6.16.4**, PZ 42.20.4. Both corrective content uploads are pending; website compatibility is deployed. See [release evidence](PUBLIC_RELEASE_READINESS.md) and the [short targeted player test](TEST_PUBLIC_RELEASE.md). This is developer coverage tracking, not another player checklist.
+Current release: **Trait Shop 0.9.0.1 / Horde Night 0.6.16.4**, PZ 42.20.4. Both uploads are confirmed; the owner reports the latest test passes and final console/SFTP review found no recurrence of the OMH callback loop. Website compatibility is deployed. See [release evidence](PUBLIC_RELEASE_READINESS.md); the [short checklist](TEST_PUBLIC_RELEASE.md) remains a regression reference, not a request to repeat it.
 
 Latest correction: starting-Token purchases no longer manufacture unofficial earnings history; actual XP/Prestige and acquired-benefit restrictions persist. The new regression failed before the fix and passed afterward. Core adds gold participant counts with server-owned username tooltips. Automated results: 262 shop/UI/physical, 191 foundation/feedback, 45 horde integration, 38 core provenance and 149 core settings assertions; UI lifecycle checks and 22 addon / 107 core Lua compilation pass. Existing saved flags are preserved.
 
@@ -30,4 +30,4 @@ Standalone and hosted/split-screen combinations, arbitrary third-party traits an
 
 ## Public handoff
 
-After both patch uploads, the short multiplayer pass and log review, use the prepared Workshop description and owner-selected public visibility. Current changelogs are cumulative drafts since the confirmed 0.9.0 / 0.6.16.3 uploads.
+Uploads and the latest owner acceptance/log review are complete. Use the prepared Workshop description and owner-selected public visibility. Current changelogs describe confirmed uploaded 0.9.0.1 / 0.6.16.4 content; retain them until the next gameplay change.

@@ -1,5 +1,7 @@
 # Quick two-player release check
 
+**Acceptance recorded September 21:** owner reports the latest test passes; final console/SFTP logs reviewed. Both patch uploads below are now confirmed. Keep this checklist for future regressions; no repeat is requested.
+
 **Wait for both patch uploads:** Trait Shop **0.9.0.1** and Horde Night **0.6.16.4**. In [OMH_TraitShop.cmd](../OMH_TraitShop.cmd) and [OMH.cmd](../../pz-mod-onemorehorde_protectthecure/OMH.cmd), use option 2 (Mirror), then 3 (Publish). Restart the private server and launch through Steam after both updates download. No XP grind is needed.
 
 1. Use two fresh characters with no inherited Prestige, leaving **4 creation points unspent** each: expect **4 Tokens, Level 1**. Join the same faction, keep default Trait Shop rules and reset the run. Old test characters retain their recorded flags.
