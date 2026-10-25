@@ -86,7 +86,7 @@ end
 Events = {}
 Events.OnSGlobalObjectSystemInit = event()
 Events.OnConnected = event()
-local names = { "OnInitGlobalModData", "OnNewGame", "OnCreatePlayer", "OnCharacterDeath", "OnZombieDead", "OnZombieCreate", "OnTick", "OnSave", "OnClientCommand", "OnDisconnect", "OnGameStart", "OnServerCommand" }
+local names = { "OnInitGlobalModData", "OnNewGame", "OnCreatePlayer", "OnCharacterDeath", "OnZombieDead", "OnZombieCreate", "OnTick", "OnSave", "OnClientCommand", "OnDisconnect", "OnGameStart", "OnServerCommand", "OnWeaponHitCharacter", "OnWeaponHitXp" }
 for index = 1, #names do Events[names[index]] = event() end
 ModData = {}
 function ModData.getOrCreate(key)

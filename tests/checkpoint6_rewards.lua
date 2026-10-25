@@ -61,8 +61,10 @@ local now = testWorldHours
 victim.killer = killer
 victim.dead = true
 Events.OnCharacterDeath.fire(victim)
+Events.OnTick.fire() -- Death settles after the native post-hit callback.
 check(record.life.xp == 75, "enemy factionless player kill awards 75 XP")
 Events.OnCharacterDeath.fire(victim)
+Events.OnTick.fire() -- Death settles after the native post-hit callback.
 check(record.life.xp == 75, "repeated player death never pays twice")
 check(store.rewards.cooldowns.Killer.Victim == now+48, "default cooldown expires after 48 game hours")
 local sameFaction = player("Friend",0,904,0)
@@ -73,6 +75,7 @@ sameFaction.faction = "Team"
 sameFaction.dead = true
 sameFaction.killer = killer
 Events.OnCharacterDeath.fire(sameFaction)
+Events.OnTick.fire() -- Death settles after the native post-hit callback.
 check(record.life.xp == 75, "same faction cannot pay even when friendly fire kills")
 killer.faction = nil
 testWorldHours = now+47.99

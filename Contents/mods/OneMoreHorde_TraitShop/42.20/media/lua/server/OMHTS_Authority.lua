@@ -7,6 +7,8 @@ local Shop = require("OMHTS_Shop")
 local Rewards = require("OMHTS_Rewards")
 local RewardsConfig = require("OMHTS_RewardsConfig")
 local Prestige = require("OMHTS_Prestige")
+local DefenseRewards = require("OMHTS_DefenseRewards")
+local DefenseCredit = require("OMHTS_DefenseCredit")
 local Authority = {}
 TraitShop.Authority = Authority
 local store
@@ -128,6 +130,14 @@ local function bind(player)
     current.survival = Rewards.session(getGameTime():getWorldAgeHours(), getGameTime():getTimeOfDay(), RewardsConfig.read())
     bindings[player] = current
     current.access = enabled(player)
+    if rewardsReady then
+        local identity = player:getUsername()
+        if not isServer() then
+            identity = "singleplayer:" .. player:getPlayerNum()
+        end
+        DefenseRewards.attach(store, key, record, player:getUsername(), identity)
+        DefenseCredit.attached(key, player:getUsername())
+    end
     print("[OMH Trait Shop] state " .. result .. "; slot=" .. player:getPlayerNum()
         .. "; life=" .. record.life.id .. "; revision=" .. record.revision
         .. "; hours=" .. tostring(hours) .. "; creation=" .. record.life.creation.status
@@ -169,12 +179,16 @@ local function initialize()
     nextScan = 0
     store = ModData.getOrCreate(STORE_KEY)
     rewardsReady = false
+    DefenseCredit.initialize(nil)
     if not State.initialize(store) then
         store = nil
         print("[OMH Trait Shop] unsupported or invalid state schema; saved data preserved")
         return
     end
-    rewardsReady = Rewards.initialize(store)
+    rewardsReady = Rewards.initialize(store) and DefenseRewards.initialize(store)
+    if rewardsReady then
+        DefenseCredit.initialize({store = store, bindings = bindings, key = accountKey})
+    end
     if not rewardsReady then
         print("[OMH Trait Shop] invalid reward state; rewards disabled; saved data preserved")
     end
@@ -261,6 +275,7 @@ end
 ---@return nil
 local function onZombieDead(zombie)
     if not rewardsReady or not Rewards.consumeZombie(zombie) then return end
+    if DefenseCredit.zombieDeath(zombie) then return end
     local killer = zombie:getAttackedBy()
     local binding = rewardBinding(killer)
     if binding and Rewards.zombie(zombie, binding.record) then
@@ -275,7 +290,9 @@ local function observeDeath(player)
     if not player or not instanceof(player, "IsoPlayer") then return end
     local binding = bindings[player]
     if not binding or binding.record.life.id ~= binding.lifeId then return end
-    if rewardsReady and player:isDead() and Rewards.consumePlayer(store, player, binding.lifeId) then
+    if rewardsReady and DefenseCredit.waiting(player) then return end
+    if rewardsReady and player:isDead() and Rewards.consumePlayer(store, player, binding.lifeId)
+        and not DefenseCredit.playerDeath(player) then
         local killer = player:getAttackedBy()
         local killerBinding = rewardBinding(killer)
         if killerBinding and Rewards.player(store, killer, player, killerBinding.record) then
@@ -284,6 +301,9 @@ local function observeDeath(player)
         end
     end
     if State.settleDeath(binding.record, binding.lifeId) then
+        if rewardsReady then
+            DefenseRewards.death(store, accountKey(player))
+        end
         print("[OMH Trait Shop] death settled; life=" .. binding.lifeId .. "; wallet reset")
         sendSnapshot(player, binding)
     end
@@ -314,6 +334,9 @@ local function scanPlayers()
                 local binding = bind(player)
                 if binding and binding.record.life.id == binding.lifeId then
                     local access = enabled(player)
+                    if rewardsReady then
+                        DefenseCredit.recovery(player)
+                    end
                     if binding.access ~= access then
                         binding.access = access
                         binding.rewardDirty = true
@@ -347,7 +370,9 @@ local function scanPlayers()
             if player:isDead() then
                 observeDeath(player)
             end
-            bindings[player] = nil
+            if not rewardsReady or not DefenseCredit.waiting(player) then
+                bindings[player] = nil
+            end
         end
     end
 end
@@ -494,7 +519,12 @@ end
 Events.OnInitGlobalModData.Add(initialize)
 Events.OnNewGame.Add(onNewGame)
 Events.OnCreatePlayer.Add(onCreatePlayer)
-Events.OnCharacterDeath.Add(observeDeath)
+---@param player IsoGameCharacter Native death may precede its post-hit callback
+---@return nil
+local function queueDeath(player)
+    nextScan = 0
+end
+Events.OnCharacterDeath.Add(queueDeath)
 Events.OnZombieDead.Add(onZombieDead)
 Events.OnZombieCreate.Add(Rewards.created)
 Events.OnTick.Add(onTick)

@@ -41,6 +41,7 @@ local restored = authority.getState(reconnected)
 check(restored.tokens == 3 and reconnected:hasTrait("base:dextrous"), "authority reconnect repairs native traits from saved purchase receipt")
 reconnected.dead = true
 Events.OnCharacterDeath.fire(reconnected)
+Events.OnTick.fire() -- Death settles after the native post-hit callback.
 local replacement = player("Alice", 0, 52, 0)
 check(authority.getState(replacement).tokens == 5 and not replacement:hasTrait("base:dextrous"), "death grants only replacement creation points")
 testPhase2Snapshot = authority.getState(replacement)

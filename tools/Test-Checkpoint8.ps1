@@ -10,12 +10,12 @@ New-Item -ItemType Directory -Path $output -Force | Out-Null
 & javac.exe -d $output (Join-Path $PSScriptRoot 'KahluaBehaviorCheck.java')
 if ($LASTEXITCODE -ne 0) { throw 'Could not compile Kahlua runner.' }
 $stages = @("_=$GamePath\stdlib.lua", "_=$tests\phase1_setup.lua", "_=$tests\checkpoint8_setup.lua")
-foreach ($name in @('Extensions')) { $stages += "OMH_${name}=$core\shared\OMH_${name}.lua" }
-foreach ($name in @('ExtensionRuntime','Phase4Ownership')) { $stages += "OMH_${name}=$core\server\OMH_${name}.lua" }
-foreach ($name in @('Bootstrap','RewardsConfig','Physical','Catalog','Effects','Progression','Prestige')) {
+foreach ($name in @('Extensions','RunFlags')) { $stages += "OMH_${name}=$core\shared\OMH_${name}.lua" }
+foreach ($name in @('ExtensionRuntime','Phase4Ownership','DefenseIntegration')) { $stages += "OMH_${name}=$core\server\OMH_${name}.lua" }
+foreach ($name in @('Bootstrap','RewardsConfig','Physical','Catalog','Effects','Progression','Prestige','InjuryEvidence')) {
     $stages += "OMHTS_${name}=$lua\shared\OMHTS_${name}.lua"
 }
-foreach ($name in @('State','Creation','Shop','Rewards','Authority','HordeIntegration')) {
+foreach ($name in @('State','Creation','Shop','Rewards','DefenseRewards','DefenseCredit','Authority','HordeIntegration')) {
     $stages += "OMHTS_${name}=$lua\server\OMHTS_${name}.lua"
 }
 $engine = [IO.File]::ReadAllText((Join-Path $core 'server\OMH_Phase3HordeEngine.lua'))

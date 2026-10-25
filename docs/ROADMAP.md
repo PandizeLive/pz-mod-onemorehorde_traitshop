@@ -1,5 +1,8 @@
 # OMH: Trait Shop roadmap
 
+**Prepared XP integration: 0.9.1.** Adds authoritative optional defense credit, equal assist settlement, offline pending shares and matched client body-state recovery replies. Native death settlement waits for the post-hit callback and outstanding authorized injury receipts. [Patch and verification](PATCH_v0.9.1.md). Coordinated local installation pending; Workshop and connected-player acceptance pending.
+
+
 This is the active phase/checkpoint roadmap. It organizes the approved product direction; creating the roadmap does not authorize implementation or publication.
 
 **Current status:** Trait Shop 0.9.0 and Horde Night 0.6.16.3 are uploaded and running on the dedicated test server. Checkpoints 1–10 are implemented; the website compatibility update is deployed. Checkpoint 11 awaits the targeted two-player acceptance; Checkpoint 12 documentation/package preparation is complete, with final owner page/visibility handoff after acceptance. See [current evidence](PUBLIC_RELEASE_READINESS.md) and [the final test](TEST_PUBLIC_RELEASE.md). Historical checkpoint notes below retain their original scope and are not new test requests.

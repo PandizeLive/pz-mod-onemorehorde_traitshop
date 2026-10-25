@@ -116,6 +116,7 @@ e5.participants.Bob.casualty=true
 e5.participants.Bob.eligibilityStatus="casualty"
 bob.dead=true
 Events.OnCharacterDeath.fire(bob)
+Events.OnTick.fire() -- Death settles after the native post-hit callback.
 bob=player("Bob",0,201,0)
 testPlayers={alice,bob,outsider}
 Authority.getState(bob)

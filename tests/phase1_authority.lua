@@ -34,13 +34,16 @@ Events.OnInitGlobalModData.fire()
 check(authority.getState(reconnect).tokens == 42, "runtime reload rebinds native serialized state")
 reconnect.dead = true
 Events.OnCharacterDeath.fire(reconnect)
+Events.OnTick.fire() -- Death settles after the native post-hit callback.
 Events.OnCharacterDeath.fire(reconnect)
+Events.OnTick.fire() -- Death settles after the native post-hit callback.
 local replacement = player("Alice", 0, 23, 0)
 testPlayers = { replacement }
 testClock = testClock + 1001
 Events.OnTick.fire()
 check(authority.getState(replacement).tokens == 0 and authority.getState(replacement).lifeId ~= initial.lifeId, "server character-death event clears wallet before replacement")
 Events.OnCharacterDeath.fire(reconnect)
+Events.OnTick.fire() -- Death settles after the native post-hit callback.
 check(authority.getState(replacement).status == "alive", "late retired object event ignored")
 local current = authority.getState(replacement)
 authority.updateState(replacement, current.lifeId, current.revision, { tokens = 5 })
