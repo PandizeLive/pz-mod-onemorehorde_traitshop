@@ -6,6 +6,67 @@ local Rewards = {}
 local deadZombies = {}
 local deathRing = {}
 local deathSequence = 0
+local auditCounts = {}
+local auditAt, detailAt, detailLines = 0, 0, 0
+
+---@param event string Fixed reward outcome
+---@param fields table Scalar evidence
+---@return nil
+function Rewards.audit(event, fields)
+    local options = SandboxVars.OMHTurretsTraps
+    if not options then return end
+    local component = fields.component
+    if not component and type(fields.device) == "string" then
+        component = "traps"
+        if string.find(fields.device, "^turret") then
+            component = "turrets"
+        end
+    end
+    local traps = component ~= "turrets" and (options.Enabled == true or options.FoundationTestControls == true)
+        and options.DiagnosticLogging ~= false
+    local turrets = component ~= "traps" and (options.TurretsEnabled == true or options.TurretTestControls == true)
+        and options.TurretDiagnosticLogging ~= false
+    if not traps and not turrets then return end
+    auditCounts[event] = (auditCounts[event] or 0) + 1
+    if type(fields.amount) == "number" then
+        auditCounts[event .. "-xp"] = (auditCounts[event .. "-xp"] or 0) + fields.amount
+    end
+    if not (traps and options.DetailedLogging == true or turrets and options.TurretDetailedLogging == true) then return end
+    local now = getTimestampMs()
+    if now - detailAt >= 1000 or now < detailAt then
+        detailAt, detailLines = now, 0
+    end
+    if detailLines >= 30 then
+        auditCounts["detail-suppressed"] = (auditCounts["detail-suppressed"] or 0) + 1
+        return
+    end
+    detailLines = detailLines + 1
+    local parts = {"[OMH Trait Shop] xp-event=" .. event}
+    for key, value in pairs(fields) do
+        parts[#parts + 1] = key .. "=" .. string.sub(string.gsub(tostring(value), "[%s=]", "_"), 1, 128)
+    end
+    print(table.concat(parts, " "))
+end
+
+---@param force boolean|nil Save boundary
+---@return nil
+function Rewards.flushAudit(force)
+    local now = getTimestampMs()
+    if not force and now >= auditAt and now - auditAt < 5000 then return end
+    auditAt = now
+    local keys = {}
+    for key in pairs(auditCounts) do
+        keys[#keys + 1] = key
+    end
+    if #keys == 0 then return end
+    table.sort(keys)
+    local parts = {"[OMH Trait Shop] xp-summary"}
+    for i = 1, #keys do
+        parts[#parts + 1] = keys[i] .. "=" .. tostring(auditCounts[keys[i]])
+    end
+    print(table.concat(parts, " "))
+    auditCounts = {}
+end
 
 ---@param store table
 ---@return boolean
@@ -60,6 +121,10 @@ end
 ---@param zombie IsoZombie
 ---@return boolean
 function Rewards.consumeZombie(zombie)
+    if zombie and deadZombies[zombie] then
+        Rewards.audit("duplicate-zombie-death", {})
+        return false
+    end
     if not zombie or not instanceof(zombie, "IsoZombie") or not zombie:isDead()
         or zombie:isOnKillDone() or deadZombies[zombie] then return false end
     deathSequence = deathSequence + 1
@@ -80,6 +145,7 @@ end
 local function award(record, amount, source)
     local oldLevel = record.life.level
     if amount <= 0 or not State.awardXP(record, record.life.id, record.revision, amount) then return false end
+    Rewards.audit("ordinary-paid", {source = source, life = record.life.id, amount = amount})
     if (source ~= "zombie" and source ~= "HordeZombieXP") or record.life.level ~= oldLevel then
         print("[OMH Trait Shop] XP awarded; life=" .. record.life.id .. "; source=" .. source
             .. "; amount=" .. amount .. "; level=" .. record.life.level .. "; xp=" .. record.life.xp)

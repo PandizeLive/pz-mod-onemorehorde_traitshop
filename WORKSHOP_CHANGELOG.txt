@@ -1,7 +1,11 @@
-v0.9.1
+v0.9.1.1
 Trait Shop fixes
 - Fixed purchases made with starting Tokens incorrectly recording unofficial XP or Prestige history.
 - Actual unofficial earnings and acquired benefits continue to retain their scoring restrictions.
 
 Defense XP
 - Added optional shared turret/trap kill XP, equal PvP assist shares, and same-character offline delivery.
+
+- Fixed single-player defense rewards missing their owner after character startup.
+- Guaranteed at least 1 XP for eligible positive recipient splits, after combining shares and before offline banking. Zero rewards remain disabled.
+- Added bounded XP summaries and detailed rejection reasons.

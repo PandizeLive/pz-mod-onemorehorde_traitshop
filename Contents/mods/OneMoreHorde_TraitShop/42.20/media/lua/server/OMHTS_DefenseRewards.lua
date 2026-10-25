@@ -1,6 +1,7 @@
 if isClient() then return end
 
 local State = require("OMHTS_State")
+local Rewards = require("OMHTS_Rewards")
 local D = {}
 
 ---@param store table Authoritative Trait Shop store
@@ -59,6 +60,7 @@ function D.attach(store, key, record, username, identity)
     end
     if not State.awardXP(record, record.life.id, record.revision, pending.amount) then return false end
     data.pending[key] = nil
+    Rewards.audit("defense-delivered", {recipient = username, life = pending.life, amount = pending.amount})
     if pending.unofficial then
         record.life.prestigeUnofficial = true
         if record.prestige.earned > 0 then
@@ -128,6 +130,12 @@ function D.plan(reward, rate, faction, assists, pvp)
     if pvp then
         split(assists, reward * (1 - rate), result)
     end
+    for key, entry in pairs(result) do
+        entry.beforeMinimum = entry.amount
+        if entry.amount > 0 and entry.amount < 1 then
+            entry.amount = 1
+        end
+    end
     return result
 end
 
@@ -178,6 +186,16 @@ function D.settle(store, payouts, victim, now, cooldownHours)
                 end
                 cooldowns[victim] = now + cooldownHours
             end
+            local outcome = "defense-rejected"
+            if awarded and member.online then
+                outcome = "defense-paid"
+            elseif awarded then
+                outcome = "defense-banked"
+            end
+            Rewards.audit(outcome, {recipient = member.username, life = member.life,
+                amount = entry.amount, beforeMinimum = entry.beforeMinimum, device = entry.device})
+        else
+            Rewards.audit("defense-stale-or-cooldown", {recipient = member.username, life = member.life})
         end
     end
     return changed

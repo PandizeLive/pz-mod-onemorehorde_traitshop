@@ -1,5 +1,9 @@
 # Decisions and open questions
 
+## 2026-10-25 - C467 corrective XP approved
+
+The owner approved the same-character SP identity refresh and minimum1XP for eligible positive shares below1. Merge all recipient portions before the floor, apply it once before payment/banking, and retain zero/ineligible/duplicate suppression. This explicit exception may exceed the nominal shared pool. See PATCH_v0.9.1.1.md. No fabricated backpay or changes to unrelated release-tool edits.
+
 > Current policy (2026-09-21): [Checkpoint 9](CHECKPOINT_9.md) supersedes earlier Locked Official Mode planning. Run Options provides Enable Trait Shop, default ON when installed with Horde Night; standalone stays enabled. Existing benefits force access, missing creation provenance is unofficial, and default-or-harder rules retain eligibility.
 
 Recorded September 14, 2026 from the OMH: Trait Shop conversation. New owner instructions supersede these documents; keep the documents consistent when decisions change.

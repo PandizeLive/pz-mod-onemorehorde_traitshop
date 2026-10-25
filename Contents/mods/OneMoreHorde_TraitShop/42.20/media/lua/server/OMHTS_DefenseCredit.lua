@@ -4,6 +4,7 @@ local Pools = require("OMHTS_DefenseRewards")
 local Config = require("OMHTS_RewardsConfig")
 local State = require("OMHTS_State")
 local Evidence = require("OMHTS_InjuryEvidence")
+local Rewards = require("OMHTS_Rewards")
 local Credit = {API_VERSION = 1}
 local context
 local pending = {}
@@ -12,6 +13,7 @@ local zombies = setmetatable({}, {__mode = "k"})
 local recovery = setmetatable({}, {__mode = "k"})
 local sequence = 0
 local accountsByName = {}
+local namesByAccount = {}
 local currentFactions = {}
 OMHTS_DefenseCredit = Credit
 
@@ -24,6 +26,7 @@ function Credit.initialize(value)
     zombies = setmetatable({}, {__mode = "k"})
     recovery = setmetatable({}, {__mode = "k"})
     accountsByName = {}
+    namesByAccount = {}
     if context then
         for key, member in pairs(context.store.defense.members) do
             Credit.attached(key, member.username)
@@ -35,12 +38,17 @@ end
 ---@param username string Native account name
 ---@return nil
 function Credit.attached(key, username)
+    local previous = namesByAccount[key]
+    if previous and previous ~= username then
+        accountsByName[previous][key] = nil
+    end
     local keys = accountsByName[username]
     if not keys then
         keys = {}
         accountsByName[username] = keys
     end
     keys[key] = true
+    namesByAccount[key] = username
 end
 
 ---@param username string Account username
@@ -92,7 +100,7 @@ end
 ---@param owner string|nil Server-held owner
 ---@param injured boolean Validated application outcome
 ---@return nil
-function Credit.finishInjury(victim, token, owner, injured)
+function Credit.finishInjury(victim, token, owner, injured, source)
     local current = requests[victim]
     local job = current and current.jobs[token]
     if not job then return end
@@ -106,6 +114,7 @@ function Credit.finishInjury(victim, token, owner, injured)
     victim:setAttackedBy(nil)
     local encounter = Pools.encounter(context.store, key, binding.lifeId)
     encounter.owner, encounter.attacker = owner, "none"
+    encounter.source = source
     recovery[victim] = nil
 end
 
@@ -125,12 +134,13 @@ end
 ---@param victim IsoPlayer Injured victim
 ---@param owner string Registered device owner
 ---@return nil
-function Credit.playerInjury(victim, owner)
+function Credit.playerInjury(victim, owner, source)
     local key, binding = victimBinding(victim)
     if not key or type(owner) ~= "string" or owner == "" then return end
     victim:setAttackedBy(nil)
     local encounter = Pools.encounter(context.store, key, binding.lifeId)
     encounter.owner = owner
+    encounter.source = source
     encounter.attacker = attackerIdentity(victim)
     recovery[victim] = nil
 end
@@ -139,9 +149,9 @@ end
 ---@param owner string|nil Registered defense owner
 ---@param horde boolean|nil Authoritative active Horde source
 ---@return nil
-function Credit.zombieFinisher(victim, owner, horde)
+function Credit.zombieFinisher(victim, owner, horde, source)
     if not context then return end
-    zombies[victim] = {owner = owner, horde = horde}
+    zombies[victim] = {owner = owner, horde = horde, source = source}
 end
 
 ---@param victim IsoPlayer Candidate
@@ -259,15 +269,27 @@ end
 ---@param now number Earning time
 ---@param includeOffline boolean Selected setting
 ---@return table|nil member Eligible snapshot
-local function eligible(key, meta, online, victim, victimFaction, now, includeOffline)
+local function eligible(key, meta, online, victim, victimFaction, now, includeOffline, device)
     local store = context.store
     local record = store.accounts[key]
-    if not State.isRecord(record) or record.life.status ~= "alive" or record.life.id ~= meta.life then return nil end
+    if not State.isRecord(record) or record.life.status ~= "alive" or record.life.id ~= meta.life then
+        Rewards.audit("defense-ineligible-life", {recipient = meta.username, device = device})
+        return nil
+    end
     local player = online[key]
-    if not player and not includeOffline then return nil end
-    if victim and (meta.username == victim or (victimFaction and factionOf(meta.username) == victimFaction)) then return nil end
+    if not player and not includeOffline then
+        Rewards.audit("defense-offline-excluded", {recipient = meta.username, device = device})
+        return nil
+    end
+    if victim and (meta.username == victim or (victimFaction and factionOf(meta.username) == victimFaction)) then
+        Rewards.audit("defense-friendly-recipient", {recipient = meta.username, device = device})
+        return nil
+    end
     local cooldowns = store.rewards.cooldowns[meta.username]
-    if victim and cooldowns and cooldowns[victim] and now < cooldowns[victim] then return nil end
+    if victim and cooldowns and cooldowns[victim] and now < cooldowns[victim] then
+        Rewards.audit("defense-cooldown", {recipient = meta.username, device = device})
+        return nil
+    end
     local allowed, official = true, false
     if Config.hasHordeNight() then
         local runtime = rawget(_G, "OneMoreHordeDifficultyRuntime")
@@ -281,7 +303,10 @@ local function eligible(key, meta, online, victim, victimFaction, now, includeOf
             return nil
         end
     end
-    if not allowed or (player and player:isDead()) then return nil end
+    if not allowed or (player and player:isDead()) then
+        Rewards.audit("defense-earning-ineligible", {recipient = meta.username, device = device})
+        return nil
+    end
     return {key = key, life = meta.life, username = meta.username, online = player ~= nil, unofficial = not official}
 end
 
@@ -290,15 +315,22 @@ end
 ---@param encounter table|nil Participant set
 ---@param horde boolean Horde source already validated by the defense adapter
 ---@return nil
-local function settle(owner, victim, encounter, horde)
-    if type(owner) ~= "string" or owner == "" then return end
+local function settle(owner, victim, encounter, horde, device)
+    Rewards.audit("defense-death", {owner = owner, device = device})
+    if type(owner) ~= "string" or owner == "" then
+        Rewards.audit("defense-no-owner", {device = device})
+        return
+    end
     local settings = SandboxVars.OMHTurretsTraps or {}
     local prefix = ""
     if not getActivatedMods():contains("OneMoreHorde_Turrets")
         and getActivatedMods():contains("OneMoreHorde_Traps") then
         prefix = "Traps"
     end
-    if settings[prefix .. "DefenseXPEnabled"] == false then return end
+    if settings[prefix .. "DefenseXPEnabled"] == false then
+        Rewards.audit("defense-disabled", {owner = owner, device = device})
+        return
+    end
     local rate = settings[prefix .. "DefenseXPPercent"]
     if type(rate) ~= "number" then
         rate = 50
@@ -313,7 +345,10 @@ local function settle(owner, victim, encounter, horde)
         source = "HordeZombieXP"
     end
     local reward = Config.amount(config, source)
-    if reward <= 0 then return end
+    if reward <= 0 then
+        Rewards.audit("defense-zero-reward", {owner = owner, source = source, device = device})
+        return
+    end
     currentFactions = {}
     local rosters = {}
     if isServer() then
@@ -332,7 +367,10 @@ local function settle(owner, victim, encounter, horde)
     end
     local online = {}
     for player, binding in pairs(context.bindings) do
-        if binding.lifeId == binding.record.life.id and not player:isDead() then
+        if context.refresh and not player:isDead() then
+            binding = context.refresh(player)
+        end
+        if binding and binding.lifeId == binding.record.life.id and not player:isDead() then
             online[context.key(player)] = player
         end
     end
@@ -366,11 +404,12 @@ local function settle(owner, victim, encounter, horde)
     for key in pairs(candidates) do
         local meta = context.store.defense.members[key]
         if meta and not seen[meta.username] then
-            local member = eligible(key, meta, online, victimName, victimFaction, now, settings[prefix .. "DefenseXPIncludeOffline"] ~= false)
+            local member = eligible(key, meta, online, victimName, victimFaction, now, settings[prefix .. "DefenseXPIncludeOffline"] ~= false, device)
             local participant = type(horde) == "table" and horde.participants and horde.participants[meta.identity]
             if participant and (participant.casualty or participant.membershipStatus == "left"
                 or participant.role == "vigilante" or participant.eligibilityStatus ~= "eligible") then
                 member = nil
+                Rewards.audit("defense-horde-ineligible", {recipient = meta.username, device = device})
             end
             if member then
                 seen[meta.username] = true
@@ -384,6 +423,14 @@ local function settle(owner, victim, encounter, horde)
         end
     end
     local payouts = Pools.plan(reward, rate, faction, assists, victim ~= nil)
+    for key, payout in pairs(payouts) do
+        payout.device = device
+    end
+    Rewards.audit("defense-attributed", {owner = owner, source = source,
+        base = reward, rate = rate, faction = #faction, assists = #assists, device = device})
+    if #faction == 0 and #assists == 0 then
+        Rewards.audit("defense-no-recipient", {owner = owner, device = device})
+    end
     local changed = Pools.settle(context.store, payouts, victimName, now, config.PlayerKillCooldownDays * 24)
     for key in pairs(changed) do
         local player = online[key]
@@ -397,7 +444,7 @@ function Credit.zombieDeath(zombie)
     local fact = zombies[zombie]
     zombies[zombie] = nil
     if not fact then return false end
-    settle(fact.owner, nil, nil, fact.horde)
+    settle(fact.owner, nil, nil, fact.horde, fact.source)
     return true
 end
 
@@ -409,7 +456,7 @@ function Credit.playerDeath(player)
     local encounter = context.store.defense.encounters[key]
     if not encounter or encounter.life ~= binding.lifeId or not encounter.owner
         or encounter.attacker ~= attackerIdentity(player) then return false end
-    settle(encounter.owner, player, encounter, false)
+    settle(encounter.owner, player, encounter, false, encounter.source)
     return true
 end
 

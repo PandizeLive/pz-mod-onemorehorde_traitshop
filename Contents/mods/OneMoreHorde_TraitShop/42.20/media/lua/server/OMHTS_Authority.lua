@@ -103,6 +103,19 @@ local function bind(player)
     local current = bindings[player]
     if current then
         if current.lifeId ~= current.record.life.id or current.record.life.status ~= "alive" then return nil end
+        local key, username = accountKey(player), player:getUsername()
+        if key ~= current.accountKey then return nil end
+        if rewardsReady and username ~= current.defenseName then
+            local identity = username
+            if not isServer() then
+                identity = "singleplayer:" .. player:getPlayerNum()
+            end
+            if DefenseRewards.attach(store, key, current.record, username, identity) then
+                current.rewardDirty = true
+            end
+            DefenseCredit.attached(key, username)
+            current.defenseName = username
+        end
         return current
     end
     local key = accountKey(player)
@@ -125,7 +138,7 @@ local function bind(player)
         store.creations[birthKey] = nil
     end
     Shop.reconcile(player, record, true)
-    current = { record = record, lifeId = record.life.id, lastRequest = -10000,
+    current = { record = record, lifeId = record.life.id, accountKey = key, lastRequest = -10000,
         lastPurchase = -10000, lastBusy = -10000 }
     current.survival = Rewards.session(getGameTime():getWorldAgeHours(), getGameTime():getTimeOfDay(), RewardsConfig.read())
     bindings[player] = current
@@ -137,6 +150,7 @@ local function bind(player)
         end
         DefenseRewards.attach(store, key, record, player:getUsername(), identity)
         DefenseCredit.attached(key, player:getUsername())
+        current.defenseName = player:getUsername()
     end
     print("[OMH Trait Shop] state " .. result .. "; slot=" .. player:getPlayerNum()
         .. "; life=" .. record.life.id .. "; revision=" .. record.revision
@@ -187,7 +201,7 @@ local function initialize()
     end
     rewardsReady = Rewards.initialize(store) and DefenseRewards.initialize(store)
     if rewardsReady then
-        DefenseCredit.initialize({store = store, bindings = bindings, key = accountKey})
+        DefenseCredit.initialize({store = store, bindings = bindings, key = accountKey, refresh = bind})
     end
     if not rewardsReady then
         print("[OMH Trait Shop] invalid reward state; rewards disabled; saved data preserved")
@@ -383,6 +397,7 @@ local function onTick()
     if now < nextScan then return end
     nextScan = now + 1000
     scanPlayers()
+    Rewards.flushAudit()
 end
 
 ---@param playerNum number
@@ -519,6 +534,7 @@ end
 Events.OnInitGlobalModData.Add(initialize)
 Events.OnNewGame.Add(onNewGame)
 Events.OnCreatePlayer.Add(onCreatePlayer)
+Events.OnGameStart.Add(scanPlayers)
 ---@param player IsoGameCharacter Native death may precede its post-hit callback
 ---@return nil
 local function queueDeath(player)
@@ -529,6 +545,11 @@ Events.OnZombieDead.Add(onZombieDead)
 Events.OnZombieCreate.Add(Rewards.created)
 Events.OnTick.Add(onTick)
 Events.OnSave.Add(scanPlayers)
+---@return nil
+local function saveAudit()
+    Rewards.flushAudit(true)
+end
+Events.OnSave.Add(saveAudit)
 Events.OnClientCommand.Add(onClientCommand)
 
 return Authority

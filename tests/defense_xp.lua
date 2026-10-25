@@ -49,16 +49,16 @@ local function death(owner, horde)
     check(not Credit.zombieDeath(zombie), "same zombie receipt consumed once")
 end
 death("Alice", false)
-check(a.life.xp == .5 and b.life.xp == .5 and c.life.xp == 0, "one half pool shared, no personal owner bonus")
+check(a.life.xp == 1 and b.life.xp == 1 and c.life.xp == 0, "positive sub-one shares have a one-XP minimum")
 bindings[bob] = nil
 death("Alice", false)
-check(a.life.xp == 1 and b.life.xp == .5 and store.defense.pending.Bob.amount == .5, "offline share reserved without redistribution")
+check(a.life.xp == 2 and b.life.xp == 1 and store.defense.pending.Bob.amount == 1, "offline share reserved without redistribution")
 store = nativeRoundTrip(store)
 a, b, c, v = store.accounts.Alice, store.accounts.Bob, store.accounts.Carol, store.accounts.Victim
 bindings = {[alice] = {record = a, lifeId = a.life.id}, [carol] = {record = c, lifeId = c.life.id}, [victim] = {record = v, lifeId = v.life.id}}
 Credit.initialize({store = store, bindings = bindings, key = function(p) return p.name end})
-check(Pools.attach(store, "Bob", b, "Bob", "Bob") and b.life.xp == 1, "native serialization restart delivers exact reserved share")
-check(not Pools.attach(store, "Bob", b, "Bob", "Bob") and b.life.xp == 1, "repeated reconnect cannot deliver twice")
+check(Pools.attach(store, "Bob", b, "Bob", "Bob") and b.life.xp == 2, "native serialization restart delivers exact reserved share")
+check(not Pools.attach(store, "Bob", b, "Bob", "Bob") and b.life.xp == 2, "repeated reconnect cannot deliver twice")
 bindings[bob] = {record = b, lifeId = b.life.id}
 -- A blocked hit and a bleed tick after it must not manufacture an assistant.
 Credit.beforeHit(carol, victim, {}, 100)
@@ -82,7 +82,7 @@ Credit.playerInjury(victim, "Alice")
 victim.dead = true
 check(Rewards.consumePlayer(store, victim, v.life.id), "first death admitted")
 check(Credit.playerDeath(victim), "delayed defense death owns settlement")
-check(math.abs(a.life.xp - 38.5) < .000001 and math.abs(b.life.xp - 19.75) < .000001
+check(math.abs(a.life.xp - 39.5) < .000001 and math.abs(b.life.xp - 20.75) < .000001
     and math.abs(c.life.xp - 18.75) < .000001, "75 XP: faction 18.75 each, two equal personal assists, owner receives both once")
 check(not Rewards.consumePlayer(store, victim, v.life.id), "duplicate PvP death rejected")
 check(store.rewards.cooldowns.Alice.Victim == testWorldHours + 48, "combined award consumes one configured account cooldown")
@@ -124,7 +124,7 @@ local snapshot = {key = "Bob", username = "Bob", life = b.life.id, online = fals
 Pools.settle(store, Pools.plan(2, .5, {snapshot}, {}, false), nil, testWorldHours, 48)
 factions = {}
 SandboxVars.OMHTurretsTraps.DefenseXPPercent = 0
-check(Pools.attach(store, "Bob", b, "Bob", "Bob") and b.life.xp == 20.75, "earned payout ignores later faction and rate changes")
+check(Pools.attach(store, "Bob", b, "Bob", "Bob") and b.life.xp == 21.75, "earned payout ignores later faction and rate changes")
 Pools.settle(store, Pools.plan(2, .5, {snapshot}, {}, false), nil, testWorldHours, 48)
 State.settleDeath(b, b.life.id)
 b = State.attach(store, "Bob", 6, 0)
@@ -181,7 +181,7 @@ SandboxVars.OMHTurretsTraps.TrapsDefenseXPEnabled = true
 SandboxVars.OMHTurretsTraps.TrapsDefenseXPPercent = 20
 SandboxVars.OMHTurretsTraps.TrapsDefenseXPIncludeOffline = false
 death("Alice", false)
-check(math.abs(a.life.xp - previous - .4) < .000001, "traps-only package uses its independent pool percentage")
+check(math.abs(a.life.xp - previous - 1) < .000001, "traps-only package uses its independent pool percentage")
 getActivatedMods = oldMods
 local corrupt = nativeRoundTrip(store)
 corrupt.defense.pending.Alice = {life = 1, amount = -1, unofficial = false}
@@ -199,4 +199,9 @@ check(a.life.xp == previous, "Horde casualty cannot earn through a defense")
 death("Alice", {participants = {Alice = {eligibilityStatus = "eligible"}}})
 check(a.life.xp == previous + 2.5, "Horde source uses configured Horde XP before half split")
 testHorde = false
+local member = {key = "Floor"}
+check(Pools.plan(.5, .5, {member}, {member}, true).Floor.amount == 1, "minimum after combining faction and assist shares")
+check(Pools.plan(3, .5, {member}, {}, false).Floor.amount == 1.5, "fractions above one unchanged")
+check(Pools.plan(0, .5, {member}, {member}, true).Floor == nil, "zero rewards never create minimum XP")
+check(Pools.plan(2, 0, {member}, {}, false).Floor == nil, "zero faction percentage awards zero")
 testOutput = testChecks .. " defense XP assertions passed"

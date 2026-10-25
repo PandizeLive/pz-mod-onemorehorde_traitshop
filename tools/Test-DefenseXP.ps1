@@ -18,3 +18,10 @@ foreach ($name in @('State','Rewards','DefenseRewards','DefenseCredit')) {
 $stages += "_=$tests/defense_xp.lua"
 & "$GamePath/jre64/bin/java.exe" --enable-native-access=ALL-UNNAMED -cp "$GamePath/projectzomboid.jar;$output" KahluaBehaviorCheck @stages | Tee-Object -FilePath (Join-Path $output 'behavior.log')
 if ($LASTEXITCODE -ne 0) { throw 'Defense XP verification failed.' }
+$startup = $stages[0..($stages.Length - 2)]
+foreach ($name in @('Creation','Shop','Authority')) {
+    $startup += "OMHTS_${name}=$lua/server/OMHTS_${name}.lua"
+}
+$startup += "_=$tests/defense_startup.lua"
+& "$GamePath/jre64/bin/java.exe" --enable-native-access=ALL-UNNAMED -cp "$GamePath/projectzomboid.jar;$output" KahluaBehaviorCheck @startup | Tee-Object -FilePath (Join-Path $output 'startup.log')
+if ($LASTEXITCODE -ne 0) { throw 'Defense startup verification failed.' }
