@@ -8,4 +8,4 @@ The selected defense kill rule shares 50% of the applicable normal XP across the
 
 Evidence: [coordinated verification](../../Turrets%20%26%20Traps/docs/TEST_v0.2.68.md). Native packages load together and server GlobalModData persists the exact pending amount, cooldown and source/assist record across a fresh process. Connected clients have not been tested. Existing cumulative Workshop notes are preserved.
 
-Local tag/install evidence pending final packaging. No Workshop upload or public release.
+Installed locally and into existing Workshop staging from `v0.9.1` / `5fb6f2b964490475fbd51e68de5cf1bf55b565b1`. All 37 package files match at both destinations, with installer backups retained. All three coordinated versions loaded in the isolated native startup/restart test; owner-client and connected acceptance remain pending. No Workshop upload or public release. Remote mirror remains pending; use the existing root launcher, option 2. See the coordinated test record for backup paths and sibling state.

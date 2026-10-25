@@ -1,6 +1,6 @@
 # OMH: Trait Shop
 
-**Prepared XP integration: 0.9.1.** Adds authoritative optional defense credit, equal assist settlement, offline pending shares and matched client body-state recovery replies. Native death settlement waits for the post-hit callback and outstanding authorized injury receipts. [Patch and verification](docs/PATCH_v0.9.1.md). Coordinated local installation pending; Workshop and connected-player acceptance pending.
+**Prepared XP integration: 0.9.1.** Adds authoritative optional defense credit, equal assist settlement, offline pending shares and matched client body-state recovery replies. Native death settlement waits for the post-hit callback and outstanding authorized injury receipts. [Patch and verification](docs/PATCH_v0.9.1.md). Coordinated local installation and native startup/restart verified; Workshop and connected-player acceptance pending.
 
 
 Standalone trait progression and purchasing addon for Project Zomboid Build 42, with optional OMH: Horde Night integration.
