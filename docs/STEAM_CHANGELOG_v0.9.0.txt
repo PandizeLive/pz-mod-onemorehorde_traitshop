@@ -1,0 +1,10 @@
+[h1]v0.9.0[/h1]
+[h2]Run Options and official scoring[/h2]
+[list]
+[*]Added Enable Trait Shop to Horde Night's Run Options. It starts enabled when installed; standalone Trait Shop stays enabled.
+[*]Disabled Trait Shop stops purchases and XP rewards. Prestige and purchased benefits require it to remain enabled for the affected character or faction.
+[*]Existing characters without verified Horde Night creation records receive unofficial scores. Create a new character with Horde Night enabled and start a new run to qualify under normal rules.
+[*]Kept unofficial Prestige and Trait Shop rule history attached to affected characters across resets, reconnects and addon removal.
+[*]Default or harder Trait Shop rules remain eligible; easier rules or leaving Horde Night rewards flag the affected run.
+[*]Preview Trait Shop's x0.50 score multiplier alongside Cure and the combined result.
+[/list]

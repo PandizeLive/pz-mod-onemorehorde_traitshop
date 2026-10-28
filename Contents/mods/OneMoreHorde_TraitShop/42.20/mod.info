@@ -1,6 +1,7 @@
 name=OMH: Trait Shop
 id=OneMoreHorde_TraitShop
-modversion=0.1.0
+modversion=0.9.1.1
 versionMin=42.20.0
 icon=icon.png
-description=Development foundation for OMH: Trait Shop. Checkpoint 1 provides package loading and startup diagnostics only. Trait purchasing and progression are not implemented yet.
+poster=poster.png
+description=Earn Trait XP, purchase traits and optionally remove negative traits. Prestige grants next-character creation points with configurable retention. Standalone or integrated with Horde Night 0.6.16+ through Run Options and persistent official-score safeguards.

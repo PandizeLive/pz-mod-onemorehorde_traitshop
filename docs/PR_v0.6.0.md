@@ -1,0 +1,5 @@
+Checkpoint 6 adds Trait XP from ordinary zombie kills, eligible enemy-player kills, and full connected day/night periods. Defaults are 2/75/0/25 XP, with Hybrid standalone and a persistent two-game-day same-victim PvP cooldown. Survival follows seasonal dawn/dusk independently of the Horde Night event schedule.
+
+Reward modes filter sandbox controls and server-provided tooltip sources. Native death attribution, duplicate protection, bounded survival catch-up and batched snapshots keep awards authoritative. Existing character state and creation grants remain compatible. Horde rewards, prestige creation bonuses and official scoring remain later checkpoints.
+
+Validation: game Kahlua compilation/fundamentals audit, lifecycle/shop regressions, reward/UI checks and isolated native dedicated save/restart probes. The native probe found and fixed an early null climate-current-day dependency. Final evidence: docs/CHECKPOINT_6_EVIDENCE.txt. Live two-player acceptance remains owner-run; no publication is implied.

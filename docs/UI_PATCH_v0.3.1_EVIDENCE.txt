@@ -1,0 +1,34 @@
+OMH: Trait Shop v0.3.1 verification - 2026-09-15
+12 packaged Lua files compiled; 53 foundation assertions; 143 Phase 2 assertions; 30 offline release-tooling checks.
+Native VM network fixtures: largest packet 7999 bytes including the 100-entry compatibility catalog.
+Native server path: .local/phase2-server-72a3814130ab4443b44ca8eee04e3214
+Release fixture path: .local/release-tests/9bafaf63c23543cbbadff6942db2e36a
+No real player joined the native probe; actual UI and player-network acceptance remain separate.
+stage-1.log: LOG  : Lua          f:0 st:52,950,780> [OMHTS TEST] native registry 97; visible unverified positives 39
+stage-1.log: LOG  : Lua          f:0 st:52,952,399> [OMHTS TEST] native catalog 10/10; starting 8; purchases 2+4; capacity 10->13
+stage-1.log: LOG  : Lua          f:0 st:52,952,400> [OMHTS TEST] disk stage 1 ready
+stage-2.log: LOG  : Lua          f:0 st:52,991,241> [OMHTS TEST] native registry 97; visible unverified positives 39
+stage-2.log: LOG  : Lua          f:0 st:52,992,967> [OMHTS TEST] native purchase receipts restored effects; death cleared receipts
+stage-2.log: LOG  : Lua          f:0 st:52,992,967> [OMHTS TEST] disk stage 2 ready
+stage-3.log: LOG  : Lua          f:0 st:53,032,446> [OMHTS TEST] native registry 97; visible unverified positives 39
+stage-3.log: LOG  : Lua          f:0 st:53,034,092> [OMHTS TEST] native replacement receives exactly 8 starting Tokens; no inherited purchases
+stage-3.log: LOG  : Lua          f:0 st:53,034,092> [OMHTS TEST] disk stage 3 ready
+DED0438F56C50B7D25D3B3B0BEDEFF18625408E6A8FF1B09C1136CAA6DADBC1A  Contents\mods\OneMoreHorde_TraitShop\42.20\icon.png
+CA76A6C5DA033C1211AE1C4C4DDCDAF3949737FE5EF20D3DA64B3168C43FB399  Contents\mods\OneMoreHorde_TraitShop\42.20\media\lua\client\OMHTS_ClientStartup.lua
+D8E4E3C93FFCFEFBAFE896721A4BB4C21CE2AE5DE0FE973BD28D99BEF5430A56  Contents\mods\OneMoreHorde_TraitShop\42.20\media\lua\client\OMHTS_ClientState.lua
+777C9D523D59F0242693B9330281CE67200CEAABBCC15BAAA64B4FEF68DB38C2  Contents\mods\OneMoreHorde_TraitShop\42.20\media\lua\client\OMHTS_HealthButton.lua
+7AD7B013E5C1DB9329558EDC27535E5470B5F929DA9E0A26D8122C52CA553E31  Contents\mods\OneMoreHorde_TraitShop\42.20\media\lua\client\OMHTS_Presentation.lua
+BE1C3181B887BD1657F6DC88B935FB231C4932CF1E3493701BE3E5AEEA49F916  Contents\mods\OneMoreHorde_TraitShop\42.20\media\lua\client\OMHTS_ShopWindow.lua
+B20CF5DD189911AAA3621D09B0DDD19519FD56F3CAEBF2D6F5A4EECF59070A65  Contents\mods\OneMoreHorde_TraitShop\42.20\media\lua\server\OMHTS_Authority.lua
+5D822AC7DF44A18515CB2D1C1C96ED4CE7858C5E0A87B559421938FD53F0F79B  Contents\mods\OneMoreHorde_TraitShop\42.20\media\lua\server\OMHTS_Creation.lua
+55B02C52AFBE50546F4EAD7564EBE6AEA329A2019F539997F0B285ED9027FBC9  Contents\mods\OneMoreHorde_TraitShop\42.20\media\lua\server\OMHTS_ServerStartup.lua
+1146E63560D7373D40863EF6ECC736A43A1804F5912889ECCC4F6E6006182316  Contents\mods\OneMoreHorde_TraitShop\42.20\media\lua\server\OMHTS_Shop.lua
+9827CE07364932FA487A542A3D4FEB4201B07916F4351D0BD6D0A691F1D6F44D  Contents\mods\OneMoreHorde_TraitShop\42.20\media\lua\server\OMHTS_State.lua
+BE0C68A97D6546203A3564CF80695824B8955F5CA8C490C986E2A48E79497F27  Contents\mods\OneMoreHorde_TraitShop\42.20\media\lua\shared\OMHTS_Bootstrap.lua
+74A22624C73E8E8BA699C44535570C46F5007E31175AB24F60C5CAAE9CCDEE6F  Contents\mods\OneMoreHorde_TraitShop\42.20\media\lua\shared\OMHTS_Catalog.lua
+70AF2BAE6C68029A9993D230ECCD09430E892FFED4A431EE57158426C919327B  Contents\mods\OneMoreHorde_TraitShop\42.20\media\lua\shared\Translate\EN\Sandbox.json
+8B32743A0B230F3B215743548F9EE58EE196CC6097278E158C5171CFFE82773B  Contents\mods\OneMoreHorde_TraitShop\42.20\media\lua\shared\Translate\EN\UI.json
+0712135921CAE1418A31E06F57F08324E0F7D53FFE6ECDE47DBD0618B11BC7EC  Contents\mods\OneMoreHorde_TraitShop\42.20\media\sandbox-options.txt
+0964EC36999498AF53E99B6CFE11BEEF6CA34F9196B280D4C2EA9D34B6C9FED9  Contents\mods\OneMoreHorde_TraitShop\42.20\media\textures\OMHTS_ShopIcon.png
+DF5F2E0C3F869E1F61D0335B1C3B19008A329FC822742BC9BC6B888F095F7BF8  Contents\mods\OneMoreHorde_TraitShop\42.20\mod.info
+E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855  Contents\mods\OneMoreHorde_TraitShop\common\.gitkeep

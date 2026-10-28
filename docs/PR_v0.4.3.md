@@ -1,0 +1,3 @@
+A valid Purchase button could turn neutral after a refresh because native ISButton.setEnable mutates the button color tables, which were shared with the green palette. Apply RGBA values to button-owned tables after availability changes and separate Reset's border from Close's.
+
+The regression harness now uses the installed native setEnable and color setters. It reproduces the v0.4.2 failure and checks repeated valid refreshes, exact balance, insufficient funds, return to valid state, and independent button borders. See docs/PATCH_v0.4.3_EVIDENCE.txt. No transaction, persistence or networking changes; rendered button recheck and dedicated player acceptance remain pending.

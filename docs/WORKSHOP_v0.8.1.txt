@@ -1,0 +1,9 @@
+[h1]v0.8.1[/h1]
+[h2]Physical trait purchases[/h2]
+[list]
+[*]Stout, Strong, Fit and Athletic now grant their Strength or Fitness increase, preserving existing XP progress and respecting level 10.
+[*]Added stat-based removal of Puny, Weak, Unfit and Out of Shape when negative removal is enabled.
+[*]Cart and trait tooltips preview the resulting stat and trait changes.
+[*]Character-creation conflicts still apply; queue removal of a conflicting negative before buying its replacement.
+[*]Physical grants apply once per purchase and do not repeatedly refill lost XP after reconnecting or restarting.
+[/list]

@@ -1,0 +1,26 @@
+Checkpoint 1: owner-run singleplayer test reviewed September 14, 2026.
+Source: %USERPROFILE%/Zomboid/console.txt
+Source SHA-256: AE9840DB214282572CE600D1E1796C671DE62AA30E6464A754E54BE87A0655A9
+Horde Night and Cure Defense were enabled. This is not the standalone singleplayer test.
+Local and local Workshop staging packages: 6/6 files each match the current tagged source.
+
+59: LOG  : General      f:0> version=42.20.4 b0bbce05d5 demo=false
+98: LOG  : Mod          f:0> loading OneMoreHorde_HordeNight
+101: LOG  : Mod          f:0> loading OneMoreHorde_CureDefense
+181: LOG  : Mod          f:0> loading OneMoreHorde_HordeNight
+184: LOG  : Mod          f:0> loading OneMoreHorde_CureDefense
+191: LOG  : Mod          f:0> loading OneMoreHorde_TraitShop
+213: LOG  : Lua          f:0> [OMH Trait Shop] v0.1.0 shared loaded: singleplayer
+313: LOG  : General      f:0> Saving GlobalModData
+756: LOG  : Lua          f:0> [OMH Trait Shop] v0.1.0 client game started; checkpoint 1
+766: LOG  : General      f:519> Saving GlobalModData
+769: LOG  : General      f:519> STATE: exit zombie.gameStates.IngameState
+771: LOG  : Mod          f:0> loading OneMoreHorde_HordeNight
+774: LOG  : Mod          f:0> loading OneMoreHorde_CureDefense
+781: LOG  : Mod          f:0> loading OneMoreHorde_TraitShop
+803: LOG  : Lua          f:0> [OMH Trait Shop] v0.1.0 shared loaded: singleplayer
+811: LOG  : General      f:0> GameThread exited.
+
+No Trait Shop runtime errors or Lua stack traces found in the reviewed log.
+Other errors: vanilla fluid-container names, Piano recipe icon fallback, mannequin zone properties and a duplicate basement room ID.
+Gameplay features, save/reload correctness and multiplayer player joins are not validated by this startup-only package.

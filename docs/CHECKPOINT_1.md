@@ -1,6 +1,6 @@
 # Checkpoint 1 - Package and integration feasibility
 
-Date: September 14, 2026. Build: **0.1.0**. Status: minimal package implemented; Kahlua compilation and isolated dedicated-server startup passed. Interactive singleplayer world-entry verification remains pending. Do not mark this checkpoint fully passed yet.
+Date: September 14, 2026. Build: **0.1.0**. Status: minimal package implemented; Kahlua compilation, isolated dedicated-server startup, and owner-run singleplayer world entry alongside Horde Night/Cure Defense passed. Standalone singleplayer verification remains pending. Do not mark this checkpoint fully passed yet.
 
 ## Implemented scope
 
@@ -8,7 +8,7 @@ Date: September 14, 2026. Build: **0.1.0**. Status: minimal package implemented;
 - Package: `Contents/mods/OneMoreHorde_TraitShop/common/` plus `42.20/`; metadata minimum 42.20.0, actually tested against installed 42.20.4 (Steam build 24909800). Earlier 42.20 patch compatibility is not yet tested; this is not a B41 package.
 - Three Lua files: shared module identity, client world-start marker, dedicated-server-start marker. They do not modify traits, settings, time, XP, player data, or scores. No required Horde Night dependency and no reward listeners.
 - Copied the owner's Trait Shop image unchanged as the package icon. No third-party source or art is bundled.
-- Independent local source project, with `.local/`, build output and Java classes ignored. No remote or Workshop identity assigned. Existing Horde Night repository and game/server settings were not edited.
+- Independent local source project, with `.local/`, build output and Java classes ignored. Subsequent owner-authorized tooling work connected a separate private GitHub repository; no Workshop item is assigned. Existing Horde Night repository and game/server settings were not edited.
 - Renumbered the roadmap globally as Checkpoints 1-14 while retaining six phases. Corrected references to the moved Horde Night repository.
 
 ## Source evidence
@@ -61,18 +61,22 @@ The installed game is at `C:/Program Files (x86)/Steam/steamapps/common/ProjectZ
 | Test isolation | Verified | Separate cache, save, database and mod folder under `.local/server-smoke`; Steam/public listing/UPnP disabled, bound to 127.0.0.1:17261. |
 | Server shutdown | Process stopped after startup evidence | Input pipe was closed, so a graceful console quit was unavailable. Verified the owning loopback port and game Java path before stopping that test process. Save/reload is not claimed tested. |
 | Game startup log review | No Trait Shop failure found | The log is not error-free: native content reports missing assets/sounds, map-property exceptions and mannequin/basement data warnings. The addon only logs startup and does not load custom world content. These messages did not prevent server startup; no blanket claim that all game errors were fixed. |
-| Live singleplayer world entry | Pending | Requires the interactive test below; compilation/server startup do not substitute for this. |
+| Live singleplayer world entry with Horde Night/Cure Defense | Passed on B42.20.4 | Owner completed the test; normal-profile console contains both expected v0.1.0 markers, world save/exit, and GameThread exit. No Trait Shop failure or Lua stack trace found. See [singleplayer evidence](CHECKPOINT_1_SINGLEPLAYER_EVIDENCE.txt). Other fluid-container, recipe-icon, mannequin-zone and basement errors remain outside this addon's startup code. |
+| Installed package verification | Passed | Local mod and local Workshop staging each contain 6/6 files matching tagged source hashes. |
+| Standalone singleplayer world entry | Pending | Horde Night and Cure Defense were enabled during the owner test. Follow the normal Steam-launch test below with only Trait Shop enabled. |
 | Multiplayer player join / prestige handshake | Not tested | Future checkpoint tests; no player connected in this startup-only test. |
 
-## Owner test
+## Remaining owner test: standalone singleplayer
 
-Run [Test-Checkpoint1.cmd](../Test-Checkpoint1.cmd). It launches the installed game with a separate `.local/client-smoke` cache and only this addon selected, leaving normal saves and mod selections alone. Start a **new singleplayer Sandbox game**, enter the world, then quit normally. No shop window or button should exist in this checkpoint.
+The **v0.1.1** package replaced the mod-list icon. The current **v0.2.0** package adds Phase 1 persistent state; the v0.1.0 startup evidence above remains historical. The isolated launch menu option/helper was removed at the owner's request. Follow [Checkpoint 2's normal Steam tests](CHECKPOINT_2.md) to cover the remaining standalone gate and new persistence together.
 
-The log to review is `.local/client-smoke/console.txt`. Expected markers:
+Install through [OMH_TraitShop.cmd](../OMH_TraitShop.cmd), **1 - Install locally**, while the game is closed, then launch Project Zomboid normally through Steam. Check the new mod-list icon. For the remaining standalone check, enable only Trait Shop for a **new singleplayer Sandbox game**, enter the world, then quit normally. No shop window or button should exist in this checkpoint.
+
+The log to review is `%USERPROFILE%/Zomboid/console.txt`. Expected markers:
 
 ```text
-[OMH Trait Shop] v0.1.0 shared loaded: singleplayer
-[OMH Trait Shop] v0.1.0 client game started; checkpoint 1
+[OMH Trait Shop] v0.2.0 shared loaded: singleplayer
+[OMH Trait Shop] v0.2.0 client game started; checkpoint 2
 ```
 
 Only after checking that log can the singleplayer load gate pass. Remaining pre-creation transport feasibility should be recorded as conditional until validated; it must not be represented as finished multiplayer prestige support.

@@ -1,0 +1,3 @@
+Groups Trait Shop sandbox settings under Trait Costs, XP Rewards and Player Kill Rules, matching Horde Night's large centered white headers. The cooldown moves after the XP rewards; its entire section hides when the selected mode excludes player kills. New-world, host and live-admin panels share the layout, including scroll height, resize centering and controller focus updates.
+
+Preserves saved identifiers, defaults and tooltip wording. Includes the prior level-up sound/reward-text patches. Validation: 167 reward/sandbox assertions, 140 lifecycle/feedback assertions and all 17 native Kahlua compilation checks pass. Player visual acceptance is documented in docs/PATCH_v0.6.3.md.

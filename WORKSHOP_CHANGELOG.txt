@@ -1,0 +1,5 @@
+v0.9.1.1
+Defense XP
+- Added optional shared turret/trap kill XP, equal PvP assist shares, and same-character offline delivery, including single-player owner recognition after character startup.
+- Guaranteed at least 1 XP for eligible positive recipient splits, after combining shares and before offline banking. Zero rewards remain disabled.
+- Added bounded XP summaries and detailed rejection reasons.

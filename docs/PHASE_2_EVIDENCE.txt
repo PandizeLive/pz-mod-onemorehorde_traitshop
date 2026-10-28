@@ -1,0 +1,47 @@
+OMH: Trait Shop v0.3.0 - Phase 2 evidence, September 15, 2026
+Installed target: Project Zomboid 42.20.4, native Kahlua and Java runtime.
+11/11 packaged Lua files compile; fundamentals audit passes.
+53 Phase 1 regression assertions and 93 Phase 2 assertions pass.
+Native wire serialization: largest Phase 1 snapshot 1068 bytes; Phase 2 fixtures 1036 bytes.
+UI checks use doubles for widgets; actual UI rendering and live player delivery remain owner acceptance.
+Native server probe: three real processes, each graceful quit/save. No player joined.
+Native objects: IsoPlayer, CharacterTraitDefinition, CharacterTraits, ItemContainer.
+Translator.loadFiles is called after mods initialize to exercise the client-equivalent translation-load order.
+Client Core.ResetLua loads mods before Translator; dedicated startup otherwise populates its cache before mods.
+Native fixture: C:\Users\bandi\Zomboid_Modding\OMH\Trait Shop\.local\phase2-server-536523711d374f30976208f497163564
+
+Stage 1 log SHA256: FFDE895FC4464FE7E103D3C8673A8DE029712BBE1A1B9B675DDF63137BCADF45
+LOG  : Lua          f:0 st:47,994,206> [OMH Trait Shop] v0.3.0 shared loaded: server
+LOG  : Lua          f:0 st:47,996,539> [OMH Trait Shop] authority ready; schema=2
+LOG  : Lua          f:0 st:47,999,127> [OMH Trait Shop] v0.3.0 dedicated server started; checkpoint 4
+LOG  : Lua          f:0 st:48,001,036> [OMHTS TEST] native catalog 10/10; starting 8; purchases 2+4; capacity 10->13
+LOG  : Lua          f:0 st:48,001,036> [OMHTS TEST] disk stage 1 ready
+LOG  : General      f:0 st:48,002,830> Saving GlobalModData
+
+Stage 2 log SHA256: 53FB7D6045EF0F4B2EC2B012E002141F8B5FCFEB4DFB1F96B95F135C5B070F22
+LOG  : Lua          f:0 st:48,036,405> [OMH Trait Shop] v0.3.0 shared loaded: server
+LOG  : Lua          f:0 st:48,038,832> [OMH Trait Shop] authority ready; schema=2
+LOG  : Lua          f:0 st:48,041,656> [OMH Trait Shop] v0.3.0 dedicated server started; checkpoint 4
+LOG  : Lua          f:0 st:48,044,079> [OMHTS TEST] native purchase receipts restored effects; death cleared receipts
+LOG  : Lua          f:0 st:48,044,079> [OMHTS TEST] disk stage 2 ready
+LOG  : General      f:0 st:48,046,419> Saving GlobalModData
+
+Stage 3 log SHA256: CC19ED131269436A579ACEB8489982F8B5852E94561F844543217DA9C9DFB25A
+LOG  : Lua          f:0 st:48,079,654> [OMH Trait Shop] v0.3.0 shared loaded: server
+LOG  : Lua          f:0 st:48,082,135> [OMH Trait Shop] authority ready; schema=2
+LOG  : Lua          f:0 st:48,085,152> [OMH Trait Shop] v0.3.0 dedicated server started; checkpoint 4
+LOG  : Lua          f:0 st:48,087,828> [OMHTS TEST] native replacement receives exactly 8 starting Tokens; no inherited purchases
+LOG  : Lua          f:0 st:48,087,828> [OMHTS TEST] disk stage 3 ready
+LOG  : General      f:0 st:48,090,550> Saving GlobalModData
+
+Final gameplay sources match the four native-probe modules below:
+server\OMHTS_State.lua SHA256: 9827CE07364932FA487A542A3D4FEB4201B07916F4351D0BD6D0A691F1D6F44D
+server\OMHTS_Creation.lua SHA256: 5D822AC7DF44A18515CB2D1C1C96ED4CE7858C5E0A87B559421938FD53F0F79B
+server\OMHTS_Shop.lua SHA256: D9315D1B0918279301AEADA6AC1CED1AC939D2B8E83B019FF1516BCC598C8350
+shared\OMHTS_Catalog.lua SHA256: 698677E5466B0EED76591373AB4118ACB7C0A2E116261CD8BDEE461638C0A99B
+
+Final authority/client rapid-purchase handling is covered by the 53/93 game-VM assertion runs.
+Multiplayer skill audit: 0 high, 1 medium. MP017 matches the UI list addItem call, not inventory mutation.
+Release tooling: 30 offline checks passed for the final package. Fixture: .local/release-tests/5b45be75a9ec4b15b1758ece9a2afc13. No network calls or real user-profile writes.
+Normal native asset/map warnings remain. No Trait Shop runtime error occurred in the passing native run.
+Abrupt power loss across separately saved player/global-data files is not claimed atomic.

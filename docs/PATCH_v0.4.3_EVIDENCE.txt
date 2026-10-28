@@ -1,0 +1,28 @@
+v0.4.3 verification - 2026-09-16
+
+Source: installed Build 42.20.4 ISButton.setEnable, setBackgroundRGBA,
+setBackgroundColorMouseOverRGBA, setBorderRGBA, setTextureRGBA.
+
+New test uses these native methods with fixture UI primitives. Before the fix it failed:
+native setEnable preserves green across valid refresh 1.
+This reproduces v0.4.2 palette mutation without relying on a guessed button implementation.
+
+Final tools/Test-Phase1.ps1: exit 0
+13/13 shipped Lua files compile in Kahlua; no banned constructs or tabs.
+53 foundation assertions passed.
+
+Final tools/Test-Phase2.ps1: exit 0
+205 Phase 2 / v0.4.3 assertions passed.
+Includes 12 repeated valid refreshes, exact balance, insufficient funds, restoring validity,
+and separate Reset/Close border colors, alongside existing cart and scrolling regressions.
+Native B42.20.4 table serialization: 3 packets, largest 49809 / 60000 bytes.
+
+Final tools/Test-ReleaseTooling.ps1: exit 0
+32 offline checks passed. Fixture:
+.local/release-tests/70dddbb6e94840da958a50cd5cbae6f0
+No network calls or real user-profile changes.
+
+No live renderer or real player multiplayer session was run. No transaction rules or server code
+changed. Four-step owner button recheck and dedicated player acceptance remain pending.
+
+2026-09-17 owner acceptance update: user reported Passed for the four-step v0.4.3 button recheck. Dedicated player acceptance remains pending.
