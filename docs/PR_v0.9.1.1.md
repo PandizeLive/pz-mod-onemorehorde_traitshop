@@ -1,4 +1,8 @@
-# Corrective integration - 0.9.1.1
+# Shared defense kill XP and offline rewards - 0.9.1.1
+
+Add optional turret/trap kill XP sharing, equal PvP assist shares and same-character offline delivery. Resolve single-player owner identity after character startup and guarantee at least 1 XP for an eligible positive recipient total, combining shares before applying the minimum. Zero/ineligible rewards remain disabled. Add bounded reward summaries and detailed rejection reasons.
+
+The release also includes the existing shared CMD-menu refactor and local Workshop description edits. Existing-item publishing preserves the live description and cover. See RELEASE_PREPARATION_2026-10-28.md for the confirmed 0.9.0.1 upload baseline and cumulative changelog audit. The following corrective-patch evidence remains applicable.
 
 C467 owner approval 2026-10-25 covers this coordinated local patch with T&T 0.2.68.1, Trait Shop 0.9.1.1 and Horde/Cure 0.6.16.7.
 

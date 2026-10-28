@@ -1,5 +1,11 @@
 # Trait Shop release tooling
 
+## Current preparation: 0.9.1.1 (October 28, 2026)
+
+The current package is **0.9.1.1**, tagged `v0.9.1.1`, for existing Workshop item **3803035618**. The last confirmed content upload is **0.9.0.1**, September 21. See [current release preparation and changelog evidence](RELEASE_PREPARATION_2026-10-28.md). The initial-upload and older acceptance records below are historical; they do not establish acceptance of the new defense XP integration.
+
+Use option **2 Mirror to GitHub**, then **3 Publish mod to Steam Workshop** when ready. Local preparation does not perform either action. The existing-item publisher preserves the live description, cover and visibility.
+
 ## First upload through Project Zomboid (owner-selected 2026-09-17)
 
 The owner chose the in-game uploader for the first item. This route does not require the GitHub mirror or SteamCMD login prerequisite of the separate command-line publisher.
@@ -8,13 +14,13 @@ Prepared `C:/Users/bandi/Zomboid/Workshop/OneMoreHorde_TraitShop` with all 21 v0
 
 The in-game uploader specifically reads preview.png and accepts square 256 or 512 pixel images; the GIF remains available for a later SteamCMD preview update. Select this staged folder in the game's Workshop submission screen, create the item, review the metadata/visibility and publish. After upload, read the generated ID from the staged workshop.txt and record it in the repository's workshop.txt before using any other publisher. Never create a second item because the repository still says id=0.
 
-## Status and repository choice
+## Historical status and repository choice
 
-Prepared September 14, 2026. The owner selected a separate private repository: [PandizeLive/pz-mod-onemorehorde_traitshop](https://github.com/PandizeLive/pz-mod-onemorehorde_traitshop). Creation and privacy were verified, and local `origin` points there. No branches were pushed during setup. No Steam Workshop item exists yet.
+Prepared September 14, 2026. The owner selected a separate private repository: [PandizeLive/pz-mod-onemorehorde_traitshop](https://github.com/PandizeLive/pz-mod-onemorehorde_traitshop). Creation and privacy were verified, and local `origin` points there. No branches were pushed during setup. No Steam Workshop item existed at that time.
 
 A separate repository keeps the addon's standalone releases, Workshop identity and change history independent of Horde Night. Both projects can share the local GitHub CLI and SteamCMD installation. Coordinated gameplay changes still need matching work in Horde Night; this repository choice does not implement that integration.
 
-The current package is **v0.8.1, physical trait purchases/removals**, with the owner-supplied icons. Current behavior and acceptance are recorded in [PATCH_v0.8.1.md](PATCH_v0.8.1.md). The owner created **Workshop item 3803035618**, Unlisted, through the native uploader; the staged metadata was read back and that ID is now recorded in the repository. The owner uploaded v0.5.0, verified in dedicated logs. Update this existing item for v0.8.1; preparation does not imply publication.
+At v0.8.1, physical trait purchases/removals and owner-supplied icons were recorded in [PATCH_v0.8.1.md](PATCH_v0.8.1.md). The owner originally created **Workshop item 3803035618**, Unlisted, through the native uploader; the staged metadata was read back and that ID was recorded in the repository. The owner uploaded v0.5.0, verified in dedicated logs. Later content-upload evidence supersedes this historical status.
 
 ## One launcher
 
@@ -27,7 +33,7 @@ Run the root [OMH_TraitShop.cmd](../OMH_TraitShop.cmd). The stable wrapper calls
 | 3 | Publish through SteamCMD. The first upload creates a private item; subsequent uploads update the recorded item. |
 | 4 | Check package and installation paths without changing files. |
 | 5 | Validate and display the Workshop upload manifest without files, credentials, network calls or upload. |
-| 6 | Replace only the existing Trait Shop Workshop preview with preview.gif. Requires the normal mirrored-release check; type PREVIEW to upload. |
+| 6 | Open project-specific tools: 1 updates the Workshop preview/GIF; 2 checks preview upload readiness. Preview upload retains the mirrored-release check and PREVIEW confirmation. |
 | 0 | Exit. |
 
 Install with option 1, then launch Project Zomboid normally through Steam. The owner requested removal of the isolated game-launch option and helper. Trait Shop does not need the core mod's leaderboard patch option.

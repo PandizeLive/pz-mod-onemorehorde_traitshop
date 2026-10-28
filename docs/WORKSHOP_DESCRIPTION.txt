@@ -1,49 +1,66 @@
-[h1]DON'T STAY AT GROUND ZERO.[/h1]
-Zomboid lets you read books and improve skills by doing things. So why can't you gain traits?
+[h1]OMH: TRAIT SHOP[/h1]
 
-[b]OMH: Trait Shop[/b] adds customizable trait progression to Project Zomboid. Earn XP, gain Trait Levels, and spend Tokens on positive traits, or remove supported negative traits if enabled.
+Earn XP, gain Trait Levels, and spend Tokens on traits as you play. Prestige gives your next character bonus trait points.
 
-[h1]EARN IT. SPEND IT.[/h1]
-Choose what earns XP and how much:
-[list]
-[*]Zombies and players killed
-[*]Days and nights survived
-[*]Horde kills and Hordes survived with OMH: Horde Night (Optional)
-[/list]
-Level up with sound effects and notifications, then decide what your survivor needs next. Customize trait costs, level rewards, and Prestige settings to suit your world.
+[b]Works on its own or alongside OMH: Horde Night.[/b]
 
-[b]Horde Night is optional. Trait Shop works on its own.[/b]
+[hr][/hr]
+
+[img]https://media.onemorehorde.com/media/c9f4f57aada3af0d59a8d0b191695d3ee1c51c9b0b278bb12a7627bc301d734f.png[/img]
+
+[h1]THE OFFICIAL OMH WEBSITE[/h1]
+
+[url=https://onemorehorde.com/][b]VISIT ONEMOREHORDE.COM[/b][/url]
+
+Browse the Horde Night leaderboard and submit your runs. In Horde Night's Full Leaderboard, choose [b]Records > Submit Record[/b], then upload the exported file on the website. Most valid scores publish automatically; flagged runs may be reviewed.
+
+[url=https://onemorehorde.com/#submit][b]SUBMIT YOUR HORDE NIGHT SCORE[/b][/url]
+
+[hr][/hr]
+
+[h1]FEATURES[/h1]
+
+[table]
+[tr][th]Feature[/th][th]How it works[/th][/tr]
+[tr][td]Trait XP[/td][td]Earn XP from zombie kills, eligible player kills, and days or nights survived.[/td][/tr]
+[tr][td]Levels and Tokens[/td][td]Level up to earn Tokens, with sound effects and notifications. Unused character-creation points become starting Tokens for new characters.[/td][/tr]
+[tr][td]Trait Shop[/td][td]Buy positive traits through a searchable shop with a shared cart and price preview.[/td][/tr]
+[tr][td]Negative trait removal[/td][td]Spend Tokens to remove supported negatives. Optional and disabled by default.[/td][/tr]
+[tr][td]Sandbox settings[/td][td]Customize XP sources and amounts, trait costs, level rewards, and Prestige settings.[/td][/tr]
+[tr][td]Horde Night integration[/td][td]Earn XP from credited Horde kills and surviving your Horde. Requires OMH: Horde Night.[/td][/tr]
+[/table]
 
 [img]https://media.onemorehorde.com/media/6d6efdaa8a705734a6d00aad372698afc6f5c3e5deda4429212507f19ab53f98.gif[/img]
 
-[h1]YOU DIED. AT LEAST SOMETHING CARRIES OVER.[/h1]
-All those hours building your character don't have to disappear completely.
+[hr][/hr]
 
-By default, reaching Trait Levels 5, 10, 15, and so on earns [b]1 Prestige Point[/b]. Each point gives your next character an extra trait point during character creation.
+[h1]PRESTIGE[/h1]
+
+By default, reaching Trait Levels [b]5, 10, 15[/b], and so on earns [b]1 Prestige Point[/b]. Each point gives your next character an extra trait point during character creation.
+
+Your next character receives the full bonus, then retains [b]30% of that Prestige[/b] for future lives, rounded to the nearest whole point. Tokens, Trait Level, and XP reset on death.
 
 [img]https://media.onemorehorde.com/media/1beb29ce4b27b2b5d3ae937760eec132b81b9bc1b57f8c1934b8c04af3ec3780.gif[/img]
 
-That character receives the full bonus, then retains [b]30% of the Prestige[/b] for future lives, rounded to the nearest whole point. Your Tokens, Trait Level, and XP reset on death.
+[hr][/hr]
 
-[b]A head start. You'll still have to earn the rest.[/b]
+[h1]HORDE NIGHT AND OFFICIAL SCORES[/h1]
 
-[h1]HOW TO?[/h1]
+With Horde Night installed, Trait Shop is enabled by default through [b]Enable Trait Shop[/b] in Run Options. Using purchased traits, removals, or a Prestige creation bonus keeps it enabled for the affected character or faction.
+
+Trait Shop applies a [b]x0.50 score multiplier[/b], combined multiplicatively with other score modifiers. Runs can remain Official with Horde Night rewards and default-or-harder settings. Easier settings, enabling negative removal, or switching away from Horde Night reward mode make the affected run unofficial.
+
+Characters created before Horde Night could verify their creation remain playable, but their runs are Unverified. Create a new character and reset the run for a fresh eligibility check. Fixing settings or respawning does not erase an old run's flags.
+
+[hr][/hr]
+
+[h1]GETTING STARTED AND COMPATIBILITY[/h1]
+
 Enable Trait Shop, then hover over the health icon to reveal the shop button.
 
-[b]Game version:[/b] Build 42.20+
+Common vanilla and modded traits are supported through their declared effects. Traits with custom scripts may need a compatibility patch. Zero-cost abilities and weight conditions appear in the read-only [b]Other Traits[/b] panel.
+
 [b]Workshop ID:[/b] 3803035618
 [b]Mod ID:[/b] OneMoreHorde_TraitShop
-
-[h1]PLAYING WITH OMH: HORDE NIGHT?[/h1]
-
-Trait Shop is enabled by default. Find [b]Enable Trait Shop[/b] in Horde Night's Run Options. Using purchased traits, removals or a Prestige creation bonus keeps it enabled for the affected character or faction.
-
-Trait Shop applies a [b]x0.50 score multiplier[/b], combined multiplicatively with other score modifiers. Horde Night rewards and default-or-harder settings can remain Official. Easier settings, enabling negative removal or switching away from Horde Night reward mode make the affected run unofficial.
-
-Characters created before Horde Night could verify their creation remain playable, but their runs are Unverified. Create a new character and reset the run for a fresh eligibility check; fixing settings or respawning does not erase an old run's flags.
-
-[h1]TRAIT COMPATIBILITY[/h1]
-
-Common vanilla and modded traits are supported through their declared effects. Traits with custom scripts may need a compatibility patch. Zero-cost abilities and weight conditions appear in the read-only Other Traits panel. Negative removal is optional and disabled by default.
 
 DISCLAIMER: This mod was made in tandem with ChatGPT
