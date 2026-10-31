@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([switch]$PreflightOnly, [switch]$ResetCredentials, [switch]$UpdatePreview)
+param([switch]$PreflightOnly, [switch]$UpdatePreview)
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'OMH-ReleaseCommon.ps1')
@@ -9,11 +9,9 @@ $contentFolder = Join-Path $repoRoot 'Contents'
 $changeLogPath = Join-Path $repoRoot 'WORKSHOP_CHANGELOG.txt'
 $workshopMetadataPath = Join-Path $repoRoot 'workshop.txt'
 $publisherRoot = Join-Path $env:LOCALAPPDATA 'OMH\TraitShopPublisher'
-$credentialPath = Join-Path $publisherRoot 'steam-credential.xml'
 $logFolder = Join-Path $publisherRoot 'Logs'
 $vdfPath = Join-Path $publisherRoot 'traitshop-upload.vdf'
 $pendingPath = Join-Path $publisherRoot 'creation-pending.json'
-$steamCmdPath = Find-OmhSharedPath $repoRoot '.tools\steamcmd\steamcmd.exe'
 $workshopAppId = '108600'
 
 function New-WorkshopVdf {
@@ -86,7 +84,6 @@ try {
         }
         throw "An earlier creation attempt needs review. Do not create another item. Inspect $pendingPath and the preserved VDF/logs, then commit the recovered workshop.txt ID."
     }
-    if (-not $steamCmdPath) { throw 'SteamCMD not found. Install it under the shared .tools/steamcmd folder.' }
     $criticalPaths = @('Contents', 'tools', 'OMH_TraitShop.cmd', 'preview.gif', 'preview.png', 'workshop.txt', 'WORKSHOP_CHANGELOG.txt')
     if (Invoke-OmhReleaseGit $release (@('status', '--porcelain', '--untracked-files=all', '--') + $criticalPaths)) {
         throw 'Commit release content, identity, changelog and tooling before publishing.'
@@ -100,30 +97,22 @@ try {
     Assert-OmhRemoteMirror $release $config $gitAuth
     Assert-ProjectZomboidClosed
     $confirmationWord = if ($UpdatePreview) { 'PREVIEW' } elseif ($workshopId -eq '0') { 'CREATE' } else { 'PUBLISH' }
-    $label = if ($UpdatePreview) { "replace ONLY the preview of Trait Shop item $workshopId with preview.gif" } elseif ($workshopId -eq '0') { 'create a NEW PRIVATE Trait Shop Workshop item' } else { "update Trait Shop item $workshopId (preserving description, cover and visibility)" }
+    $label = if ($UpdatePreview) { "replace ONLY the preview of Trait Shop item $workshopId with preview.gif" } elseif ($workshopId -eq '0') { 'create a NEW PRIVATE Trait Shop Workshop item' } else { "update Trait Shop item $workshopId (using preview.gif; preserving title, description, tags and visibility)" }
     if ((Read-Host "Type $confirmationWord to $label").Trim() -ine $confirmationWord) { throw 'Publication cancelled.' }
     New-Item -ItemType Directory -Path $publisherRoot, $logFolder -Force | Out-Null
     [IO.File]::WriteAllText($vdfPath, $manifest, [Text.UTF8Encoding]::new($false))
-    $credential = Get-PublisherCredential
-    $steamPath = Get-SteamPath
-    $guardCode = Read-GuardCode
-    $steamWasRunning = Stop-SteamClient $steamPath
-    try {
-        Assert-OmhTaggedContent $release
-        if ($workshopId -eq '0') {
-            [IO.File]::WriteAllText($pendingPath, (@{ repository = $repoRoot; version = $release.Version; manifest = $vdfPath; startedUtc = [DateTime]::UtcNow.ToString('o') } | ConvertTo-Json), [Text.UTF8Encoding]::new($false))
-        }
-        $logPath = Join-Path $logFolder ("traitshop-v$($release.Version)-{0}.log" -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
-        Invoke-SteamCmdUpload $credential $guardCode $logPath
-        if ($workshopId -eq '0') {
-            $workshopId = Save-CreatedWorkshopId $vdfPath
-            Remove-Item -LiteralPath $pendingPath -ErrorAction Stop
-        }
-        Write-Host "Upload confirmed: https://steamcommunity.com/sharedfiles/filedetails/?id=$workshopId"
-        Write-Host "Log: $logPath"
-    } finally {
-        if ($steamWasRunning) { Start-Process -FilePath $steamPath -WindowStyle Hidden | Out-Null }
+    Assert-OmhTaggedContent $release
+    if ($workshopId -eq '0') {
+        [IO.File]::WriteAllText($pendingPath, (@{ repository = $repoRoot; version = $release.Version; manifest = $vdfPath; startedUtc = [DateTime]::UtcNow.ToString('o') } | ConvertTo-Json), [Text.UTF8Encoding]::new($false))
     }
+    $logPath = Join-Path $logFolder ("traitshop-v$($release.Version)-{0}.log" -f (Get-Date -Format 'yyyyMMdd-HHmmssfff'))
+    Invoke-SteamUploaderUpload -ManifestPath $vdfPath -LogPath $logPath -PreviewFile (Join-Path $repoRoot 'preview.gif') -UploadKind $(if ($UpdatePreview) { 'Preview' } else { 'Content' }) -ReleaseVersion $release.Version
+    if ($workshopId -eq '0') {
+        $workshopId = Save-CreatedWorkshopId $vdfPath
+        Remove-Item -LiteralPath $pendingPath -ErrorAction Stop
+    }
+    Write-Host "Upload confirmed: https://steamcommunity.com/sharedfiles/filedetails/?id=$workshopId"
+    Write-Host "Log: $logPath"
 } catch {
     Write-Host "ERROR: $($_.Exception.Message)" -ForegroundColor Red
     exit 1

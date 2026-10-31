@@ -1,0 +1,550 @@
+diff --git a/Cargo.lock b/Cargo.lock
+index 5be06a8..624f08e 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -4,7 +4,7 @@ version = 4
+ 
+ [[package]]
+ name = "SteamUploader"
+-version = "0.2.1"
++version = "0.3.0"
+ dependencies = [
+  "clap",
+  "confy",
+diff --git a/src/main.rs b/src/main.rs
+index 838f378..3899d25 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -27,6 +27,8 @@ use steamworks; // rust bindings for the Steamworks API
+ #[command(name = "Steam Uploader")]
+ #[command(about = "Upload mods to Steam Workshop", long_about = None)]
+ struct Args {
++    #[arg(long)]
++    omh_protocol_version: bool,
+     #[command(subcommand)]
+     command: Option<Commands>,
+ }
+@@ -35,6 +37,10 @@ struct Args {
+ // MAIN ENTRY POINT
+ fn main() {
+     let args = Args::parse();
++    if args.omh_protocol_version {
++        println!("OMH_STEAM_UPLOADER_PROTOCOL=1");
++        return;
++    }
+     
+     // no command provided, show interactive menu
+     if args.command.is_none() {
+@@ -65,94 +71,37 @@ fn execute_command(command: Commands) {
+ 
+         // handle the upload command
+         Commands::Upload { patchnote, manifest_path, dry_run } => {
+-            match Manifest::load_default(manifest_path) {
+-                Ok(mut manifest) => {
+-                    let appid = manifest.appid;
+-                    let (client, ugc) = steam::load::load_steam(appid);
+-
+-                    // verify that the workshop ID was provided
+-                    // if not, then we create a new item and update the manifest file
+-                    let published_id = if let Some(workshopid) = manifest.workshopid {
+-                        // already have a workshop ID, just upload
+-                        colors::info(&format!("Found existing workshopid in manifest: {}", workshopid));
+-                        steamworks::PublishedFileId(workshopid)
+-                    } else {
+-                        // no workshop ID, create one
+-                        colors::warning("No workshopid found in manifest. Creating new workshop item...");
+-                        match steam::create::create_item(&client, &ugc, manifest.appid, dry_run) {
+-                            Ok(id) => {
+-                                colors::success(&format!("Created workshop item: {:?}", id));
+-                                // update manifest with new workshopid and save it to the source file
+-                                if dry_run {
+-                                    colors::info("Dry run enabled. Skipping manifest update with new workshop ID.");
+-                                } else {
+-                                    match manifest.save_with_id_to_source(id.0) {
+-                                        Ok(_) => colors::info("Updated manifest with new workshopid"),
+-                                        Err(e) => colors::error(&format!("Warning: Could not update manifest file: {}", e)),
+-                                    }
+-                                }
+-                                id
+-                            }
+-                            Err(e) => {
+-                                colors::error(&format!("Error creating workshop item: {}", e));
+-                                return;
+-                            }
+-                        }
+-                    };
+-
+-                    // resolve content and preview paths relative to the manifest file
+-                    let content_path = match manifest.get_content_path() {
+-                        Ok(path) => path.to_string_lossy().to_string(),
+-                        Err(e) => {
+-                            colors::error(&format!("Error resolving content path: {}", e));
+-                            return;
+-                        }
+-                    };
+-                    let preview_path = match manifest.get_preview_path() {
+-                        Ok(path) => path.to_string_lossy().to_string(),
+-                        Err(e) => {
+-                            colors::error(&format!("Error resolving preview path: {}", e));
+-                            return;
+-                        }
+-                    };
+-                    let description = match manifest.get_description() {
+-                        Ok(desc) => desc,
+-                        Err(e) => {
+-                            colors::error(&format!("Error reading description: {}", e));
+-                            return;
+-                        }
+-                    };
+-
+-                    let patchnote = match manifest.try_read_file(patchnote.unwrap_or_default()) {
+-                        Ok(note) => Some(note),
+-                        Err(e) => {
+-                            colors::error(&format!("Error reading patch note: {}", e));
+-                            return;
+-                        }
+-                    };
+-
+-                    // upload the content
+-                    colors::info("Uploading content to Steam Workshop...");
+-                    steam::uploader::upload_item_content(
+-                        &client,
+-                        &ugc,
+-                        manifest.appid,
+-                        published_id,
+-                        &content_path,
+-                        &preview_path,
+-                        &manifest.title,
+-                        &description,
+-                        manifest.visibility,
+-                        manifest.tags,
+-                        patchnote.as_deref(),
+-                        dry_run,
+-                    );
++            let result = (|| -> Result<(), Box<dyn std::error::Error>> {
++                let mut manifest = Manifest::load_default(manifest_path)?;
++                let content = manifest.get_content_path()?;
++                let preview = manifest.get_preview_path()?;
++                let description = manifest.get_description()?;
++                let note = patchnote.map(|value| manifest.try_read_file(value)).transpose()?;
++                steam::uploader::validate_upload(&manifest, content.as_deref(), preview.as_deref(), description.as_deref(), note.as_deref())?;
++                if dry_run {
++                    println!("{}", serde_json::to_string_pretty(&manifest)?);
++                    println!("OMH_PREFLIGHT_OK");
++                    return Ok(());
+                 }
+-                Err(e) => colors::error(&format!("Error loading manifest: {}", e)),
++                let (client, ugc) = steam::load::load_steam(manifest.appid);
++                let published_id = match manifest.workshopid {
++                    Some(id) => steamworks::PublishedFileId(id),
++                    None => {
++                        let id = steam::create::create_item(&client, &ugc, manifest.appid, false)?;
++                        manifest.save_with_id_to_source(id.0)?;
++                        id
++                    }
++                };
++                steam::uploader::upload_item_content(&client, &ugc, &manifest, published_id,
++                    content.as_deref(), preview.as_deref(), description.as_deref(), note.as_deref())?;
++                Ok(())
++            })();
++            if let Err(error) = result {
++                colors::error(&format!("Upload failed: {}", error));
++                std::process::exit(1);
+             }
+         }
+ 
+-
+         // here we delete the workshop item provided by the user. Steam's API handles basically everything else,
+         // we don't need to verify if it exists or if the user is the owner, etc.
+         Commands::Delete { workshopid, appid } => {
+diff --git a/src/manifest.rs b/src/manifest.rs
+index 613f06e..85bd27b 100644
+--- a/src/manifest.rs
++++ b/src/manifest.rs
+@@ -11,12 +11,12 @@ pub struct Manifest {
+     pub appid: u32,
+     #[serde(skip_serializing_if = "Option::is_none")]
+     pub workshopid: Option<u64>,
+-    pub content: String,
+-    pub preview: String,
+-    pub title: String,
+-    pub description: String,
+-    pub visibility: u32,
+-    pub tags: Vec<String>,
++    pub content: Option<String>,
++    pub preview: Option<String>,
++    pub title: Option<String>,
++    pub description: Option<String>,
++    pub visibility: Option<u32>,
++    pub tags: Option<Vec<String>>,
+ 
+     #[serde(skip)]
+     source_path: Option<PathBuf>,
+@@ -38,12 +38,12 @@ impl Manifest {
+             schema: Some("https://raw.githubusercontent.com/SimKDT/Steam-Uploader-rs/refs/heads/main/manifest_schema/mod-manifest-schema.json".to_string()),
+             appid: 0,
+             workshopid: None,
+-            content: "./Contents".to_string(),
+-            preview: "preview.png".to_string(),
+-            title: "Mod Template".to_string(),
+-            description: "./description.bbcode".to_string(),
+-            visibility: 2, // default to private
+-            tags: Vec::new(),
++            content: Some("./Contents".to_string()),
++            preview: Some("preview.png".to_string()),
++            title: Some("Mod Template".to_string()),
++            description: Some("./description.bbcode".to_string()),
++            visibility: Some(2), // default to private
++            tags: Some(Vec::new()),
+             source_path: None,
+         };
+         let filename = format!("mod-manifest.{}", extension);
+@@ -156,13 +156,13 @@ impl Manifest {
+ 
+ 
+     /// Get the absolute path to the content directory, resolved relative to the manifest file.
+-    pub fn get_content_path(&self) -> Result<PathBuf, Box<dyn std::error::Error>> {
+-        self.resolve_path(&self.content)
++    pub fn get_content_path(&self) -> Result<Option<PathBuf>, Box<dyn std::error::Error>> {
++        self.content.as_deref().map(|path| self.resolve_path(path)).transpose()
+     }
+ 
+     /// Get the absolute path to the preview file, resolved relative to the manifest file.
+-    pub fn get_preview_path(&self) -> Result<PathBuf, Box<dyn std::error::Error>> {
+-        self.resolve_path(&self.preview)
++    pub fn get_preview_path(&self) -> Result<Option<PathBuf>, Box<dyn std::error::Error>> {
++        self.preview.as_deref().map(|path| self.resolve_path(path)).transpose()
+     }
+ 
+     /// Resolve a path relative to the manifest file's directory.
+@@ -176,11 +176,8 @@ impl Manifest {
+         }
+     }
+ 
+-    pub fn get_description(&self) -> Result<String, Box<dyn std::error::Error>> {
+-        // test if the manifest description is a path to a file
+-        // if so, load that file content as the description
+-        // otherwise, return the description as is
+-        self.try_read_file(self.description.clone())
++    pub fn get_description(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
++        self.description.clone().map(|value| self.try_read_file(value)).transpose()
+     }
+ 
+     pub fn try_read_file(&self, txt: String) -> Result<String, Box<dyn std::error::Error>> {
+diff --git a/src/steam/load.rs b/src/steam/load.rs
+index 9e57d6d..fe4a915 100644
+--- a/src/steam/load.rs
++++ b/src/steam/load.rs
+@@ -1,33 +1,6 @@
+-use steamworks;
+-use crate::colors;
+-
+ pub fn load_steam(appid: u32) -> (steamworks::Client, steamworks::UGC) {
+-    make_appidtxt(appid);
+-
+-    // create a client pair
+-    let client = steamworks::Client::init().expect("Steam is not running or has not been detected");
+-
+-    // get a handle to Steam's UGC module (user-generated content)
++    std::env::set_var("SteamAppId", appid.to_string());
++    let client = steamworks::Client::init().expect("Steam must be running and logged in");
+     let ugc = client.ugc();
+-    delete_appidtxt();
+-
+-
+     (client, ugc)
+ }
+-
+-
+-/// Create the appid.txt file in the current directory with the specified appid. 
+-/// This is needed for the Steamworks API to function properly.
+-pub fn make_appidtxt(appid: u32) {
+-    match std::fs::write("steam_appid.txt", appid.to_string()) {
+-        Ok(_) => {},
+-        Err(e) => colors::error(&format!("Failed to write steam_appid.txt file: {}", e)),
+-    }
+-}
+-
+-pub fn delete_appidtxt() {
+-    match std::fs::remove_file("steam_appid.txt") {
+-        Ok(_) => {},
+-        Err(e) => colors::error(&format!("Failed to delete steam_appid.txt file: {}", e)),
+-    }
+-}
+diff --git a/src/steam/uploader.rs b/src/steam/uploader.rs
+index 72626a8..0cf29ba 100644
+--- a/src/steam/uploader.rs
++++ b/src/steam/uploader.rs
+@@ -1,184 +1,102 @@
+-use std;
+-use std::sync::mpsc;
+-use std::sync::Arc;
+-use std::sync::atomic::{AtomicBool, Ordering};
+-use std::time::Duration;
+-use std::time::Instant;
+-use std::thread;
++use std::{path::Path, sync::mpsc, thread, time::{Duration, Instant}};
++use crate::manifest::Manifest;
+ 
+-use crate::colors;
+-
+-fn visibility2enum(visibility: u32) -> Result<steamworks::PublishedFileVisibility, String> {
+-    match visibility {
+-        0 => Ok(steamworks::PublishedFileVisibility::Public),
+-        1 => Ok(steamworks::PublishedFileVisibility::FriendsOnly),
+-        2 => Ok(steamworks::PublishedFileVisibility::Private),
+-        3 => Ok(steamworks::PublishedFileVisibility::Unlisted),
+-        _ => {
+-            Err(format!("Invalid visibility value: {}. Must be 0 (Public), 1 (Friends Only), 2 (Private), or 3 (Unlisted)", visibility))
+-        }
+-    }
+-}
+-
+-
+-/// Uploads a workshop item with the given parameters
+-pub fn upload_item_content(
+-    client: &steamworks::Client, ugc: &steamworks::UGC, appid: u32,
+-    published_id: steamworks::PublishedFileId,
+-    content: &str, preview: &str,
+-    title: &str, description: &str,
+-    visibility: u32, tags: Vec<String>,
+-    patchnote: Option<&str>,
+-    dry_run: bool,
+-) {
+-    // Validate visibility before proceeding
+-    let visibility_enum = match visibility2enum(visibility) {
+-        Ok(vis) => vis,
+-        Err(e) => {
+-            colors::error(&format!("Error: {}", e));
+-            return;
+-        }
+-    };
+-
+-    // dry run
+-    // just print the values that would be used for the upload, without actually uploading anything
+-    if dry_run {
+-        colors::info("Dry run enabled. The following item would be uploaded:");
+-        colors::info(&format!("Title: {}", title));
+-        colors::info(&format!("Description: {}", description));
+-        colors::info(&format!("Content path: {}", content));
+-        colors::info(&format!("Preview path: {}", preview));
+-        colors::info(&format!("Visibility: {:?}", visibility_enum));
+-        colors::info(&format!("Tags: {:?}", tags));
+-        if let Some(patchnote) = patchnote {
+-            colors::info(&format!("Patchnote: {}", patchnote));
+-        }
+-        return;
++pub fn validate_upload(manifest: &Manifest, content: Option<&Path>, preview: Option<&Path>, description: Option<&str>, note: Option<&str>) -> Result<(), String> {
++    if manifest.appid == 0 || manifest.workshopid == Some(0) { return Err("Invalid app or Workshop ID".into()); }
++    if content.is_none() && preview.is_none() && manifest.title.is_none() && description.is_none() && manifest.tags.is_none() && manifest.visibility.is_none() {
++        return Err("No update fields supplied".into());
+     }
+-
+-    // Re-add validation for the preview image size and description/patch note limits.
+-    // Steam rejects an update that exceeds these, so catching them here fails fast
+-    // with a clear message instead of a silent no-op upload.
+-    // Use Steamworks SDK constants so these limits stay in sync with the SDK.
+-    // k_cchPublishedDocumentTitleMax includes the null terminator, so subtract 1.
+-    // No SDK constant exists for preview file size; 1 MB is Steam's documented workshop limit.
+-    const MAX_PREVIEW_BYTES: u64 = 1_048_576;
+-    let max_title_bytes = (steamworks::sys::k_cchPublishedDocumentTitleMax - 1) as usize;
+-    let max_desc_bytes  = steamworks::sys::k_cchPublishedDocumentDescriptionMax as usize;
+-    let max_note_bytes  = steamworks::sys::k_cchPublishedDocumentChangeDescriptionMax as usize;
+-
+-    if title.len() > max_title_bytes {
+-        colors::error(&format!(
+-            "Title is {} bytes (max {}). Please shorten the manifest title.",
+-            title.len(), max_title_bytes
+-        ));
+-        return;
++    if manifest.workshopid.is_none() && (content.is_none() || preview.is_none() || manifest.title.is_none() || description.is_none() || manifest.visibility != Some(2)) {
++        return Err("New items require content, preview, title, description and Private visibility".into());
+     }
+-
+-    if description.len() > max_desc_bytes {
+-        colors::error(&format!(
+-            "Description is {} bytes (max {}). The upload would be silently rejected by Steam. \
+-             Note: non-ASCII characters (em-dashes, arrows, etc.) count as 2-3 bytes each.",
+-            description.len(), max_desc_bytes
+-        ));
+-        return;
++    if let Some(path) = content {
++        if !path.is_dir() || std::fs::read_dir(path).map_err(|e| e.to_string())?.next().is_none() { return Err("Content directory is missing or empty".into()); }
+     }
+-
+-    if let Some(note) = patchnote {
+-        if note.len() > max_note_bytes {
+-            colors::error(&format!(
+-                "Patch note is {} bytes (max {}).",
+-                note.len(), max_note_bytes
+-            ));
+-            return;
++    if let Some(path) = preview {
++        let bytes = std::fs::read(path).map_err(|e| format!("Cannot read preview: {}", e))?;
++        if bytes.is_empty() || bytes.len() >= 1_048_576 { return Err("Preview must be smaller than 1 MiB".into()); }
++        if !bytes.starts_with(b"GIF87a") && !bytes.starts_with(b"GIF89a") && !bytes.starts_with(b"\x89PNG\r\n\x1a\n") && !bytes.starts_with(b"\xff\xd8\xff") {
++            return Err("Preview must be GIF, PNG or JPEG".into());
+         }
+     }
+-
+-    if let Ok(meta) = std::fs::metadata(preview) {
+-        if meta.is_file() && meta.len() > MAX_PREVIEW_BYTES {
+-            colors::error(&format!(
+-                "Preview image is {} bytes (max {}). Please reduce it before uploading.",
+-                meta.len(), MAX_PREVIEW_BYTES
+-            ));
+-            return;
+-        }
++    if let Some(title) = &manifest.title {
++        if title.is_empty() || title.len() >= steamworks::sys::k_cchPublishedDocumentTitleMax as usize { return Err("Invalid title length".into()); }
+     }
++    if let Some(value) = description {
++        if value.len() > steamworks::sys::k_cchPublishedDocumentDescriptionMax as usize { return Err("Description exceeds Steam's limit".into()); }
++    }
++    if let Some(value) = note {
++        if value.len() > steamworks::sys::k_cchPublishedDocumentChangeDescriptionMax as usize { return Err("Change note exceeds Steam's limit".into()); }
++    }
++    if manifest.visibility.is_some_and(|value| value > 3) { return Err("Invalid visibility".into()); }
++    Ok(())
++}
+ 
+-    // uploading the content of the workshop item
+-    // this process uses a builder pattern to set properties of the item
+-    // mandatory properties are:
+-    // - title
+-    // - description
+-    // - preview_path
+-    // - content_path
+-    // - visibility
+-    // after setting the properties, call .submit() to start uploading the item
+-    // this function is unique in that it returns a handle to the upload, which can be used to
+-    // monitor the progress of the upload and needs a closure to be called when the upload is done
+-    //
+-    // notes:
+-    // - once an upload is started, it cannot be cancelled!
+-    // - content_path is the path to a folder which houses the content you wish to upload
+-    //
+-    // IMPORTANT: submit() returns an UpdateWatchHandle that must be kept alive and we must
+-    // pump client.run_callbacks() until the closure fires, otherwise the process exits before
+-    // Steam finishes the upload and the change is silently dropped (exit code 0, nothing uploaded).
+-    let (tx, rx) = mpsc::channel::<Result<(steamworks::PublishedFileId, bool), String>>();
+-    let finished = Arc::new(AtomicBool::new(false));
+-    let finished_clone = finished.clone();
+-
+-    let upload_handle = ugc
+-        .start_item_update(steamworks::AppId(appid), published_id)
+-        .content_path(std::path::Path::new(content))
+-        .preview_path(std::path::Path::new(preview))
+-        .title(title)
+-        .description(description)
+-        .tags(tags, false)
+-        .visibility(visibility_enum)
+-        .submit(patchnote, move |upload_result| {
+-            // push the real result into the channel so the caller can decide success/failure
+-            let res = match upload_result {
+-                Ok((published_id, needs_to_agree_to_terms)) => {
+-                    if needs_to_agree_to_terms {
+-                        // despite being Ok, the upload did NOT succeed in this case
+-                        Err("You need to agree to the terms of use before you can upload any files".to_string())
+-                    } else {
+-                        Ok((published_id, needs_to_agree_to_terms))
+-                    }
+-                }
+-                Err(e) => Err(e.to_string()),
+-            };
+-            let _ = tx.send(res);
+-            finished_clone.store(true, Ordering::SeqCst);
+-        });
++fn validate_confirmation(expected: steamworks::PublishedFileId, actual: steamworks::PublishedFileId, needs_terms: bool) -> Result<(), String> {
++    if needs_terms { return Err("Steam Workshop agreement must be accepted; upload is not confirmed".into()); }
++    if actual != expected { return Err("Steam confirmed a different item".into()); }
++    Ok(())
++}
+ 
+-    // keep the handle alive and pump callbacks until Steam reports the outcome
+-    let deadline = Instant::now() + Duration::from_secs(30 * 60); // generous cap for big content packs
++pub fn upload_item_content(client: &steamworks::Client, ugc: &steamworks::UGC, manifest: &Manifest, id: steamworks::PublishedFileId,
++    content: Option<&Path>, preview: Option<&Path>, description: Option<&str>, note: Option<&str>) -> Result<(), String> {
++    let mut update = ugc.start_item_update(steamworks::AppId(manifest.appid), id);
++    if let Some(value) = content { update = update.content_path(value); }
++    if let Some(value) = preview { update = update.preview_path(value); }
++    if let Some(value) = &manifest.title { update = update.title(value); }
++    if let Some(value) = description { update = update.description(value); }
++    if let Some(value) = &manifest.tags { update = update.tags(value.clone(), false); }
++    if let Some(value) = manifest.visibility {
++        let visibility = match value {
++            0 => steamworks::PublishedFileVisibility::Public,
++            1 => steamworks::PublishedFileVisibility::FriendsOnly,
++            2 => steamworks::PublishedFileVisibility::Private,
++            3 => steamworks::PublishedFileVisibility::Unlisted,
++            _ => return Err("Invalid visibility".into()),
++        };
++        update = update.visibility(visibility);
++    }
++    let (tx, rx) = mpsc::channel();
++    let handle = update.submit(note, move |result| { let _ = tx.send(result); });
++    let deadline = Instant::now() + Duration::from_secs(30 * 60);
+     loop {
+-        if finished.load(Ordering::SeqCst) {
+-            break;
+-        }
+         client.run_callbacks();
+-        let (status, processed, total) = upload_handle.progress();
+-        // report progress so the user sees the upload moving (and when it gets stuck)
+-        colors::info(&format!("  upload progress: {:?} {}/{}", status, processed, total));
+-        thread::sleep(Duration::from_millis(500));
+-
+-        if Instant::now() > deadline {
+-            colors::error("Upload timed out waiting for Steam to confirm completion.");
+-            return;
++        match rx.try_recv() {
++            Ok(Ok((actual, needs_terms))) => {
++                validate_confirmation(id, actual, needs_terms)?;
++                println!("OMH_UPLOAD_CONFIRMED:{}", id.0);
++                return Ok(());
++            }
++            Ok(Err(error)) => return Err(format!("Steam rejected upload: {}", error)),
++            Err(mpsc::TryRecvError::Disconnected) => return Err("Upload callback disconnected".into()),
++            Err(mpsc::TryRecvError::Empty) => (),
+         }
++        if Instant::now() >= deadline { return Err("Upload timed out; outcome unconfirmed. Inspect Steam before retrying".into()); }
++        let (status, processed, total) = handle.progress();
++        println!("Upload progress: {:?} {}/{}", status, processed, total);
++        thread::sleep(Duration::from_millis(500));
+     }
++}
+ 
+-    match rx.try_recv() {
+-        Ok(Ok((published_id, _))) => {
+-            colors::success(&format!("Uploaded item with id {:?}", published_id));
+-        }
+-        Ok(Err(e)) => {
+-            colors::error(&format!("Error uploading item: {}", e));
+-        }
+-        Err(_) => {
+-            colors::error("Upload finished but the result channel was empty.");
+-        }
++#[cfg(test)]
++mod tests {
++    use super::*;
++    #[test]
++    fn confirmation_requires_matching_id_and_accepted_terms() {
++        let id = steamworks::PublishedFileId(9912345678);
++        assert!(validate_confirmation(id, id, false).is_ok());
++        assert!(validate_confirmation(id, id, true).is_err());
++        assert!(validate_confirmation(id, steamworks::PublishedFileId(9987654321), false).is_err());
++    }
++    #[test]
++    fn omitted_metadata_stays_absent() {
++        let manifest: Manifest = serde_json::from_str(r#"{"appid":108600,"workshopid":9912345678,"content":"Contents"}"#).unwrap();
++        assert!(manifest.title.is_none() && manifest.description.is_none() && manifest.tags.is_none());
++        assert!(manifest.preview.is_none() && manifest.visibility.is_none());
+     }
+-}
+\ No newline at end of file
++    #[test]
++    fn creation_requires_complete_private_manifest() {
++        let manifest: Manifest = serde_json::from_str(r#"{"appid":108600,"content":"Contents"}"#).unwrap();
++        assert!(validate_upload(&manifest, Some(Path::new("Contents")), None, None, None).is_err());
++    }
++}

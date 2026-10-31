@@ -30,7 +30,7 @@ Run the root [OMH_TraitShop.cmd](../OMH_TraitShop.cmd). The stable wrapper calls
 |---|---|
 | 1 | Install locally, backing up and verifying both the local mod and Workshop staging copy. Requires the game to be closed. |
 | 2 | Mirror the current working branch and immutable version tag; create or update its draft PR against `main`. |
-| 3 | Publish through SteamCMD. The first upload creates a private item; subsequent uploads update the recorded item. |
+| 3 | Publish through the running Steam client. The first upload creates a private item; subsequent uploads update the recorded item. |
 | 4 | Check package and installation paths without changing files. |
 | 5 | Validate and display the Workshop upload manifest without files, credentials, network calls or upload. |
 | 6 | Open project-specific tools: 1 updates the Workshop preview/GIF; 2 checks preview upload readiness. Preview upload retains the mirrored-release check and PREVIEW confirmation. |
@@ -71,13 +71,13 @@ After merging a PR, start the next development branch from updated `main`. For p
 
 ## Steam Workshop identity and upload
 
-`workshop.txt` now has `id=3803035618`, recovered from the owner's first in-game upload. Normal publishing must update this existing item. Native first upload used its required PNG, while root preview.gif remains available for a separately approved cover change. Keep `DISCLAIMER: This mod was made in tandem with ChatGPT`. Later SteamCMD updates preserve existing presentation and visibility. The owner must review final presentation and visibility before public release.
+`workshop.txt` has `id=3803035618`, recovered from the owner's first in-game upload. Normal publishing updates this existing item. Native first upload used its required PNG; the current animated cover matches root preview.gif and is reused by SteamUploader. Keep `DISCLAIMER: This mod was made in tandem with ChatGPT`. Updates preserve existing page text, tags and visibility.
 
-The publisher requires tagged content, committed release files and a verified GitHub mirror, then asks for `CREATE` or `PUBLISH`. It uses the shared `.tools/steamcmd/steamcmd.exe`. Steam credentials are encrypted using Windows credential export under `%LOCALAPPDATA%\OMH\TraitShopPublisher\steam-credential.xml`, separately from the core publisher. Steam Guard input is hidden. Upload manifests, recovery markers and masked logs live in that same Trait Shop publisher directory, outside Git. A running Steam client is closed for upload and restarted afterward; a running game blocks publication.
+The publisher requires tagged content, committed release files and a verified GitHub mirror, then asks for `CREATE` or `PUBLISH`. It uses the compatible workspace SteamUploader build, keeps Steam running and reuses the currently signed-in owner account. It does not read saved credentials or request Guard codes. Project Zomboid must be closed. Logs, sparse manifests, exact GIF copies, change notes and result receipts remain under `%LOCALAPPDATA%\OMH\TraitShopPublisher`. [Build and verification details](../tools/steam-uploader/README.md).
 
 On successful first upload, the script reads the Steam-assigned ID from the returned VDF and writes it into `workshop.txt`. **Commit and mirror this identity change before the next upload.** If creation is interrupted, `creation-pending.json` prevents blindly creating a duplicate. The next attempt can recover a returned ID; otherwise inspect the retained VDF/log and your Workshop items before resolving the marker. Do not reset a known item ID to zero to retry an update.
 
-Updates omit title, description, previewfile and visibility so the existing Workshop presentation is preserved. `WORKSHOP_CHANGELOG.txt` becomes a single-line BBCode change note. Both metadata and VDF generation reject Horde Night's Workshop ID `3777891317`.
+Updates omit title, description, tags and visibility, and supply the existing root preview.gif. The local GIF was verified byte-for-byte against the live cover on 2026-10-31. `WORKSHOP_CHANGELOG.txt` becomes a single-line BBCode change note. Both metadata and VDF generation reject Horde Night's Workshop ID `3777891317`.
 
 Steam's documented create/update behavior uses an unset/zero published ID for creation, returns the new ID in the VDF, and only updates fields supplied in subsequent uploads. See [Steamworks Workshop implementation](https://partner.steamgames.com/doc/features/workshop/implementation). The separate private repository was created without pushing source using the [GitHub CLI repository-creation command](https://cli.github.com/manual/gh_repo_create).
 
