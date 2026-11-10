@@ -1,6 +1,6 @@
 # Checkpoint 9 — six-step local check
 
-1. Quit PZ. Install with [OMH_TraitShop.cmd](../OMH_TraitShop.cmd) and [OMH.cmd](../../pz-mod-onemorehorde_protectthecure/OMH.cmd) → **1**, then launch through Steam with both mods.
+1. Quit PZ. Install with [OMH_TraitShop.cmd](../OMH_TraitShop.cmd) and [OMH_HordeNight.cmd](../../pz-mod-onemorehorde_protectthecure/OMH_HordeNight.cmd) → **1**, then launch through Steam with both mods.
 2. Open an existing character: expect the **Unverified Character** notice; the world remains playable.
 3. Create a fresh test save/character without inherited Prestige, leave a few creation points unspent, and start a new run. Open **Run Options**: Checkpoints and Difficulty Settings belong here; Trait Shop starts checked.
 4. Turn Trait Shop OFF, return and Confirm. Expect no shop icon and no Trait Shop score reduction on this clean run.

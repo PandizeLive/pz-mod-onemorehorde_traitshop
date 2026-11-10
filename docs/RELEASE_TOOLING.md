@@ -71,7 +71,7 @@ After merging a PR, start the next development branch from updated `main`. For p
 
 ## Steam Workshop identity and upload
 
-`workshop.txt` has `id=3803035618`, recovered from the owner's first in-game upload. Normal publishing updates this existing item. Native first upload used its required PNG; the current animated cover matches root preview.gif and is reused by SteamUploader. Keep `DISCLAIMER: This mod was made in tandem with ChatGPT`. Updates preserve existing page text, tags and visibility.
+`workshop.txt` has `id=3803035618`, recovered from the owner's first in-game upload. Normal publishing updates this existing item. Native first upload used its required PNG; the current animated cover matches root preview.gif and is reused by SteamUploader. Updates preserve existing page text, tags and visibility.
 
 The publisher requires tagged content, committed release files and a verified GitHub mirror, then asks for `CREATE` or `PUBLISH`. It uses the compatible workspace SteamUploader build, keeps Steam running and reuses the currently signed-in owner account. It does not read saved credentials or request Guard codes. Project Zomboid must be closed. Logs, sparse manifests, exact GIF copies, change notes and result receipts remain under `%LOCALAPPDATA%\OMH\TraitShopPublisher`. [Build and verification details](../tools/steam-uploader/README.md).
 

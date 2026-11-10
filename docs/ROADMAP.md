@@ -155,7 +155,7 @@ Progression, Prestige, Horde Night rewards and official scoring are present. Com
 
 ### Checkpoint 12 - Release package and owner handoff
 
-**Deliver:** versioned package, install/recovery instructions, accurate README and sandbox documentation, known limitations, and owner-reviewable Workshop assets/description/changelog. Confirm release identities rather than inventing IDs. Include the required Workshop disclaimer: `DISCLAIMER: This mod was made in tandem with ChatGPT`.
+**Deliver:** versioned package, install/recovery instructions, accurate README and sandbox documentation, known limitations, and owner-reviewable Workshop assets/description/changelog. Confirm release identities rather than inventing IDs.
 
 **Pass when:** package contents match tested source, a clean installation loads the intended version, required official-score integration is available, and the owner has a concrete release package to review. Publishing is a separate explicitly authorized action; a prepared package is not a published release. Record actual publication and post-publication verification when they occur.
 

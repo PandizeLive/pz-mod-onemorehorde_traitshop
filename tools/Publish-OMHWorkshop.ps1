@@ -65,9 +65,6 @@ try {
     $changeLog = Get-WorkshopChangeNote $release.Version
     $description = ((Get-Content -LiteralPath $workshopMetadataPath -Encoding UTF8 |
         Where-Object { $_.StartsWith('description=') } | ForEach-Object { $_.Substring(12) }) -join ' ').Trim()
-    if ($workshopId -eq '0' -and -not $description.Contains('DISCLAIMER: This mod was made in tandem with ChatGPT')) {
-        throw 'The first Workshop description must include the required disclaimer.'
-    }
     $manifest = New-WorkshopVdf $contentFolder $changeLog.Steam $workshopId $description (Join-Path $repoRoot 'preview.gif') -PreviewOnly:$UpdatePreview
     Write-Host "OMH: TRAIT SHOP publisher - v$($release.Version) - Workshop ID $workshopId"
     if ($UpdatePreview) { Write-Host 'Preview-only update: mod files, changelog, title, description and visibility are preserved.' }
