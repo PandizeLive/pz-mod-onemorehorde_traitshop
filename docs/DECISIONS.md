@@ -1,5 +1,18 @@
 # Decisions and open questions
 
+## Decision log
+
+Decision log (owner, 2026-11-17, same system as SporeCoop): every question asked of the owner gets a permanent ID in the order it was asked: 1A, 1B ... 1Z, then 2A ... 2Z, and so on. Answers read "1BA" (decision 1B, option A). Options: A what Claude recommends, B the closest to the owner's ask (with its issues), C an alternative only if needed; one answer per ID, no sub-decisions. IDs are never reused or renumbered. Check "Next free ID" before assigning one.
+
+The sequence starts on 2026-11-17. Earlier decisions keep their existing form in the sections below (list numbers 1-33 and the dated approvals) and have no IDs.
+
+**Next free ID: 1C**
+
+| ID | Decision | Answer |
+|---|---|---|
+| 1A | Record 0.9.1.1 (October 28) as the confirmed Workshop upload in the release doc and roadmap: A yes, docs only; B not now | A (owner 2026-11-17: "Yes, update it"; asked without its ID at the time). Done 2026-11-17 |
+| 1B | Commit the 2026-11-17 doc edits (release doc, roadmap, this log) locally, no mirror: A yes; B leave uncommitted | A (owner 2026-11-17: "1BA"). Committed locally 2026-11-17 |
+
 ## 2026-10-25 - C467 corrective XP approved
 
 The owner approved the same-character SP identity refresh and minimum1XP for eligible positive shares below1. Merge all recipient portions before the floor, apply it once before payment/banking, and retain zero/ineligible/duplicate suppression. This explicit exception may exceed the nominal shared pool. See PATCH_v0.9.1.1.md. No fabricated backpay or changes to unrelated release-tool edits.

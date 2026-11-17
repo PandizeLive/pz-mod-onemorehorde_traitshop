@@ -1,6 +1,8 @@
 # OMH: Trait Shop roadmap
 
-**Prepared XP integration: 0.9.1.** Adds authoritative optional defense credit, equal assist settlement, offline pending shares and matched client body-state recovery replies. Native death settlement waits for the post-hit callback and outstanding authorized injury receipts. [Patch and verification](PATCH_v0.9.1.md). Coordinated local installation and native startup/restart verified; Workshop and connected-player acceptance pending.
+**Prepared XP integration: 0.9.1.** Adds authoritative optional defense credit, equal assist settlement, offline pending shares and matched client body-state recovery replies. Native death settlement waits for the post-hit callback and outstanding authorized injury receipts. [Patch and verification](PATCH_v0.9.1.md). Coordinated local installation and native startup/restart verified; connected-player acceptance pending.
+
+**Latest upload (recorded 2026-11-17):** Trait Shop **0.9.1.1** was uploaded to Workshop item 3803035618 on October 28, 2026. See [upload baseline](RELEASE_PREPARATION_2026-10-28.md). The "Current status" paragraph below describes the earlier 0.9.0 state.
 
 
 This is the active phase/checkpoint roadmap. It organizes the approved product direction; creating the roadmap does not authorize implementation or publication.
