@@ -72,7 +72,8 @@ function Screen.context(panel)
         elseif not isClient() then
             context.bonus = 0
             if not MainScreen.instance.createWorld or (CoopCharacterCreation and CoopCharacterCreation.instance) then
-                local reader = getFileReader(Prestige.localPath(slot), false)
+                local path = Prestige.localPath(slot)
+                local reader = path and getFileReader(path, false)
                 if reader then
                     local value = tonumber(reader:readLine())
                     reader:close()

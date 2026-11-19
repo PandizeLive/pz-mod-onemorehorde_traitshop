@@ -103,6 +103,27 @@ Prestige.publish('local:0',legacy)
 local path=Prestige.localPath(0)
 check(tonumber(testFiles[path])==3,"SP menu preview is written outside the Lua VM")
 check(Prestige.localPath(1)~=path,"SP slots have separate previews")
+-- B42.22: getGameMode() returns a native GameMode object, not a string.
+check(path=="OMHTraitShop/Sandbox/Fixture/prestige-0.txt","string game mode keeps the established preview path")
+check(testNativeGameMode~=nil,"installed game exposes the native GameMode object")
+check(not pcall(function() return #testNativeGameMode end),"native GameMode has no length (the 42.22 failure)")
+local stringWorld=getWorld
+getWorld=function() return {getGameMode=function() return testNativeGameMode end,getWorld=function() return "Fixture" end} end
+check(Prestige.localPath(0)==path,"native GameMode object resolves to the same preview path")
+legacy.prestige.pending=legacy.prestige.pending+1
+Prestige.publish('local:0',legacy)
+check(tonumber(testFiles[path])==4,"SP preview is written with a native GameMode object")
+getWorld=function() return {getGameMode=function() return nil end,getWorld=function() return "Fixture" end} end
+check(Prestige.localPath(0)==nil,"unnamed game mode yields no preview path")
+getWorld=function() return nil end
+check(Prestige.localPath(0)==nil,"unavailable world yields no preview path")
+legacy.prestige.pending=legacy.prestige.pending+1
+Prestige.publish('local:0',legacy)
+check(tonumber(testFiles[path])==4,"preview failure cannot interrupt publishing")
+getWorld=stringWorld
+legacy.prestige.pending=legacy.prestige.pending-2
+Prestige.publish('local:0',legacy)
+check(tonumber(testFiles[path])==3,"preview recovers once the world is available")
 testTransportPackets={preview,State.snapshot(record,0)}
 
 testStage='Checkpoint 7 creation screen and cancellation'

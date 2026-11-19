@@ -35,12 +35,37 @@ function Prestige.tag(account)
     return Prestige.PREFIX .. Prestige.encode(account)
 end
 
+-- B42.22 returns a GameMode object from getGameMode(); earlier builds return its id as a string.
+-- Both produce the same save-folder name, so existing preview files keep their path.
+---@nodiscard
+---@param value any
+---@return string|nil
+local function text(value)
+    if type(value) == "string" then return value end
+    if value == nil then return nil end
+    return tostring(value)
+end
+
+local pathWarned = false
+
+-- Returns nil when the game cannot name the save. The preview file is a convenience for the
+-- creation screen; a failure here must never interrupt authoritative state or snapshots.
 ---@nodiscard
 ---@param slot number
----@return string
+---@return string|nil
 function Prestige.localPath(slot)
-    return "OMHTraitShop/" .. Prestige.encode(getWorld():getGameMode()) .. "/"
-        .. Prestige.encode(getWorld():getWorld()) .. "/prestige-" .. slot .. ".txt"
+    local world = getWorld()
+    local mode = world and text(world:getGameMode())
+    local name = world and text(world:getWorld())
+    if type(mode) == "string" and type(name) == "string" then
+        return "OMHTraitShop/" .. Prestige.encode(mode) .. "/"
+            .. Prestige.encode(name) .. "/prestige-" .. slot .. ".txt"
+    end
+    if not pathWarned then
+        pathWarned = true
+        print("[OMH Trait Shop] creation preview path unavailable; authoritative Prestige preserved")
+    end
+    return nil
 end
 
 ---@nodiscard
@@ -85,7 +110,7 @@ function Prestige.publish(account, record)
         local slot = tonumber(string.match(account, "^local:([0-3])$"))
         if slot == nil then return end
         local path = Prestige.localPath(slot)
-        if written[path] == bonus then return end
+        if not path or written[path] == bonus then return end
         local writer = getFileWriter(path, true, false)
         if not writer then
             print("[OMH Trait Shop] unable to save creation preview; authoritative Prestige preserved")

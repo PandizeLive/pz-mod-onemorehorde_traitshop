@@ -81,6 +81,14 @@ public final class KahluaBehaviorCheck {
             return 1;
         });
         set.invoke(env, "nativeCreationRoundTrip", creationRoundTrip);
+        // B42.22+: IsoWorld.getGameMode() returns this object instead of a String.
+        // Absent on earlier builds, where the field stays nil and the Lua check reports it.
+        try {
+            set.invoke(env, "testNativeGameMode",
+                Class.forName("zombie.core.GameMode").getField("SANDBOX").get(null));
+        } catch (Throwable error) {
+            System.out.println("Native GameMode object unavailable: " + error);
+        }
         for (String arg : args) {
             int split = arg.indexOf('=');
             String name = arg.substring(0, split);

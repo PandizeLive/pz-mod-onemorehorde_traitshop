@@ -1,5 +1,7 @@
 # OMH: Trait Shop
 
+**B42.22 compatibility build: 0.9.1.2.** Fixes a single-player error on game version 42.22 where the game mode is no longer a text value. [Patch and verification](docs/PATCH_v0.9.1.2.md). Prepared locally; not installed, published or live-tested.
+
 **C467 corrective build: 0.9.1.1.** Refresh same-life defense ownership after native single-player username initialization; apply the approved minimum1XP once after merged eligible shares, and add bounded reward summaries/details. Preserve zero/ineligible/duplicate suppression, fractional awards>=1, character-bound pending delivery and ordinary rewards. [Patch and verification](docs/PATCH_v0.9.1.1.md). Approved, installed locally and hash-verified with backups. No Workshop publication or connected multiplayer acceptance.
 
 **Prepared XP integration: 0.9.1.** Adds authoritative optional defense credit, equal assist settlement, offline pending shares and matched client body-state recovery replies. Native death settlement waits for the post-hit callback and outstanding authorized injury receipts. [Patch and verification](docs/PATCH_v0.9.1.md). Coordinated local installation and native startup/restart verified; Workshop and connected-player acceptance pending.

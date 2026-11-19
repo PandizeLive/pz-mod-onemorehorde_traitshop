@@ -6,12 +6,13 @@ Decision log (owner, 2026-11-17, same system as SporeCoop): every question asked
 
 The sequence starts on 2026-11-17. Earlier decisions keep their existing form in the sections below (list numbers 1-33 and the dated approvals) and have no IDs.
 
-**Next free ID: 1C**
+**Next free ID: 1D**
 
 | ID | Decision | Answer |
 |---|---|---|
 | 1A | Record 0.9.1.1 (October 28) as the confirmed Workshop upload in the release doc and roadmap: A yes, docs only; B not now | A (owner 2026-11-17: "Yes, update it"; asked without its ID at the time). Done 2026-11-17 |
 | 1B | Commit the 2026-11-17 doc edits (release doc, roadmap, this log) locally, no mirror: A yes; B leave uncommitted | A (owner 2026-11-17: "1BA"). Committed locally 2026-11-17 |
+| 1C | Install 0.9.1.2 (B42.22 single-player fix, [patch](PATCH_v0.9.1.2.md)) into the local game for a live check, with a local commit and `v0.9.1.2` tag first: A yes, local only, no mirror or upload; B hold, keep it as uncommitted source | A and further (owner 2026-11-18: "If you feel that you solved it, then we should be good to release."): commit, tag, local install, GitHub mirror and Workshop upload authorized; the upload itself is owner-run (PUBLISH confirmation) |
 
 ## 2026-10-25 - C467 corrective XP approved
 
