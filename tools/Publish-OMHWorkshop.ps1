@@ -90,7 +90,7 @@ try {
     if (-not $ghPath) { $ghPath = (Get-Command gh.exe -ErrorAction Stop).Source }
     $ghConfig = Find-OmhSharedPath $repoRoot '.gh-codex'
     if ($ghConfig) { $env:GH_CONFIG_DIR = $ghConfig }
-    $gitAuth = @('-c', 'credential.helper=', '-c', ('credential.helper=!"' + $ghPath.Replace('\', '/') + '" auth git-credential'))
+    $gitAuth = @('-c', 'credential.helper=', '-c', ('credential.helper=!''' + $ghPath.Replace('\', '/') + ''' auth git-credential'))
     Assert-OmhRemoteMirror $release $config $gitAuth
     Assert-ProjectZomboidClosed
     $confirmationWord = if ($UpdatePreview) { 'PREVIEW' } elseif ($workshopId -eq '0') { 'CREATE' } else { 'PUBLISH' }

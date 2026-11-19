@@ -25,7 +25,7 @@ try {
     if (-not (Test-Path -LiteralPath $prBody -PathType Leaf)) { throw "Prepare $prBody before mirroring." }
     if ($ValidateOnly) { Write-Host "Local mirror checks passed for $($release.Tag). No network calls or remote changes."; exit 0 }
     Invoke-Gh @('auth', 'status', '--hostname', 'github.com') | Out-Host
-    $gitAuth = @('-c', 'credential.helper=', '-c', ('credential.helper=!"' + $ghPath.Replace('\', '/') + '" auth git-credential'))
+    $gitAuth = @('-c', 'credential.helper=', '-c', ('credential.helper=!''' + $ghPath.Replace('\', '/') + ''' auth git-credential'))
     $remoteHeads = @(Invoke-OmhReleaseGit $release ($gitAuth + @('ls-remote', '--heads', 'origin')))
     if ($remoteHeads.Count -eq 0) {
         $roots = @(Invoke-OmhReleaseGit $release @('rev-list', '--max-parents=0', 'HEAD'))
