@@ -1,0 +1,22 @@
+module Base
+{
+    sound OMHTS_LevelUp
+    {
+        category = UI,
+        is3D = false,
+        clip
+        {
+            file = media/sound/OMHTS_LevelUp.wav,
+        }
+    }
+
+    sound OMHTS_PrestigeLevelUp
+    {
+        category = UI,
+        is3D = false,
+        clip
+        {
+            file = media/sound/OMHTS_PrestigeLevelUp.wav,
+        }
+    }
+}

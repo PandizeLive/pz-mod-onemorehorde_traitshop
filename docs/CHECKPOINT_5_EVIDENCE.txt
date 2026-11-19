@@ -1,0 +1,42 @@
+OMH Trait Shop v0.5.0 / Checkpoint 5 - 2026-09-17
+
+Installed game: Project Zomboid 42.20.4.
+PZ modding, Lua/Kahlua and Build 42 multiplayer skills applied.
+14/14 shipped Lua files compile in the installed Kahlua VM.
+Fundamentals audit: no pcall, xpcall, ipairs, next, goto or tabs.
+113 lifecycle/progression/authority/client assertions passed (Test-Phase1.ps1).
+221 shop/catalog/UI/network assertions passed (Test-Phase2.ps1).
+Largest native serialized state packet: 49,809 / 60,000 bytes.
+32 offline release-tooling checks passed.
+Release tooling fixture: .local/release-tests/b1c9484c6898488381ae04de21555dde
+
+Native dedicated: tools/Test-Phase1Server.ps1 -Phase 3
+All three actual game-server save/restart cycles passed, with graceful quit.
+Evidence folder: .local/phase3-server-a658bcbd941640b1b469edf160766398
+Stage 1: native OnNewGame captures 8 starting Tokens; delayed attachment at
+0.025 survived hours grants once. 3,650 XP -> Level 10, 50 remainder XP,
+18 Tokens (8 starting + 10 earned), 2 earned Prestige. Replayed revision rejected.
+Stage 2: saved progression restored unchanged. Separate pending birth capture
+survives restart and grants once at 0.5 hours. Death and replacement clear life
+progress; replacement receives only 8 creation Tokens, with 2 pending Prestige.
+Stage 3: replacement and pending prestige persist; an unrelated existing
+character at 0.01 hours with no creation capture receives no starting grant.
+No human clients joined; real connection/rendered acceptance remains pending.
+
+Native event placement confirmed using javap against installed projectzomboid.jar:
+zombie.network.packets.character.CreatePlayerPacket.processServer invokes
+OnNewGame after applyTraits/recipes and setUsername, before server profile save.
+Readable decompile: GameServer.receivePlayerConnect reloads the player profile;
+SurvivorDesc.save/load persists descriptor ID across that reload.
+
+Multiplayer skill audit: 0 high, 1 medium, 1 low.
+Reviewed medium: ShopWindow addItem calls insert display rows, not inventory.
+Reviewed low: shared Effects intentionally applies server-authorized target
+effects on the owning client; nonce/life binding and authority tests retained.
+
+Historical SFTP diagnosis: first life revision 1 implies no creation settlement;
+replacement revision 4 plus owner screenshot/purchase confirms second grant.
+Exact historical survived hours were not logged; fast-forward causation unproven.
+Remote AllowNegativeRemoval was false. No remote config/save files changed.
+Workshop ID 3803035618 recovered from owner-written staged metadata, Unlisted.
+No v0.5.0 Workshop upload or GitHub push performed.

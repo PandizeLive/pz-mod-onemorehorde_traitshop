@@ -1,0 +1,117 @@
+VERSION = 1,
+
+option OMHTraitShop.PositiveCostMultiplier {
+    type = double,
+    min = 0.1,
+    max = 100.0,
+    default = 1.0,
+    page = OMHTraitShop,
+    translation = OMHTraitShop_PositiveCostMultiplier,
+}
+
+option OMHTraitShop.NegativeCostMultiplier {
+    type = double,
+    min = 0.1,
+    max = 100.0,
+    default = 2.0,
+    page = OMHTraitShop,
+    translation = OMHTraitShop_NegativeCostMultiplier,
+}
+
+option OMHTraitShop.AllowNegativeRemoval {
+    type = boolean,
+    default = false,
+    page = OMHTraitShop,
+    translation = OMHTraitShop_AllowNegativeRemoval,
+}
+
+option OMHTraitShop.TokensPerLevel {
+    type = integer,
+    min = 0,
+    max = 1000,
+    default = 1,
+    page = OMHTraitShop,
+    translation = OMHTraitShop_TokensPerLevel,
+}
+option OMHTraitShop.PrestigeLevelInterval {
+    type = integer,
+    min = 1,
+    max = 1000,
+    default = 5,
+    page = OMHTraitShop,
+    translation = OMHTraitShop_PrestigeLevelInterval,
+}
+
+option OMHTraitShop.PrestigeRetentionPercentage {
+    type = integer,
+    min = 0,
+    max = 100,
+    default = 30,
+    page = OMHTraitShop,
+    translation = OMHTraitShop_PrestigeRetentionPercentage,
+}
+
+option OMHTraitShop.RewardMode {
+    type = enum,
+    numValues = 4,
+    default = 4,
+    page = OMHTraitShop,
+    translation = OMHTraitShop_RewardMode,
+}
+option OMHTraitShop.ZombieXP {
+    type = integer,
+    min = 0,
+    max = 100000,
+    default = 2,
+    page = OMHTraitShop,
+    translation = OMHTraitShop_ZombieXP,
+}
+option OMHTraitShop.PlayerKillXP {
+    type = integer,
+    min = 0,
+    max = 100000,
+    default = 75,
+    page = OMHTraitShop,
+    translation = OMHTraitShop_PlayerKillXP,
+}
+option OMHTraitShop.DayXP {
+    type = integer,
+    min = 0,
+    max = 100000,
+    default = 0,
+    page = OMHTraitShop,
+    translation = OMHTraitShop_DayXP,
+}
+option OMHTraitShop.NightXP {
+    type = integer,
+    min = 0,
+    max = 100000,
+    default = 25,
+    page = OMHTraitShop,
+    translation = OMHTraitShop_NightXP,
+}
+option OMHTraitShop.HordeZombieXP {
+    type = integer,
+    min = 0,
+    max = 100000,
+    default = 5,
+    page = OMHTraitShop,
+    translation = OMHTraitShop_HordeZombieXP,
+}
+option OMHTraitShop.HordeSurvivedXP {
+    type = integer,
+    min = 0,
+    max = 100000,
+    default = 100,
+    page = OMHTraitShop,
+    translation = OMHTraitShop_HordeSurvivedXP,
+}
+
+option OMHTraitShop.PlayerKillCooldownDays {
+    type = integer,
+    min = 0,
+    max = 365,
+    default = 2,
+    page = OMHTraitShop,
+    translation = OMHTraitShop_PlayerKillCooldownDays,
+}

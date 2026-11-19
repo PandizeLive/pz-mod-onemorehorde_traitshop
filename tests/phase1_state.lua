@@ -1,0 +1,52 @@
+testStage = "state and native persistence"
+local State = require("OMHTS_State")
+local store = {}
+check(State.initialize(store), "new schema initializes")
+local record, outcome = State.attach(store, "local:0", 10, 1)
+check(outcome == "created" and record.life.tokens == 0 and record.life.id == 1, "first life initializes once")
+check(State.update(record, 1, record.revision, { tokens = 17, xp = 4.5, level = 9 }), "trusted state mutation")
+check(not State.update(record, 1, 1, { tokens = 999 }), "stale revision rejected")
+check(not State.update(record, 1, record.revision, { tokens = -1 }), "negative wallet rejected")
+check(not State.update(record, 1, record.revision, { tokens = 1.5 }), "fractional Tokens rejected")
+check(not State.update(record, 1, record.revision, { xp = 0 / 0 }), "NaN XP rejected")
+check(not State.update(record, 1, record.revision, { xp = 1 / 0 }), "infinite XP rejected")
+check(not State.update(record, 1, record.revision, { tokens = 99, owner = "other" }), "unknown fields reject entire mutation")
+check(record.life.tokens == 17, "failed transaction changes nothing")
+record.prestige.retained = 1
+record.prestige.earned = 2
+store = nativeRoundTrip(store)
+check(State.initialize(store), "native table save/load schema survives")
+record, outcome = State.attach(store, "local:0", 10, 1)
+check(outcome == "resumed" and record.life.tokens == 17 and record.life.xp == 4.5 and record.life.level == 9, "save and reconnect preserve nonzero wallet XP and level")
+check(record.prestige.retained == 1 and record.prestige.earned == 2, "prestige categories persist separately")
+record, outcome = State.attach(store, "local:0", 10, 0.9)
+check(outcome == "resumed" and record.life.tokens == 17, "ordinary native profile save lag does not erase wallet")
+local id = record.life.id
+check(State.settleDeath(record, id), "death settles")
+check(record.life.tokens == 0 and record.life.xp == 0 and record.life.level == 0, "death resets wallet level and partial XP")
+check(record.prestige.pending == 3 and record.prestige.retained == 0 and record.prestige.earned == 0, "retained plus earned moved to pending once")
+check(not State.settleDeath(record, id) and record.prestige.pending == 3, "duplicate death cannot duplicate prestige")
+store = nativeRoundTrip(store)
+record = State.attach(store, "local:0", 11, 0)
+check(record.life.id ~= id and record.life.tokens == 0 and record.prestige.pending == 3, "replacement cannot recover dead wallet; pending preserved")
+check(not State.update(record, id, record.revision, { tokens = 17 }), "retired life cannot mutate replacement")
+check(not State.settleDeath(record, id), "late death cannot settle replacement")
+check(State.update(record, record.life.id, record.revision, { tokens = 12 }), "new life writable")
+local same = State.attach(store, "local:0", 11, 0)
+check(same.life.tokens == 12, "repeated spawn cannot reset current life")
+local other = State.attach(store, "local:1", 11, 0)
+check(other.life.id ~= same.life.id and other.life.tokens == 0, "split-screen wallet and prestige isolated")
+local newWorld = {}
+State.initialize(newWorld)
+check(State.attach(newWorld, "local:0", 11, 0).prestige.pending == 0, "unrelated world cannot inherit prestige")
+local reused = State.attach(newWorld, "reuse", 10, 2)
+State.update(reused, reused.life.id, reused.revision, { tokens = 50 })
+check(State.attach(newWorld, "reuse", 10, 0).life.tokens == 0, "fresh zero-age character cannot reuse an old descriptor wallet")
+local before = State.snapshot(record, 0)
+before.tokens = 777
+check(record.life.tokens == 12, "snapshot cannot modify authoritative state")
+check(not State.initialize({ schema = 999, nextLife = 0, accounts = {} }), "future schema fails closed")
+check(not State.initialize({ unknown = 1 }), "nonempty unversioned data preserved")
+store.accounts["broken"] = { revision = 1 }
+check(State.attach(store, "broken", 4, 0) == nil, "malformed record not silently reset")
+testSide = "server"

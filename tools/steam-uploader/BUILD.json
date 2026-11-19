@@ -1,0 +1,11 @@
+{
+  "upstream": "https://github.com/SimKDT/Steam-Uploader-rs",
+  "tag": "v0.3.0",
+  "commit": "73c6db2702114cafe3ab67e2843c2a1ba16feacb",
+  "protocol": 1,
+  "rust": "1.99.1-x86_64-pc-windows-msvc",
+  "patchSha256": "070f41cd8924c5ee9cf7eed7b801561efa93cac7eb1fe7f24d2734b6848df89e",
+  "exeSha256": "15058ace99ed0181f5fe2a39161a1bfa988a68eb8724131ec2d3a05d4db08428",
+  "dllSha256": "eb17909a76668cf9ae0b92a618a34a50f6c73d3a6787cb4dd8ce36a8b10bfb75",
+  "workshopUploadsPerformed": 0
+}

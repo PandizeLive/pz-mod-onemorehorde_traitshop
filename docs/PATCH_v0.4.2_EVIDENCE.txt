@@ -1,0 +1,29 @@
+v0.4.2 verification - 2026-09-16
+
+Source evidence: installed Project Zomboid Build 42.20.4 ISScrollingListBox.prerender / doDrawItem,
+ISUIElement.setYScroll; local decompiled UIElement.setYScroll; OMH_DifficultyUI DifficultyPanel.initialise.
+
+Regression reproduced before fix:
+Stage: resizable cart UI
+Failed: all viewport rows render at scroll offset 2 size 1 group catalog.
+The initial-size list fails at a middle scroll position; no resize is needed to reproduce it.
+
+Final tools/Test-Phase1.ps1: exit 0
+13/13 Lua files compile in the installed Kahlua VM.
+No pcall/xpcall, ipairs, bare next, goto or tabs in shipped Lua.
+53 foundation assertions passed.
+
+Final tools/Test-Phase2.ps1: exit 0
+189 Phase 2 / v0.4.2 assertions passed.
+Includes 49-row rendering checks across four groups, three heights, and three scroll offsets;
+footer placement, valid/invalid Purchase colors, Close/Reset palettes and amount-free XP tooltip.
+Native B42.20.4 serialization: 3 packets, largest 49809 / 60000 bytes.
+Uses drawing fixtures, not a live renderer or a multiplayer player connection.
+
+Final tools/Test-ReleaseTooling.ps1: exit 0
+32 offline release-tooling checks passed.
+Fixture: .local/release-tests/e97a19754f10485e81fe3888c93267e9
+No network calls or real user-profile changes; printed fake Workshop IDs belong only to fixtures.
+
+Server, networking, effects and persistence logic are unchanged. Prior dedicated native-object evidence
+remains in v0.4.0; real dedicated player acceptance is pending after the short solo UI recheck.

@@ -1,0 +1,42 @@
+OMH: Trait Shop v0.4.0 evidence - 2026-09-16
+Installed runtime: Project Zomboid 42.20.4. No connected players in native probes.
+Test-Phase1.ps1: 13/13 Kahlua compilation; no banned constructs/BOM; 53 foundation assertions passed.
+Test-Phase2.ps1: 120 assertions passed; largest native serialized test packet 49809 / 60000 bytes.
+Test-Phase1Server.ps1 -Phase 2: three native save/restart cycles; graceful quits; 45 eligible native positive traits.
+Native cache: C:\Users\bandi\Zomboid_Modding\OMH\Trait Shop\.local\phase2-server-b19d4561824c436c88ef210de4b070ac
+Test-ReleaseTooling.ps1: 30 checks passed; no network or real-profile mutation.
+Tooling cache: .local\release-tests\40a9b748643a4c89bf631b05506e3773
+MP audit: 0 high; MP017 is UI list addItem, not inventory; MP016 shared effect application is intentional on authority and nonce-bound owner snapshots.
+JSON/BOM/document links passed. UI fixtures are not rendered game acceptance. Hosted/dedicated player networking remains pending.
+
+LOG  : Lua          f:0 st:131,611,258> [OMHTS TEST] native registry 97; supported positives 45
+LOG  : Lua          f:0 st:131,612,858> [OMHTS TEST] native mixed cart, base:firstaid skill levels/boosts, recipes and idempotence passed
+LOG  : Lua          f:0 st:131,612,858> [OMHTS TEST] disk stage 1 ready
+LOG  : Lua          f:0 st:131,651,858> [OMHTS TEST] native registry 97; supported positives 45
+LOG  : Lua          f:0 st:131,653,646> [OMHTS TEST] disk receipts restore membership, removal, XP, boosts, recipes without charge
+LOG  : Lua          f:0 st:131,653,646> [OMHTS TEST] disk stage 2 ready
+LOG  : Lua          f:0 st:131,692,827> [OMHTS TEST] native registry 97; supported positives 45
+LOG  : Lua          f:0 st:131,694,293> [OMHTS TEST] replacement has no inherited effects and exactly eight starting Tokens
+LOG  : Lua          f:0 st:131,694,293> [OMHTS TEST] disk stage 3 ready
+
+Final package SHA256; every file matches the final native-probe package:
+DED0438F56C50B7D25D3B3B0BEDEFF18625408E6A8FF1B09C1136CAA6DADBC1A  42.20\icon.png
+CA76A6C5DA033C1211AE1C4C4DDCDAF3949737FE5EF20D3DA64B3168C43FB399  42.20\media\lua\client\OMHTS_ClientStartup.lua
+3F83B09AAE3440C6F941220A903B36081A4AB7498E426B1D4E9E996A40756D28  42.20\media\lua\client\OMHTS_ClientState.lua
+777C9D523D59F0242693B9330281CE67200CEAABBCC15BAAA64B4FEF68DB38C2  42.20\media\lua\client\OMHTS_HealthButton.lua
+608E4EAFD0E72377B9B449BF7907F6CE75A3B81E6A42B39C6754C78563A88EBB  42.20\media\lua\client\OMHTS_Presentation.lua
+456D342DBFAD3F0D7708B13AE447C112343A4A3AD9F2C014C8FE135EDFBF0E83  42.20\media\lua\client\OMHTS_ShopWindow.lua
+A432335FBCC568C8FDE3BF3923589DC8E1F2D712FCC0A2B08D77DD3DF5323F87  42.20\media\lua\server\OMHTS_Authority.lua
+5D822AC7DF44A18515CB2D1C1C96ED4CE7858C5E0A87B559421938FD53F0F79B  42.20\media\lua\server\OMHTS_Creation.lua
+55B02C52AFBE50546F4EAD7564EBE6AEA329A2019F539997F0B285ED9027FBC9  42.20\media\lua\server\OMHTS_ServerStartup.lua
+89CDBEE13E91B6D89FE5C228ECD94DC9A289613D1E09FAD3EEC968346271CB15  42.20\media\lua\server\OMHTS_Shop.lua
+E2CA9A087BEED47A7693AA30743B79828A5FF100605FAE8FED81084563AB153A  42.20\media\lua\server\OMHTS_State.lua
+E6CCDC2E295A1A58B541CDDDDBD451C81C2BDA48CB85B721EE6F64D54226AFAD  42.20\media\lua\shared\OMHTS_Bootstrap.lua
+D29531DACDEDF0B2F317DB1CF3B7B069585B12BF53E0E66787854C4A0F599DCD  42.20\media\lua\shared\OMHTS_Catalog.lua
+38B011848984504673EA80C01C5E73FF8AC390B4CDAA95A033CE049734E49E30  42.20\media\lua\shared\OMHTS_Effects.lua
+E1855E93B1B4BA3E636697324065422FF2FEA978FBC683E9D5ABAAA1F003ED5C  42.20\media\lua\shared\Translate\EN\Sandbox.json
+345F94B8EE3AEA212E770A1AB2AC8934B7432A013FDB61FA3BBA11F946C1E9F0  42.20\media\lua\shared\Translate\EN\UI.json
+6FEED7C98D36D66165C137D9A9DCF197D4865CEC93D5CD10F81802CA4FD7683A  42.20\media\sandbox-options.txt
+0964EC36999498AF53E99B6CFE11BEEF6CA34F9196B280D4C2EA9D34B6C9FED9  42.20\media\textures\OMHTS_ShopIcon.png
+420910B50E192273B9A38A774674A44F39C24C7CA203029F51EB706E4FD68A09  42.20\mod.info
+E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855  common\.gitkeep

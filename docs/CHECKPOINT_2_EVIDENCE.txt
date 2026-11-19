@@ -1,0 +1,35 @@
+Phase 1 v0.2.0 verification, September 14, 2026.
+53 Kahlua behavior checks passed; 6/6 packaged Lua files compile.
+Native packet serialization: 243 bytes for the state snapshot.
+30 release-tooling checks passed on Windows PowerShell 5.1.
+Three native dedicated-server save/restart cycles exited successfully via console quit.
+These disk probes use a synthetic record, not a connected player; live join/reconnect tests remain pending.
+No Trait Shop runtime error found; native content warnings/errors still occur.
+
+stage-1.log SHA-256: E0CAF3020A2ED4A825072BD5034BB25327072E528039B2C92700228C0E632827
+LOG  : General      f:0 st:41,375,692> version=42.20.4 b0bbce05d5 demo=false
+LOG  : Lua          f:0 st:41,434,697> [OMH Trait Shop] v0.2.0 shared loaded: server
+LOG  : Lua          f:0 st:41,440,100> [OMH Trait Shop] authority ready; schema=1
+LOG  : Lua          f:0 st:41,445,221> [OMH Trait Shop] v0.2.0 dedicated server started; checkpoint 2
+LOG  : Lua          f:0 st:41,445,222> [OMHTS TEST] disk stage 1 ready
+LOG  : General      f:0 st:41,452,067> Saving GlobalModData
+LOG  : General      f:0 st:41,463,998> Shutdown handling finished
+
+stage-2.log SHA-256: 78D55B978CEC6083114BE57C9C542A9A0736D0B84B44BCB5D3ECB4E68DF0E984
+LOG  : General      f:0 st:41,467,267> version=42.20.4 b0bbce05d5 demo=false
+LOG  : Lua          f:0 st:41,520,670> [OMH Trait Shop] v0.2.0 shared loaded: server
+LOG  : Lua          f:0 st:41,526,406> [OMH Trait Shop] authority ready; schema=1
+LOG  : Lua          f:0 st:41,532,348> [OMH Trait Shop] v0.2.0 dedicated server started; checkpoint 2
+LOG  : Lua          f:0 st:41,532,348> [OMHTS TEST] disk stage 2 ready
+LOG  : General      f:0 st:41,538,653> Saving GlobalModData
+LOG  : General      f:0 st:41,548,952> Shutdown handling finished
+
+stage-3.log SHA-256: 80C686EB791FBB3B1BE15C3CE1D62833A32D56E8BCEC0899F024A23EB5602BE6
+LOG  : General      f:0 st:41,553,006> version=42.20.4 b0bbce05d5 demo=false
+LOG  : Lua          f:0 st:41,607,444> [OMH Trait Shop] v0.2.0 shared loaded: server
+LOG  : Lua          f:0 st:41,613,426> [OMH Trait Shop] authority ready; schema=1
+LOG  : Lua          f:0 st:41,620,512> [OMH Trait Shop] v0.2.0 dedicated server started; checkpoint 2
+LOG  : Lua          f:0 st:41,620,513> [OMHTS TEST] disk stage 3 ready
+LOG  : General      f:0 st:41,628,154> Saving GlobalModData
+LOG  : General      f:0 st:41,639,593> Shutdown handling finished
+

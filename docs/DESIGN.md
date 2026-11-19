@@ -1,5 +1,7 @@
 # Trait Shop design
 
+> Current policy (2026-09-21): [Checkpoint 9](CHECKPOINT_9.md) supersedes earlier Locked Official Mode planning. Run Options provides Enable Trait Shop, default ON when installed with Horde Night; standalone stays enabled. Existing benefits force access, missing creation provenance is unofficial, and default-or-harder rules retain eligibility.
+
 Status: owner requirements recorded September 14, 2026. Explicit recommendations and unresolved details are tracked in [DECISIONS.md](DECISIONS.md).
 
 ## Vocabulary and progression
@@ -7,21 +9,21 @@ Status: owner requirements recorded September 14, 2026. Explicit recommendations
 | Term | Meaning |
 |---|---|
 | XP | Progress earned from the selected reward sources; fills the Trait Level progress bar. |
-| Trait Level | Earned by filling the XP bar. Each level grants one Token. |
-| Token | Currency spent on purchasing positive traits or, later, removing negative traits. Lost on death. |
+| Trait Level | Starts at 1. Each XP-earned level-up grants one Token; the starting level grants none. |
+| Token | Currency spent on purchasing positive traits or removing negative traits. Lost on death. |
 | Prestige Point | Bonus character-creation trait point earned every five Trait Levels; a configurable share of prior prestige can also be retained. This is not shop currency. |
 | Unspent creation points | Remaining character-creation trait points converted into starting Tokens; never award XP, levels, or prestige. |
 
 Use **Tokens** for shop currency and **Prestige Points** for creation bonuses. Avoid calling both currencies Tokens.
 
-Each completed Trait Level awards one Token; milestones at levels 5, 10, 15, etc. award one Prestige Point. Newly earned prestige depends only on Trait Level, never Token count, starting grants, spending, or refunds. XP requirements and whether level requirements grow are undecided.
+Each completed XP bar awards one Token. By default, reaching displayed Levels 5, 10, 15, etc. awards one Prestige Point; Prestige Level Interval is configurable. The starting Level 1 grants neither currency. Newly earned prestige depends only on earned levels, never Token count, starting grants, spending, or refunds. Level 1 starts at 0 / 100 XP toward Level 2. The existing Checkpoint 5 curve is unchanged; the displayed level is the saved earned-level counter plus one. Existing characters retain all progress.
 
 Examples:
 
 - A character enters the world with five unused creation points: grant five starting Tokens once, with no earned levels or prestige.
 - Five earned Trait Levels: five Tokens awarded over those levels and one Prestige Point earned, regardless of spending.
 - Twelve earned Trait Levels: twelve Tokens awarded and two Prestige Points earned. Token balance may be lower after purchases.
-- Death wipes the character's remaining Tokens and resets Trait Level. Partial XP reset is recommended but still needs confirmation.
+- Death wipes the character's remaining Tokens, resets Trait Level, and resets partial XP.
 
 Prestige grants bonus points at new-character creation, not a direct Token payout. Any conversion of unused creation points happens after character creation. Starting Tokens, refunds, and prestige-derived creation points must never count as earned levels.
 
@@ -29,26 +31,26 @@ Prestige grants bonus points at new-character creation, not a direct Token payou
 
 Prestige is not a permanently accumulated lifetime total. At death, the available prestige supplies the next character's full bonus creation points. Once that replacement character successfully enters the world, retain a configurable percentage of that prestige for subsequent lives; the owner's default is **30%**. This retained amount remains even though the full creation bonus was offered or spent. Apply retention once per completed life transition, never on ordinary login/reconnect and never a second time at death.
 
-Owner example: die with 3 Prestige Points -> next character receives +3 creation points -> after entering the world, the character has 1 retained Prestige Point and Trait Level 0. The retained point does not grant an additional creation bonus in that same transition.
+Owner example: die with 3 Prestige Points -> next character receives +3 creation points -> after entering the world, the character has 1 retained Prestige Point and Trait Level 1. The retained point does not grant an additional creation bonus in that same transition.
 
 Agreed rounding: nearest whole point, with no minimum-one guarantee. The documented exact-tie convention is half up for nonnegative values. At 30%, a no-new-earnings sequence is 3 -> 1 -> 0. Do not always round up: that would keep the final point forever and undermine decay.
 
-Working interpretation for later implementation: available prestige at death equals retained prestige plus new points earned from this life's Trait Levels. Thus a character retaining 1 and earning 2 more would offer +3 creation points next time, then retain 30% of 3. This combination example needs confirmation; it is not a separate lifetime prestige total. Retained prestige itself never grants levels or Tokens.
+Confirmed with Phase 1 approval: available prestige at death equals retained prestige plus new points earned from this life's Trait Levels. Thus a character retaining 1 and earning 2 more would offer +3 creation points next time, then retain 30% of 3. This is not a separate lifetime prestige total. Retained prestige itself never grants levels or Tokens. Checkpoint 7 applies the reserved amount to creation and settles retention after entry.
 
 ## Reward modes
 
 | Reward Mode | XP settings shown |
 |---|---|
-| Kills | Zombie; Unique Player |
+| Kills | Zombie; Player Kill |
 | Survival | Day Survived; Night Survived |
 | Horde Night | Horde Zombie; Horde Survived |
 | Hybrid | All six settings above |
 
-With OMH: Horde Night active, Horde Night is the default reward mode and the only mode eligible for official Trait Shop scoring. Without OMH, the addon must remain usable; the standalone default is undecided (Kills is recommended).
+With OMH: Horde Night active, Horde Night is the default reward mode and the only mode eligible for official Trait Shop scoring. Standalone defaults to Hybrid. Existing saved reward modes are preserved.
 
-Hybrid reveals all reward settings. Values and overlap behavior remain configurable design decisions. Recommendation: a horde zombie grants Horde Zombie XP instead of also granting ordinary Zombie XP. This recommendation has not been approved.
+Hybrid reveals all reward settings. A tagged horde zombie grants Horde Zombie XP instead of ordinary Zombie XP; the same kill is never paid by both sources. Defaults are listed in SANDBOX_OPTIONS_SPEC.md.
 
-Unique Player needs a stable definition and repeat-reward policy before implementation. Recommendation: identify the victim by account, not respawned character. Survival day/night boundaries, required elapsed time, sleep, disconnect, and time-skip behavior are also undecided.
+Player Kill XP requires an enemy outside the killer's faction and a server-account same-victim cooldown, default 2 in-game days. Survival uses full connected native seasonal dawn/dusk periods, independently of host-configured horde hours. Sleep/fast-forward count; joining partway through a period does not.
 
 ### Horde completion eligibility
 
@@ -58,20 +60,24 @@ A late-connected member can qualify under this rule. A casualty must not regain 
 
 ## Shop and UI
 
-One progression window contains the trait catalog, costs, Token balance, XP bar, Trait Level, and Prestige Points. Distinguish retained prestige from prestige earned during the current life, and clearly show the projected next-character creation bonus.
+The approved v0.4.2 window is a movable, resizable OMH panel, without pinning/collapsing. It retains geometry while reused during the session. Center the branding: One More Horde uses the full leaderboard Small font and red (0.85, 0.25, 0.25); Trait Shop uses its Large font and gold (0.95, 0.75, 0.2). Header spacing measures the actual font height. Center Trait Level and its separate number; the number and XP fill use gold #E7B428. The XP bar has white `current / required` text and starts at `0 / 100`. The XP tooltip lists only source names allowed by the active reward mode whose configured reward is above zero, without amounts.
 
-The owner wants a Trait Purchase System-style hover menu beside the health icon, using the supplied Trait Shop icon. Treat this as custom integration to inspect and recreate, not a presumed vanilla feature. Preserve existing health-button behavior and coexist with other mods adding nearby buttons. The menu must remain reachable when the pointer moves from the health icon to the shop button.
+Tokens and Prestige have equal weight. Prestige displays retained plus earned as one total; its tooltip shows those components. The Token tooltip explains unused creation points, spending and current balance, including actual level rewards, the original Prestige creation bonus, and its unused portion.
 
-Tooltip and optional keybind were suggested, not explicitly approved. UI scaling, resolution, and competing health-menu mods need validation. The owner's GIF is preserved in `art/references/health-hover-reference.gif`.
+Use unowned positives on the left and current positives/Other Traits/negatives stacked on the right. Other Traits contains read-only zero-cost abilities and weight conditions. Positive names are green, negatives red, unavailable choices grey. Selected cart rows have gold outlines and subtle green/red fill. Trait tooltips show the name and description only. There is no duplicate description footer or action-button tooltip.
 
-## Purchasing and later negative-trait removal
+Plain clicks toggle individual traits without clearing other choices. Shift adds an anchored visible range of eligible traits. Ctrl+A adds eligible visible traits from the last-clicked actionable list, respecting search/filter; while search is focused, it selects text instead. Disabled choices and unresolved conflicts are skipped by bulk selection. A combined selection may exceed the wallet or contain mutually conflicting additions; checkout stays disabled until resolved. Search/filter changes preserve the cart. A scrolling receipt shows additions/removals, individual prices, total and remaining balance. Clicking either a receipt entry or its selected source row removes it. Availability, grey shading and filters immediately reflect valid queued negative removals; undoing a removal restores any conflict. Server validation remains authoritative. Purchase submits the complete cart; Reset clears choices; Close discards an unpaid cart. Validation problems appear once near the receipt. Reset anchors lower-left with the Difficulty menu's black fill and red text/border. Close and Purchase anchor lower-right in that order: red Close, green enabled Purchase, neutral disabled Purchase. All lists and the receipt cull rows in viewport coordinates including the current scroll offset.
 
-Positive-trait purchasing is an initial feature. Purchase approval must check the authoritative balance, already-owned traits, exclusions, incompatible traits, and the ability to activate the trait's actual effects.
+Search includes localized names, trait IDs and descriptions. Rank exact names, partial names, ID matches, description phrases, then all query words in the description. Normalize case and repeated whitespace. Within equal relevance, sort current Token price, localized name, then stable ID. Empty search restores price sorting. All matching unavailable traits stay visible.
 
-Negative-trait removal is a later feature and is not required for initial release. When implemented, it will have a sandbox toggle disabled by default. Until implemented, do not expose an operational-looking removal toggle or permit removal transactions.
+Only hovering the health area opens the custom shop button; hovering its hidden coordinates cannot reveal it. Keep it open across the visible button and an existing Trait Purchase System popup. Preserve native health behavior. No extra keybind is included.
 
-Use the owner-approved setting names **Positive Cost Multiplier** and **Negative Cost Multiplier**. Each controls the corresponding cost relative to the trait's absolute creation-point value. Multiplier defaults and whole-Token rounding remain undecided. Catalog exclusions remain separate from price controls.
+## Purchases, compatibility and removal
 
-For negative traits, the earlier `2 * abs(value) + 2` proposal remains unresolved: changing the setting name does not confirm or cancel the flat +2 surcharge. If retained, the formula would be `abs(value) * Negative Cost Multiplier + 2`. With multiplier 2, example costs are -1 -> 4 Tokens and -4 -> 10. Do not silently treat the additive surcharge as part of the multiplier. Zero-cost or special traits need explicit catalog handling, not automatic eligibility from the formula.
+The owner approved broad default eligibility, replacing the ten-trait allowlist. A common processor handles membership, declared skill levels/XP boosts, granted recipes and granted traits. Custom scripts are not automatically rerun; never replay character creation or `applyTraits`. Native Strength/Fitness traits now grant one-time stat changes, with vanilla choosing the resulting trait; see PATCH_v0.8.1.md. Weight and custom physical traits still require separate handling. Profession/free traits cannot be bought, and profession/other-trait grants cannot be removed individually. Negative traits granting additional traits need a specific cleanup implementation and are currently excluded. Integrations can exclude known custom incompatibilities. Existing registration calls remain accepted but no longer gate ordinary traits.
 
-Complex removal support is deferred. This does not authorize shipping positive traits whose effects fail to initialize. Do not promise universal trait-mod compatibility.
+Removal was brought forward into this update. Allow Negative Trait Removal defaults to disabled. Positive Cost Multiplier defaults to 1; Negative Cost Multiplier defaults to 2. Both range from 0.1 to 100. Prices are `ceil(abs(creation value) * multiplier)`, with **no +2 surcharge**: -1 costs 2 Tokens and -4 costs 8 by default. Free/zero-cost traits need explicit handling rather than automatic pricing.
+
+Validate the whole cart against the final trait combination before charging: removing a conflicting negative and adding its positive counterpart can succeed together. Invalid entries, duplicate entries, changed quotes, insufficient total funds and mutually conflicting additions reject the entire cart. Skill/recipe grants are recorded as recoverable targets; retries never intentionally stack rewards. Removing a negative does not erase trained skills or learned recipes. Smoker removal clears nicotine withdrawal and its smoke timer, without clearing unrelated stress/unhappiness.
+
+No blanket claim of arbitrary mod compatibility or atomic saving across native player files and world ModData is made. Enabling negative removal is Lessened/unofficial under Horde Night's current policy.

@@ -1,0 +1,8 @@
+[h1]v0.8.1.1[/h1]
+[h2]Multiplayer Prestige loading fix[/h2]
+[list]
+[*]Fixed new characters getting stuck on Loading Prestige when joining a server.
+[*]Prestige creation points now arrive before character creation, including returning players with saved Prestige.
+[*]Preserved normal respawn refreshes, retention and one-time settlement.
+[*]Added a clear message for missing or invalid server Prestige data instead of endless first-join requests.
+[/list]

@@ -1,0 +1,5 @@
+Adds the owner's normal and prestige level-up sounds and gold overhead feedback whenever the local character receives an authoritative earned level increase. Prestige milestones replace the normal sound, including batched gains. Initial loading, reconnecting, new lives, stale/duplicate snapshots and non-level balance changes stay quiet.
+
+Trait Level now starts at 1 with 0 / 100 XP toward Level 2. Saved earned-level counters and the XP curve remain intact, preserving currency and prestige rules without a migration. The starting level grants no Token or prestige; the first prestige milestone follows five earned levels at displayed Level 6.
+
+Validation: 17 native Kahlua compilation checks, 138 lifecycle/feedback assertions, 222 shop/UI assertions, native sound-script loading and PCM decoding, and byte-identical source/package audio checks. This release retains Checkpoint 6 rewards. Actual playback and overhead appearance remain owner-run acceptance; release notes and test sequence are in docs/PATCH_v0.6.1.md.

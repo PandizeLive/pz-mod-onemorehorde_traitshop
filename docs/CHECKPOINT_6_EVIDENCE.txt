@@ -1,0 +1,32 @@
+Checkpoint 6 / v0.6.0 verification
+
+Installed target: Project Zomboid 42.20.4, native Kahlua VM.
+Lua fundamentals audit: no pcall/xpcall, ipairs, next, goto or tabs.
+Compilation: 17/17 shipped Lua files passed.
+Phase 1 regression: 113 checks passed.
+Phase 2 regression: 221 checks passed. Runner's historical output label says v0.5.0; it executed the current source.
+Checkpoint 6 reward and sandbox UI: 138 checks passed.
+Total behavioral checks: 472.
+Largest tested native serialized shop packet: 49,918 bytes (60,000-byte limit).
+
+Native dedicated: three graceful save/restart cycles passed.
+Evidence: .local/phase4-server-f1978a53353f4e01a343a7da3761b190/stage-1.log through stage-3.log.
+- Native IsoZombie.Kill fired the authority death hook and added 2 XP; duplicate notification rejected.
+- Native IsoPlayer.Kill fired the player death hook, added 75 XP to the other player, and settled the victim's life.
+- Native seasonal ErosionSeason methods added 25 XP for a complete night and crossed Level 1 correctly.
+- Reward progression and 48-hour same-victim cooldown persisted on disk.
+- Death/replacement and two subsequent reloads did not clear cooldowns or restore old-life XP.
+No humans/network clients joined. The probe supplies native players through a fixture online-player list; it proves native APIs/events/save behavior, not end-to-end two-client transport.
+
+Early native run found ClimateManager.getCurrentDay() null at server startup.
+Fixed by using GameTime date getters with the native seasonal clone; final sequence above passed.
+
+Reward fixtures cover routing, zero rates, unknown/disconnected attackers, pooled zombies, duplicate deaths, shared-faction exclusion, 75 XP, exact 48-hour expiry, death/restart cooldown, lowered cooldown settings, forged client commands, bounded catch-up matching 15 days of small steps, moved seasonal dawn, year boundaries, clock rewind, endless day/night and invalid data.
+UI fixtures cover all modes, labels/controls, compact rows, scroll height, controller navigation rows, solo/admin/host wrappers and saved-preset preservation. Rendered live menu acceptance remains pending.
+
+Release tooling: 32 offline checks passed; no network or real-profile writes.
+Evidence: .local/release-tests/95045e16c52d42b4ac59e539e0fc96cd.
+MP skill audit: 0 high, 1 medium, 1 low. Medium matches shop list addItem (UI only); low is the existing shared Effects module intentionally applied from validated server snapshots. Neither is a new reward-path defect.
+
+Owner-run installation, mirroring and Workshop upload remain separate from preparation.
+Live two-player reward acceptance: pending TEST_CHECKPOINT_6.md.

@@ -1,0 +1,3 @@
+v0.9.1.2
+Compatibility
+- Fixed a single-player error on game version 42.22 that stopped the Trait Shop from updating and could interrupt saving and creating a new character.

@@ -1,6 +1,6 @@
-# Proposed architecture
+# Architecture and later systems
 
-Architecture guidance. The minimal v0.1.0 package is implemented; gameplay systems below are still proposed. See [CHECKPOINT_1.md](CHECKPOINT_1.md) for verified source anchors and remaining integration gaps.
+Phases 1 and 2 are implemented; v0.4.0 adds the mixed cart and common removal. See [PATCH_v0.4.0.md](PATCH_v0.4.0.md) for schema 3, effects, the nonce handshake and native evidence. See [PHASE_2.md](PHASE_2.md) for the shop, starting-point conversion, schema migration and purchase receipts; [CHECKPOINT_2.md](CHECKPOINT_2.md) preserves the foundation design and evidence. Reward earning and prestige creation-screen systems below remain future work.
 
 ## Packaging
 
@@ -21,7 +21,7 @@ Contents/mods/OneMoreHorde_TraitShop/
       textures/
 ```
 
-Mod ID is `OneMoreHorde_TraitShop`, with metadata minimum 42.20.0 and real dedicated startup verified on installed 42.20.4. Earlier 42.20 patch compatibility is not yet tested. Translation placement and texture content will expand when player-facing gameplay UI is implemented. The current build only logs startup; do not describe it as a working trait shop or assign an invented Workshop identity.
+Mod ID is `OneMoreHorde_TraitShop`, with metadata minimum 42.20.0 and native verification on installed 42.20.4. Earlier 42.20 patch compatibility is not yet tested. UI and Sandbox translations use the current build's JSON files; the owner's icon is a standalone texture. No Workshop identity is assigned yet.
 
 ## Responsibilities
 
@@ -40,12 +40,12 @@ Use the same gameplay rules in singleplayer, hosted multiplayer, and dedicated m
 Separate character-life state from the player/account prestige record. A replacement character must not inherit the dead character's Token wallet or Trait Level. Newly earned prestige derives from Trait Level; Token changes cannot generate it.
 
 - Character state: life identity, current XP, Trait Level, Token balance, initialization marker, purchased-trait facts, reward deduplication, and rules provenance.
-- Prestige state: retained prestige, prestige newly earned through this life's Trait Levels, pending next-character creation bonus, life settlement/creation-grant/retention markers, applicable retention percentage, rules provenance, and schema version. Retention rounds to nearest whole point (documented half-up tie convention), with no minimum-one guarantee. Combining retained plus earned prestige still requires final confirmation.
+- Prestige state: retained prestige, prestige newly earned through this life's Trait Levels, pending next-character creation bonus, life settlement/creation-grant/retention markers, applicable retention percentage, rules provenance, and schema version. Retention rounds to nearest whole point (documented half-up tie convention), with no minimum-one guarantee. Retained plus earned prestige form the next bonus total. Phase 1 stores the separate balances and death-settlement marker; creation-grant/retention markers are added with that later transaction, before it can execute.
 - OMH association: event and owner identities, reward recipient life identity, processed completion/kill facts, and casualty result where needed.
 
-Choose stable multiplayer and singleplayer identities after inspecting actual B42 sources. Do not trust display names as durable ownership. Avoid unbounded reward ledgers; retention and compaction must preserve replay protection.
+Implemented identity: authenticated multiplayer username/native player slot, or singleplayer local slot, inside the current world's registry. Display names are not used. The server/singleplayer registry uses native global ModData persistence and is never replaced from client packets; it contains no credentials. Global ModData is not a confidentiality boundary, as explained in the Checkpoint 2 report. Avoid unbounded reward ledgers; retention and compaction must preserve replay protection.
 
-Creation-point conversion, level rewards, five-level milestones, purchases, and death settlement must be retry-safe. Reconnecting or recreating a character must not replay starting grants or prestige. A crash between debit and trait application must not leave a free trait or permanent lost payment; select a recoverable transaction sequence based on verified trait APIs.
+Creation-point conversion, level rewards, five-level milestones, purchases, and death settlement must be retry-safe. Phase 2 records debit and receipt before applying a trait, allowing a saved receipt to repair an older character profile without another charge. Reconnecting cannot repeat grants. Native player files and world global ModData are not atomic with each other; abrupt power-loss rollback across independently saved files is not claimed solved. Normal save/restart and complete world backups are the verified boundary.
 
 Snapshot the full creation bonus for the replacement character before applying retention. Once that character successfully enters the world, retain 30% by default, exactly once. Reopening/canceling character creation or ordinary reconnect must not apply another retention step or duplicate the bonus. Do not reduce prestige both at death and at spawn. The retained amount is for a subsequent transition, not another bonus for the character just created.
 
@@ -57,4 +57,4 @@ Prefer reward and lifecycle events. No continuous world scans for the shop. Surv
 
 Inspect the current Trait Purchase System and vanilla health UI before implementing the custom hover menu. Recreate the interaction with supported hooks; do not assume that menu is native or copy third-party source/assets without checking permission. The owner-supplied icon is the intended asset.
 
-Broad trait discovery is not proof that runtime purchase/removal works. Start with verified positive traits and add explicit support where initialization is required. Negative removal and its complex compatibility work are deferred until after the initial release.
+Broad default eligibility and declared-effect processing replace the original allowlist in v0.4.0. Explicit body/grant exclusions and targeted Smoker cleanup cover known exceptions; arbitrary custom scripts still need compatibility work. Common removal is implemented early, default-off.

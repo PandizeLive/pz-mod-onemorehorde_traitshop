@@ -1,0 +1,38 @@
+v0.4.1 verification - 2026-09-16
+
+Installed game VM: Build 42.20.4, projectzomboid.jar and bundled Java runtime.
+
+Command: tools/Test-Phase1.ps1
+Exit: 0
+Lua fundamentals audit passed: no pcall/xpcall, ipairs, next, goto or tabs.
+13/13 Lua files passed Kahlua compilation.
+53 Phase 1 assertions passed, including native B42 table serialization.
+
+Command: tools/Test-Phase2.ps1
+Exit: 0
+146 Phase 2 / v0.4.1 assertions passed.
+Native B42.20.4 packets=3; largest=49809 bytes (limit 60000).
+Loads installed ISResizeWidget.lua; UI element primitives and Java deferred anchor behavior use fixtures.
+Regression assertions cover 12 resize frames, clamping, outside release, title styles, click toggles, Shift ranges,
+Ctrl+A filtering/focus/disabled exclusions, immediate conflict previews, mixed checkout and retained geometry.
+Not a rendered game test or a real player network session.
+
+Command: tools/Test-ReleaseTooling.ps1
+Exit: 0
+32 checks passed. No network calls or real user-profile changes.
+Fixture: .local/release-tests/fb76a5d50c0740f48a942588fd351a57
+The fake Workshop ID printed by this fixture was not a real upload.
+
+Server purchase/effect/state logic unchanged from v0.4.0. Its dedicated native persistence probes remain prior evidence,
+not new tests for this release. Live multiplayer player acceptance remains pending.
+
+No automatic installation, remote push, PR update, Workshop upload or core Horde Night edit.
+
+Owner artwork copies verified byte-for-byte by SHA-256:
+preview.gif: 400x400, 75 frames, 801794 bytes
+EEF2BFA190555E6493347C66C456ACFFC26AB3AAE1EB310EEC21283AA86BBD62
+preview.png and packaged poster.png: 400x400, 74713 bytes
+50DD057FC7FAD5A931D52770765ECF3CE5670B3A57F49B80CA7A82CA6E579F77
+
+Relative documentation links passed after URL-decoding link targets.
+Packaged JSON parsing and UTF-8 BOM scan passed.
